@@ -1,4 +1,4 @@
-package ru.megains;
+package ru.megains.test;
 
 import org.lwjgl.*;
 import org.lwjgl.glfw.*;
