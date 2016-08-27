@@ -4,9 +4,7 @@ import org.joml.Vector3f
 import ru.megains.game.register.GameRegister
 
 
-class Item() {
-
-
+class Item(val name:String) {
 
 }
 

@@ -1,4 +1,4 @@
-
+import ru.megains.test.Test._
 
 //import scala.reflect.io.{File, Directory}
 

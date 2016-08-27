@@ -1,8 +1,8 @@
 package ru.megains.game.register
 
-import ru.megains.engine.graph.renderer.api.{ARenderItem, ARenderBlock}
+import ru.megains.engine.graph.renderer.api.{ARenderBlock, ARenderItem}
 import ru.megains.engine.graph.renderer.block.RenderBlockStandart
-import ru.megains.engine.graph.renderer.item.RenderItemBlock
+import ru.megains.engine.graph.renderer.item.{RenderItemStandart, RenderItemBlock}
 import ru.megains.game.block.Block
 import ru.megains.game.item.{Item, ItemBlock}
 import ru.megains.game.multiblock.{AMultiBlock, MultiBlock, MultiBlockSingle}
@@ -21,8 +21,25 @@ object GameRegister {
     private val multiBlockData = new RegisterNamespace[MultiBlockSingle]
 
     def registerBlock(id:Int, block: Block): Unit ={
+        if(privateRegisterBlock(id,block)){
+
+            val item = new ItemBlock(block)
+
+            if(privateRegisterItem(id,item)){
+                itemData.registerRender(id,new RenderItemBlock(item))
+            }
+        }
+    }
+    def registerItem(id:Int,item: Item): Unit ={
+        if(privateRegisterItem(id,item)){
+            itemData.registerRender(id,new RenderItemStandart(item))
+        }
+    }
+
+
+    private def privateRegisterBlock(id:Int, block: Block): Boolean ={
         if(blockData.contains(block)){
-            println("Block +\""+block.name + "\" already register")
+            println("Block \""+block.name + "\" already register")
         }else{
             if(blockData.contains(id)){
                 println("Id \""+id + "\" not single")
@@ -31,22 +48,37 @@ object GameRegister {
                     println("Name \""+ block.name + "\" not single")
                 }else{
                     blockData.registerObject(id, block.name,block)
-                    //-----------------------------------------------------------
-                    val item = new ItemBlock(block)
-                    itemData.registerObject(id,block.name,item)
-                    itemData.registerRender(id,new RenderItemBlock(item))
-                    //-----------------------------------------------------------
+                   return true
                 }
-
-
             }
         }
+        false
+    }
+
+
+
+    private def privateRegisterItem(id:Int,item: Item): Boolean ={
+        if(itemData.contains(item)){
+            println("Item \""+item.name + "\" already register")
+        }else{
+            if(itemData.contains(id)){
+                println("Id \""+id + "\" not single")
+            }else{
+                if(itemData.contains(item.name)){
+                    println("Name \""+ item.name + "\" not single")
+                }else{
+                    itemData.registerObject(id, item.name,item)
+
+                    return true
+                }
+            }
+        }
+        false
     }
     
     def getBlocks = blockData.getObjects
 
     def getBlockById(id: Int): Block =  blockData.getObject(id)
-
 
     def getIdByBlock(block: Block): Int = blockData.getIdByObject(block)
 

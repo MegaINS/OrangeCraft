@@ -61,6 +61,8 @@ public class Renderer {
 
     private CubeGame cubeGame;
 
+    private boolean renderShadow = false;
+
     public Renderer(CubeGame cubeGame) {
         this.cubeGame = cubeGame;
         transformation = new Transformation();
@@ -70,9 +72,14 @@ public class Renderer {
     Text text ;
     public void init(Window window, TextureManager textureManager) throws Exception {
         this.textureManager = textureManager;
-        shadowMap = new ShadowMap();
 
-        setupDepthShader();
+        if(renderShadow){
+            shadowMap = new ShadowMap();
+            setupDepthShader();
+        }
+
+
+
       //  setupSkyBoxShader();
 
         text = new Text("Hello");
@@ -119,7 +126,10 @@ public class Renderer {
 
         glEnable(GL_CULL_FACE);
 
-        renderDepthMap(window, camera, worldRenderer,frustum);
+        if(renderShadow){
+            renderDepthMap(window, camera, worldRenderer,frustum);
+        }
+
 
 
         glViewport(0, 0, window.getWidth(), window.getHeight());
@@ -312,9 +322,11 @@ public class Renderer {
         sceneShaderProgram.setUniform("directionalLight", directionalLight);
 
 
+        if(renderShadow){
+            glActiveTexture(GL_TEXTURE0 + 1);
+            glBindTexture(GL_TEXTURE_2D, shadowMap.id);
+        }
 
-        glActiveTexture(GL_TEXTURE0 + 1);
-        glBindTexture(GL_TEXTURE_2D, shadowMap.id);
 
         sceneShaderProgram.setUniform("depthTexture", 1);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
@@ -352,10 +364,11 @@ public class Renderer {
 
                     sceneShaderProgram.setUniform("modelViewMatrix", modelViewMatrix);
                     sceneShaderProgram.setUniform("normal", new Matrix3f(modelViewMatrix.invert()).transpose());
-                    sceneShaderProgram.setUniform("lightMatrix", lait);
+                    if(renderShadow){
+                        sceneShaderProgram.setUniform("lightMatrix", lait);
+                    }
 
-
-                    renderChunk.render(0, depthShaderProgram);
+                    renderChunk.render(0, sceneShaderProgram);
                 }
 
             }
@@ -387,6 +400,11 @@ public class Renderer {
 
 //     //   glDisable(GL_DEPTH_TEST);
 //
+
+        worldRenderer.renderEntitiesItem(frustum,transformation,sceneShaderProgram);
+
+
+
 
             glDisable(GL_CULL_FACE);
             modelViewMatrix = transformation.buildTextModelViewMatrix(new BlockWorldPos(65, 65, 65));

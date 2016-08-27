@@ -4,13 +4,15 @@ package ru.megains.game.world
 import org.joml.Vector3f
 import ru.megains.game.block.Block
 import ru.megains.game.blockdata.{BlockDirection, BlockWorldPos}
+import ru.megains.game.entity.item.EntityItem
 import ru.megains.game.multiblock.AMultiBlock
 import ru.megains.game.physics.AxisAlignedBB
-import ru.megains.game.register.Blocks
+import ru.megains.game.register.{Blocks, GameRegister}
 import ru.megains.game.util.{MathHelper, RayTraceResult}
 import ru.megains.game.world.chunk.{Chunk, ChunkLoader}
 
 import scala.collection.mutable
+import scala.collection.mutable.ArrayBuffer
 import scala.util.Random
 
 
@@ -18,6 +20,7 @@ class World(val length: Int,val height: Int,val width: Int) {
     val chunks: mutable.HashMap[Long, Chunk] = new mutable.HashMap[Long, Chunk]
     var worldRenderer:WorldRenderer = null
     val rand:Random = new Random()
+    val entitiesItem:ArrayBuffer[EntityItem] = new ArrayBuffer[EntityItem]()
 
 
 
@@ -25,22 +28,21 @@ class World(val length: Int,val height: Int,val width: Int) {
 
 
         for(x <- -4 to 3;y <- -4 to 3;z <- -4 to 3){
-
-
             chunks += Chunk.getIndex(x, y, z) -> ChunkLoader.load(this,x,y,z)
         }
 
+        for(i<-1 to 10){
+            val entity = new EntityItem(GameRegister.getItemById(rand.nextInt(4)+2))
+            entity.setWorld(this)
+            entity.setPosition(rand.nextInt(i)-i/2,5,rand.nextInt(i)-i/2)
+            entitiesItem += entity
+        }
 
-
-
-
-       // ChunkLoader.load(chunks,length * height * width, this)
+        
     }
 
     def update(){
-//            for(Entity entity: mobEntity){
-//                entity.update();
-//            }
+        entitiesItem.foreach(_.update())
 
         chunks.values.foreach(_.updateRandomBlocks(rand))
 

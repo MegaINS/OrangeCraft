@@ -1,9 +1,11 @@
 package ru.megains.game.world
 
+import ru.megains.engine.Frustum
 import ru.megains.engine.graph.renderer.texture.TextureManager
-import ru.megains.engine.graph.{ShaderProgram, RenderChunk}
+import ru.megains.engine.graph.{Transformation, ShaderProgram, RenderChunk}
 import ru.megains.engine.graph.renderer.mesh.{Mesh, MeshMaker}
 import ru.megains.game.blockdata.{BlockWorldPos, MultiBlockPos}
+import ru.megains.game.register.GameRegister
 import ru.megains.game.util.BlockAndPos
 import ru.megains.game.world.chunk.{Chunk, ChunkVoid}
 
@@ -95,5 +97,15 @@ class WorldRenderer(val world: World,val textureManager: TextureManager) {
     }
     def renderBlockBounds(shaderProgram: ShaderProgram): Unit = if(mesh!=null) mesh.render(shaderProgram,textureManager)
 
+    def renderEntitiesItem(frustum:Frustum,transformation:Transformation,sceneShaderProgram:ShaderProgram): Unit ={
+
+        world.entitiesItem.foreach((entity)=>{
+            if (frustum.cubeInFrustum(entity.body)) {
+                val modelViewMatrix = transformation.buildEntityModelViewMatrix(entity)
+                sceneShaderProgram.setUniform("modelViewMatrix", modelViewMatrix)
+                GameRegister.getItemRender(entity.item).renderInWorld(sceneShaderProgram, textureManager)
+            }
+        })
+    }
 
 }

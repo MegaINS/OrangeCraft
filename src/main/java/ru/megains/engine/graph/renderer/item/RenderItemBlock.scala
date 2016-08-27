@@ -11,13 +11,17 @@ class RenderItemBlock(item:ItemBlock) extends ARenderItem{
 
     val block = item.block
 
-    override lazy val inventoryMesh: Mesh = createMesh()
+    override lazy val inventoryMesh: Mesh = createInventoryMesh()
+
+    override lazy val worldMesh: Mesh = createWorldMesh()
+
+    override def renderInWorld(shaderProgram: ShaderProgram,textureManager:TextureManager): Unit = worldMesh.render(shaderProgram,textureManager )
 
     override def renderInInventory(shaderProgram: ShaderProgram,textureManager:TextureManager): Unit = inventoryMesh.render(shaderProgram,textureManager )
 
 
 
-    def createMesh(): Mesh ={
+    def createInventoryMesh(): Mesh ={
 
         val aabb = block.getPhysicsBody
 
@@ -40,7 +44,6 @@ class RenderItemBlock(item:ItemBlock) extends ARenderItem{
         var averageU:Float =0
         var averageV:Float =0
         var texture:TextureAtlas = null
-       // val material:Material = new Material(new Texture(TextureLoader.blockTexture))
 
         val mm  = MeshMaker.getMeshMaker
 
@@ -55,7 +58,6 @@ class RenderItemBlock(item:ItemBlock) extends ARenderItem{
         maxV = texture.maxV
         averageU = texture.averageU
         averageV = texture.averageV
-        //meshCreator.setNormals(0, 0, 1)
 
         mm.setCurrentIndex()
         mm.addNormals(0, 1, 0)
@@ -74,7 +76,7 @@ class RenderItemBlock(item:ItemBlock) extends ARenderItem{
         //V2
 
 
-        texture = block.getATexture(BlockDirection.NORTH)
+        texture = block.getATexture(BlockDirection.DOWN)
         minU = texture.minU
         maxU = texture.maxU
         minV = texture.minV
@@ -83,9 +85,6 @@ class RenderItemBlock(item:ItemBlock) extends ARenderItem{
         averageV = texture.averageV
 
 
-
-
-        // meshCreator.setNormals(0, 0, -1)
 
 
 
@@ -104,7 +103,7 @@ class RenderItemBlock(item:ItemBlock) extends ARenderItem{
 
 
 
-        texture = block.getATexture(BlockDirection.DOWN)
+        texture = block.getATexture(BlockDirection.NORTH)
         minU = texture.minU
         maxU = texture.maxU
         minV = texture.minV
@@ -112,7 +111,7 @@ class RenderItemBlock(item:ItemBlock) extends ARenderItem{
         averageU = texture.averageU
         averageV = texture.averageV
 
-        // meshCreator.setNormals(0, -1, 0)
+
 
 
         mm.setCurrentIndex()
@@ -137,7 +136,7 @@ class RenderItemBlock(item:ItemBlock) extends ARenderItem{
         averageU = texture.averageU
         averageV = texture.averageV
 
-        //   meshCreator.setNormals(0, 1, 0)
+
 
         mm.setCurrentIndex()
         mm.addNormals(1,0,0)
@@ -192,7 +191,6 @@ class RenderItemBlock(item:ItemBlock) extends ARenderItem{
         averageU = texture.averageU
         averageV = texture.averageV
 
-        //   meshCreator.setNormals(1,0,0)
 
 
         mm.setCurrentIndex()
@@ -208,8 +206,11 @@ class RenderItemBlock(item:ItemBlock) extends ARenderItem{
         mm.addIndex(1, 3, 4)
 
 
-        val  mesh = mm.makeMesh()
-      //  mesh.setMaterial(material)
-        mesh
+      mm.makeMesh()
+    }
+
+    def createWorldMesh():Mesh = {
+
+       createInventoryMesh()
     }
 }

@@ -5,6 +5,8 @@ import org.joml.Vector3f;
 import ru.megains.engine.graph.renderer.gui.GuiRenderInfo;
 import ru.megains.engine.graph.text.Text;
 import ru.megains.game.blockdata.BlockWorldPos;
+import ru.megains.game.entity.Entity;
+import ru.megains.game.physics.AxisAlignedBB;
 import ru.megains.game.position.ChunkPosition;
 
 public class Transformation {
@@ -185,15 +187,16 @@ public class Transformation {
     }
 
 
-//    public Matrix4f buildEntityModelViewMatrix(Entity entity, Matrix4f viewMatrix) {
-//            Vector3f rotation = entity.getRotation();
-//        Vector3f position = entity.getPosition();
-//        modelMatrix.identity().translate(position.x,position.y-entity.levelView,position.z).
-//                rotateX((float)Math.toRadians(-rotation.x)).
-//                rotateY((float)Math.toRadians(-rotation.y)).
-//                rotateZ((float)Math.toRadians(-rotation.z)).
-//         scale(entity.getScale());
-//        // modelViewMatrix.set(matrix);
-//        return modelViewMatrix.set(modelMatrix);
-//    }
+    public Matrix4f buildEntityModelViewMatrix(Entity entity) {
+            AxisAlignedBB position = entity.body();
+       // Vector3f position = entity.getPosition();
+        float anim2 = (float)  (Math.sin(System.currentTimeMillis() % 2000.0 / 2000 *2 *Math.PI )*0.1f)+0.4f;
+        modelMatrix.identity().translate(position.minX,position.minY+anim2,position.minZ).
+               // rotateX((float)Math.toRadians(-rotation.x)).
+                rotateY((float)Math.toRadians((float) ((System.currentTimeMillis() % 10801.0 / 30)))).
+               // rotateZ((float)Math.toRadians(-rotation.z)).
+         scale(0.25f);
+        // modelViewMatrix.set(matrix);
+        return modelViewMatrix.set(modelMatrix);
+    }
 }

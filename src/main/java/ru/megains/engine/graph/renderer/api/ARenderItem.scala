@@ -8,5 +8,10 @@ abstract class ARenderItem {
 
     val inventoryMesh:Mesh
 
+    val worldMesh:Mesh
+
     def renderInInventory(shaderProgram: ShaderProgram,textureManager:TextureManager):Unit
+
+    def renderInWorld(shaderProgram: ShaderProgram,textureManager:TextureManager): Unit
+
 }
