@@ -4,6 +4,7 @@ package ru.megains.game.world
 import org.joml.Vector3f
 import ru.megains.game.block.Block
 import ru.megains.game.blockdata.{BlockDirection, BlockWorldPos}
+import ru.megains.game.entity.Entity
 import ru.megains.game.entity.item.EntityItem
 import ru.megains.game.multiblock.AMultiBlock
 import ru.megains.game.physics.AxisAlignedBB
@@ -62,12 +63,15 @@ class World(val length: Int,val height: Int,val width: Int) {
     }
 
 
+    def setEntity(entity:Entity): Unit ={
+        entitiesItem += entity.asInstanceOf
+    }
 
     def getChunk(blockPos: BlockWorldPos): Chunk = getChunk(blockPos.worldX >> 4, blockPos.worldY >> 4, blockPos.worldZ >> 4)
 
     def getChunk(x: Int, y: Int, z: Int): Chunk = {
         try{
-            chunks.get(Chunk.getIndex(x,y,z)).get
+            chunks(Chunk.getIndex(x, y, z))
 
         }catch {
             case e:NoSuchElementException =>
