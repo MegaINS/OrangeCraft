@@ -2,10 +2,8 @@ package ru.megains.game.entity
 
 
 import org.joml.Vector3f
-import ru.megains.game.util.{ RayTraceResult, MathHelper}
-
-import scala.collection.JavaConversions._
 import ru.megains.game.physics.AxisAlignedBB
+import ru.megains.game.util.{MathHelper, RayTraceResult}
 import ru.megains.game.world.World
 
 import scala.collection.mutable

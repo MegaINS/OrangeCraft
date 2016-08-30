@@ -1,6 +1,6 @@
 package ru.megains.engine.graph.renderer.block
 
-import com.sun.scenario.effect.Offset
+
 import ru.megains.engine.graph.renderer.api.ARenderBlock
 import ru.megains.game.block.Block
 import ru.megains.game.blockdata.{MultiBlockPos, BlockWorldPos, BlockDirection}
