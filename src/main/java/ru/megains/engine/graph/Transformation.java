@@ -191,7 +191,7 @@ public class Transformation {
             AxisAlignedBB position = entity.body();
        // Vector3f position = entity.getPosition();
         float anim2 = (float)  (Math.sin(System.currentTimeMillis() % 2000.0 / 2000 *2 *Math.PI )*0.1f)+0.4f;
-        modelMatrix.identity().translate(position.minX,position.minY+anim2,position.minZ).
+        modelMatrix.identity().translate(position.minX+0.125f,position.minY+anim2,position.minZ+0.125f).
                // rotateX((float)Math.toRadians(-rotation.x)).
                 rotateY((float)Math.toRadians((float) ((System.currentTimeMillis() % 10801.0 / 30)))).
                // rotateZ((float)Math.toRadians(-rotation.z)).

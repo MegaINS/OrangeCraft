@@ -194,8 +194,6 @@ public class CubeGame implements IGameLogic {
 
 
 
-        renderer.cameraL.getRotation().add(0,1,0);
-
     }
 
 
