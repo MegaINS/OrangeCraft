@@ -1,28 +1,27 @@
-package ru.megains.game.world
+package ru.megains.engine.graph
 
 import ru.megains.engine.Frustum
-import ru.megains.engine.graph.renderer.texture.TextureManager
-import ru.megains.engine.graph.{Transformation, ShaderProgram, RenderChunk}
 import ru.megains.engine.graph.renderer.mesh.{Mesh, MeshMaker}
+import ru.megains.engine.graph.renderer.texture.TextureManager
 import ru.megains.game.blockdata.{BlockWorldPos, MultiBlockPos}
+import ru.megains.game.entity.item.EntityItem
 import ru.megains.game.register.GameRegister
 import ru.megains.game.util.BlockAndPos
+import ru.megains.game.world.World
 import ru.megains.game.world.chunk.{Chunk, ChunkVoid}
 
 import scala.collection.mutable
 
 
-class WorldRenderer(val world: World,val textureManager: TextureManager) {
+class WorldRenderer(val world: World, val textureManager: TextureManager) {
     world.worldRenderer = this
 
     val renderChunks: mutable.HashMap[Long, RenderChunk] = new mutable.HashMap[Long, RenderChunk]
-    var voidRender: RenderChunk = new RenderChunk(new ChunkVoid,textureManager)
+    var voidRender: RenderChunk = new RenderChunk(new ChunkVoid, textureManager)
+
     def init() {
-        world.chunks.foreach((chunk:(Long,Chunk))=>renderChunks.put(chunk._1, new RenderChunk(chunk._2,textureManager)))
+        world.chunks.foreach((chunk: (Long, Chunk)) => renderChunks.put(chunk._1, new RenderChunk(chunk._2, textureManager)))
     }
-
-
-
 
 
     def reRender(pos: BlockWorldPos) {
@@ -43,17 +42,18 @@ class WorldRenderer(val world: World,val textureManager: TextureManager) {
 
         if (renderChunks.contains(i)) renderChunks(i) else voidRender
     }
-    def cleanUp(): Unit =  renderChunks.values.foreach(_.cleanUp)
 
-    var mesh:Mesh = null
-    
-    def updateBlockBounds(bp:BlockAndPos): Unit ={
-        if(mesh!=null) {
+    def cleanUp(): Unit = renderChunks.values.foreach(_.cleanUp)
+
+    var mesh: Mesh = _
+
+    def updateBlockBounds(bp: BlockAndPos): Unit = {
+        if (mesh != null) {
             mesh.cleanUp()
             mesh = null
         }
         val mm = MeshMaker.getMeshMaker
-        val aabb = bp.block.getSelectedBoundingBox(bp.pos,MultiBlockPos.default).expand(0.01f,0.01f,0.01f)
+        val aabb = bp.block.getSelectedBoundingBox(bp.pos, MultiBlockPos.default).expand(0.01f, 0.01f, 0.01f)
 
         val minX = aabb.getMinX
         val minY = aabb.getMinY
@@ -74,38 +74,42 @@ class WorldRenderer(val world: World,val textureManager: TextureManager) {
         mm.addVertex(maxX, maxY, minZ)
         mm.addVertex(maxX, maxY, maxZ)
 
-        mm.addIndex(0,1)
-        mm.addIndex(0,2)
-        mm.addIndex(0,4)
+        mm.addIndex(0, 1)
+        mm.addIndex(0, 2)
+        mm.addIndex(0, 4)
 
-        mm.addIndex(6,2)
-        mm.addIndex(6,4)
-        mm.addIndex(6,7)
+        mm.addIndex(6, 2)
+        mm.addIndex(6, 4)
+        mm.addIndex(6, 7)
 
-        mm.addIndex(3,1)
-        mm.addIndex(3,2)
-        mm.addIndex(3,7)
+        mm.addIndex(3, 1)
+        mm.addIndex(3, 2)
+        mm.addIndex(3, 7)
 
-        mm.addIndex(5,1)
-        mm.addIndex(5,4)
-        mm.addIndex(5,7)
+        mm.addIndex(5, 1)
+        mm.addIndex(5, 4)
+        mm.addIndex(5, 7)
 
 
-        mesh =  mm.makeMesh()
+        mesh = mm.makeMesh()
 
 
     }
-    def renderBlockBounds(shaderProgram: ShaderProgram): Unit = if(mesh!=null) mesh.render(shaderProgram,textureManager)
 
-    def renderEntitiesItem(frustum:Frustum,transformation:Transformation,sceneShaderProgram:ShaderProgram): Unit ={
+    def renderBlockBounds(shaderProgram: ShaderProgram): Unit = if (mesh != null) mesh.render(shaderProgram, textureManager)
 
-        world.entitiesItem.foreach((entity)=>{
-            if (frustum.cubeInFrustum(entity.body)) {
-                val modelViewMatrix = transformation.buildEntityModelViewMatrix(entity)
-                sceneShaderProgram.setUniform("modelViewMatrix", modelViewMatrix)
-                GameRegister.getItemRender(entity.item).renderInWorld(sceneShaderProgram, textureManager)
+    def renderEntitiesItem(frustum: Frustum, transformation: Transformation, sceneShaderProgram: ShaderProgram): Unit = {
+
+
+        world.entities.filter(_.isInstanceOf[EntityItem]).foreach(
+            (entity) => {
+                if (frustum.cubeInFrustum(entity.body)) {
+                    val modelViewMatrix = transformation.buildEntityModelViewMatrix(entity)
+                    sceneShaderProgram.setUniform("modelViewMatrix", modelViewMatrix)
+                    GameRegister.getItemRender(entity.asInstanceOf[EntityItem].item).renderInWorld(sceneShaderProgram, textureManager)
+                }
             }
-        })
+        )
     }
 
 }

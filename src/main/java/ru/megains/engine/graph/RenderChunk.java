@@ -12,74 +12,75 @@ import ru.megains.game.world.chunk.Chunk;
 
 public class RenderChunk {
 
-    public static int  chunkSize =16;
-    private static int rend =0;
+    public static int chunkSize = 16;
+    private static int rend = 0;
     public static Material material;
-    public static int chunkRender =0;
-    public static int chunkUpdate =0;
+    public static int chunkRender = 0;
+    public static int chunkUpdate = 0;
     private boolean isReRender = true;
     public final Chunk chunk;
     private AxisAlignedBB cube;
     private int blockRender;
     private Mesh[] meshes = new Mesh[2];
     private World world;
-    private int minX ;
-    private int minY ;
-    private int minZ ;
+    private int minX;
+    private int minY;
+    private int minZ;
     private TextureManager textureManager;
 
 
-    public RenderChunk(Chunk chunk, TextureManager textureManager){
-        this.textureManager =textureManager;
-       this.chunk = chunk;
+    public RenderChunk(Chunk chunk, TextureManager textureManager) {
+        this.textureManager = textureManager;
+        this.chunk = chunk;
         this.world = chunk.world();
-         minX =chunk.position().minX();
-         minY =chunk.position().minY();
-         minZ =chunk.position().minZ();
-        cube = new AxisAlignedBB(minX,minY,minZ,chunk.position().maxX(),chunk.position().maxY(),chunk.position().maxZ());
+        minX = chunk.position().minX();
+        minY = chunk.position().minY();
+        minZ = chunk.position().minZ();
+        cube = new AxisAlignedBB(minX, minY, minZ, chunk.position().maxX(), chunk.position().maxY(), chunk.position().maxZ());
     }
 
 
-    public void render(int layer, ShaderProgram shaderProgram){
-        if(isReRender){
-           if(rend<1) {
-               rend++;
-               blockRender =0;
-               cleanUp();
-               reRenderChunk(0);
-               isReRender = false;
-               chunkUpdate++;
-           }
-       }
-        renderChunk(layer,shaderProgram);
+    public void render(int layer, ShaderProgram shaderProgram) {
+        if (isReRender) {
+            if (rend < 1) {
+                rend++;
+                blockRender = 0;
+                cleanUp();
+                reRenderChunk(0);
+                isReRender = false;
+                chunkUpdate++;
+            }
+        }
+        renderChunk(layer, shaderProgram);
     }
 
-    private void renderChunk(int layer, ShaderProgram shaderProgram){
+    private void renderChunk(int layer, ShaderProgram shaderProgram) {
 
-        if(blockRender!=0) {
-            if(meshes[layer]!=null){
-                meshes[layer].render(shaderProgram,textureManager);
+        if (blockRender != 0) {
+            if (meshes[layer] != null) {
+                meshes[layer].render(shaderProgram, textureManager);
                 chunkRender++;
             }
 
         }
     }
-    private void reRenderChunk(int layer){
+
+    private void reRenderChunk(int layer) {
 
 
         MeshMaker.startMakeTriangles();
         MeshMaker.setTexture(TextureManager.locationBlockTexture());
-        BlockWorldPos blockPos ;
-        BlockWorldPos renderPos ;
+        BlockWorldPos blockPos;
+        BlockWorldPos renderPos;
         AMultiBlock block;
 
 
-        for (int x = 0; x <  chunkSize; ++x) {
-            for (int y = 0; y <   chunkSize; ++y) {
-                for (int z = 0; z <  chunkSize; ++z) {
-                    blockPos= new BlockWorldPos(x+minX,y+minY,z+minZ);
+        for (int x = 0; x < chunkSize; ++x) {
+            for (int y = 0; y < chunkSize; ++y) {
+                for (int z = 0; z < chunkSize; ++z) {
+                    blockPos = new BlockWorldPos(x + minX, y + minY, z + minZ);
                     renderPos = new BlockWorldPos(x, y, z);
-                    if(!world.isAirBlock(blockPos)) {
+                    if (!world.isAirBlock(blockPos)) {
                         block = chunk.getBlockWorldCord(blockPos);
                         blockRender += block.renderBlocks(world, blockPos, renderPos);
                     }
@@ -88,13 +89,12 @@ public class RenderChunk {
         }
 
         meshes[layer] = MeshMaker.makeMesh();
-}
-
+    }
 
 
     public void cleanUp() {
-        for(Mesh mesh:meshes){
-            if(mesh!=null){
+        for (Mesh mesh : meshes) {
+            if (mesh != null) {
                 mesh.cleanUp();
             }
         }
@@ -102,19 +102,18 @@ public class RenderChunk {
     }
 
 
-    public void reRender(){
+    public void reRender() {
 
-        isReRender =true;
+        isReRender = true;
     }
 
     public static void clearRend() {
-            rend = 0;
+        rend = 0;
     }
 
     public AxisAlignedBB getCube() {
         return cube;
     }
-
 
 
 }

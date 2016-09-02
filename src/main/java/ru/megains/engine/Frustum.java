@@ -29,25 +29,25 @@ public class Frustum {
     private Frustum() {
     }
 
-    public static Frustum getFrustum(FloatBuffer _proj,FloatBuffer _modl) {
+    public static Frustum getFrustum(FloatBuffer _proj, FloatBuffer _modl) {
         frustum.calculateFrustum(_proj, _modl);
         return frustum;
     }
 
     private void normalizePlane(float[][] frustum, int side) {
-        float magnitude = (float)Math.sqrt((double)(frustum[side][0] * frustum[side][0] + frustum[side][1] * frustum[side][1] + frustum[side][2] * frustum[side][2]));
+        float magnitude = (float) Math.sqrt((double) (frustum[side][0] * frustum[side][0] + frustum[side][1] * frustum[side][1] + frustum[side][2] * frustum[side][2]));
         frustum[side][0] /= magnitude;
         frustum[side][1] /= magnitude;
         frustum[side][2] /= magnitude;
         frustum[side][3] /= magnitude;
     }
 
-    private void calculateFrustum(FloatBuffer _proj,FloatBuffer _modl) {
-      //  this._proj.clear();
-      //  this._modl.clear();
+    private void calculateFrustum(FloatBuffer _proj, FloatBuffer _modl) {
+        //  this._proj.clear();
+        //  this._modl.clear();
         this._clip.clear();
-      //  GL11.glGetFloat(2983, this._proj);
-     //   GL11.glGetFloat(2982, this._modl);
+        //  GL11.glGetFloat(2983, this._proj);
+        //   GL11.glGetFloat(2982, this._modl);
         _proj.flip().limit(16);
         _proj.get(this.proj);
         _modl.flip().limit(16);
@@ -101,8 +101,8 @@ public class Frustum {
     }
 
     public boolean pointInFrustum(float x, float y, float z) {
-        for(int i = 0; i < 6; ++i) {
-            if(this.m_Frustum[i][0] * x + this.m_Frustum[i][1] * y + this.m_Frustum[i][2] * z + this.m_Frustum[i][3] <= 0.0F) {
+        for (int i = 0; i < 6; ++i) {
+            if (this.m_Frustum[i][0] * x + this.m_Frustum[i][1] * y + this.m_Frustum[i][2] * z + this.m_Frustum[i][3] <= 0.0F) {
                 return false;
             }
         }
@@ -111,8 +111,8 @@ public class Frustum {
     }
 
     public boolean sphereInFrustum(float x, float y, float z, float radius) {
-        for(int i = 0; i < 6; ++i) {
-            if(this.m_Frustum[i][0] * x + this.m_Frustum[i][1] * y + this.m_Frustum[i][2] * z + this.m_Frustum[i][3] <= -radius) {
+        for (int i = 0; i < 6; ++i) {
+            if (this.m_Frustum[i][0] * x + this.m_Frustum[i][1] * y + this.m_Frustum[i][2] * z + this.m_Frustum[i][3] <= -radius) {
                 return false;
             }
         }
@@ -121,36 +121,36 @@ public class Frustum {
     }
 
     public boolean cubeFullyInFrustum(float x1, float y1, float z1, float x2, float y2, float z2) {
-        for(int i = 0; i < 6; ++i) {
-            if(this.m_Frustum[i][0] * x1 + this.m_Frustum[i][1] * y1 + this.m_Frustum[i][2] * z1 + this.m_Frustum[i][3] <= 0.0F) {
+        for (int i = 0; i < 6; ++i) {
+            if (this.m_Frustum[i][0] * x1 + this.m_Frustum[i][1] * y1 + this.m_Frustum[i][2] * z1 + this.m_Frustum[i][3] <= 0.0F) {
                 return false;
             }
 
-            if(this.m_Frustum[i][0] * x2 + this.m_Frustum[i][1] * y1 + this.m_Frustum[i][2] * z1 + this.m_Frustum[i][3] <= 0.0F) {
+            if (this.m_Frustum[i][0] * x2 + this.m_Frustum[i][1] * y1 + this.m_Frustum[i][2] * z1 + this.m_Frustum[i][3] <= 0.0F) {
                 return false;
             }
 
-            if(this.m_Frustum[i][0] * x1 + this.m_Frustum[i][1] * y2 + this.m_Frustum[i][2] * z1 + this.m_Frustum[i][3] <= 0.0F) {
+            if (this.m_Frustum[i][0] * x1 + this.m_Frustum[i][1] * y2 + this.m_Frustum[i][2] * z1 + this.m_Frustum[i][3] <= 0.0F) {
                 return false;
             }
 
-            if(this.m_Frustum[i][0] * x2 + this.m_Frustum[i][1] * y2 + this.m_Frustum[i][2] * z1 + this.m_Frustum[i][3] <= 0.0F) {
+            if (this.m_Frustum[i][0] * x2 + this.m_Frustum[i][1] * y2 + this.m_Frustum[i][2] * z1 + this.m_Frustum[i][3] <= 0.0F) {
                 return false;
             }
 
-            if(this.m_Frustum[i][0] * x1 + this.m_Frustum[i][1] * y1 + this.m_Frustum[i][2] * z2 + this.m_Frustum[i][3] <= 0.0F) {
+            if (this.m_Frustum[i][0] * x1 + this.m_Frustum[i][1] * y1 + this.m_Frustum[i][2] * z2 + this.m_Frustum[i][3] <= 0.0F) {
                 return false;
             }
 
-            if(this.m_Frustum[i][0] * x2 + this.m_Frustum[i][1] * y1 + this.m_Frustum[i][2] * z2 + this.m_Frustum[i][3] <= 0.0F) {
+            if (this.m_Frustum[i][0] * x2 + this.m_Frustum[i][1] * y1 + this.m_Frustum[i][2] * z2 + this.m_Frustum[i][3] <= 0.0F) {
                 return false;
             }
 
-            if(this.m_Frustum[i][0] * x1 + this.m_Frustum[i][1] * y2 + this.m_Frustum[i][2] * z2 + this.m_Frustum[i][3] <= 0.0F) {
+            if (this.m_Frustum[i][0] * x1 + this.m_Frustum[i][1] * y2 + this.m_Frustum[i][2] * z2 + this.m_Frustum[i][3] <= 0.0F) {
                 return false;
             }
 
-            if(this.m_Frustum[i][0] * x2 + this.m_Frustum[i][1] * y2 + this.m_Frustum[i][2] * z2 + this.m_Frustum[i][3] <= 0.0F) {
+            if (this.m_Frustum[i][0] * x2 + this.m_Frustum[i][1] * y2 + this.m_Frustum[i][2] * z2 + this.m_Frustum[i][3] <= 0.0F) {
                 return false;
             }
         }
@@ -159,15 +159,14 @@ public class Frustum {
     }
 
     public boolean cubeInFrustum(float x1, float y1, float z1, float x2, float y2, float z2) {
-        for(int i = 0; i < 6; ++i) {
-            if(this.m_Frustum[i][0] * x1 + this.m_Frustum[i][1] * y1 + this.m_Frustum[i][2] * z1 + this.m_Frustum[i][3] <= 0.0F && this.m_Frustum[i][0] * x2 + this.m_Frustum[i][1] * y1 + this.m_Frustum[i][2] * z1 + this.m_Frustum[i][3] <= 0.0F && this.m_Frustum[i][0] * x1 + this.m_Frustum[i][1] * y2 + this.m_Frustum[i][2] * z1 + this.m_Frustum[i][3] <= 0.0F && this.m_Frustum[i][0] * x2 + this.m_Frustum[i][1] * y2 + this.m_Frustum[i][2] * z1 + this.m_Frustum[i][3] <= 0.0F && this.m_Frustum[i][0] * x1 + this.m_Frustum[i][1] * y1 + this.m_Frustum[i][2] * z2 + this.m_Frustum[i][3] <= 0.0F && this.m_Frustum[i][0] * x2 + this.m_Frustum[i][1] * y1 + this.m_Frustum[i][2] * z2 + this.m_Frustum[i][3] <= 0.0F && this.m_Frustum[i][0] * x1 + this.m_Frustum[i][1] * y2 + this.m_Frustum[i][2] * z2 + this.m_Frustum[i][3] <= 0.0F && this.m_Frustum[i][0] * x2 + this.m_Frustum[i][1] * y2 + this.m_Frustum[i][2] * z2 + this.m_Frustum[i][3] <= 0.0F) {
+        for (int i = 0; i < 6; ++i) {
+            if (this.m_Frustum[i][0] * x1 + this.m_Frustum[i][1] * y1 + this.m_Frustum[i][2] * z1 + this.m_Frustum[i][3] <= 0.0F && this.m_Frustum[i][0] * x2 + this.m_Frustum[i][1] * y1 + this.m_Frustum[i][2] * z1 + this.m_Frustum[i][3] <= 0.0F && this.m_Frustum[i][0] * x1 + this.m_Frustum[i][1] * y2 + this.m_Frustum[i][2] * z1 + this.m_Frustum[i][3] <= 0.0F && this.m_Frustum[i][0] * x2 + this.m_Frustum[i][1] * y2 + this.m_Frustum[i][2] * z1 + this.m_Frustum[i][3] <= 0.0F && this.m_Frustum[i][0] * x1 + this.m_Frustum[i][1] * y1 + this.m_Frustum[i][2] * z2 + this.m_Frustum[i][3] <= 0.0F && this.m_Frustum[i][0] * x2 + this.m_Frustum[i][1] * y1 + this.m_Frustum[i][2] * z2 + this.m_Frustum[i][3] <= 0.0F && this.m_Frustum[i][0] * x1 + this.m_Frustum[i][1] * y2 + this.m_Frustum[i][2] * z2 + this.m_Frustum[i][3] <= 0.0F && this.m_Frustum[i][0] * x2 + this.m_Frustum[i][1] * y2 + this.m_Frustum[i][2] * z2 + this.m_Frustum[i][3] <= 0.0F) {
                 return false;
             }
         }
 
         return true;
     }
-
 
 
     public boolean cubeInFrustum(AxisAlignedBB aabb) {

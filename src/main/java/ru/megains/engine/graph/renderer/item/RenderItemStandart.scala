@@ -6,14 +6,14 @@ import ru.megains.engine.graph.renderer.mesh.Mesh
 import ru.megains.engine.graph.renderer.texture.TextureManager
 import ru.megains.game.item.Item
 
-class RenderItemStandart(val item:Item) extends ARenderItem{
+class RenderItemStandart(val item: Item) extends ARenderItem {
 
-  override val inventoryMesh: Mesh = null
+    override val inventoryMesh: Mesh = null
 
-  override def renderInInventory(shaderProgram: ShaderProgram, textureManager: TextureManager): Unit = {}
+    override def renderInInventory(shaderProgram: ShaderProgram, textureManager: TextureManager): Unit = {}
 
-  override val worldMesh: Mesh = null
+    override val worldMesh: Mesh = null
 
-  override def renderInWorld(shaderProgram: ShaderProgram, textureManager: TextureManager): Unit = {
-  }
+    override def renderInWorld(shaderProgram: ShaderProgram, textureManager: TextureManager): Unit = {
+    }
 }

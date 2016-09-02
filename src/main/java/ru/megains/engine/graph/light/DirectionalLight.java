@@ -30,8 +30,10 @@ public class DirectionalLight {
     public float getShadowPosMult() {
         return shadowPosMult;
     }
+
     OrthoCoords orthoCords;
-    public OrthoCoords getOrthoCoords(){
+
+    public OrthoCoords getOrthoCoords() {
 
         return orthoCords;
     }

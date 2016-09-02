@@ -2,6 +2,7 @@ package ru.megains.game.world
 
 
 import org.joml.Vector3f
+import ru.megains.engine.graph.WorldRenderer
 import ru.megains.game.block.Block
 import ru.megains.game.blockdata.{BlockDirection, BlockWorldPos}
 import ru.megains.game.entity.Entity
@@ -17,79 +18,81 @@ import scala.collection.mutable.ArrayBuffer
 import scala.util.Random
 
 
-class World(val length: Int,val height: Int,val width: Int) {
+class World(val length: Int, val height: Int, val width: Int) {
     val chunks: mutable.HashMap[Long, Chunk] = new mutable.HashMap[Long, Chunk]
-    var worldRenderer:WorldRenderer = null
-    val rand:Random = new Random()
-    val entitiesItem:ArrayBuffer[EntityItem] = new ArrayBuffer[EntityItem]()
-
+    var worldRenderer: WorldRenderer = _
+    val rand: Random = new Random()
+    val entities: ArrayBuffer[Entity] = new ArrayBuffer[Entity]()
 
 
     def init() {
 
 
-        for(x <- -4 to 3;y <- -4 to 3;z <- -4 to 3){
-            chunks += Chunk.getIndex(x, y, z) -> ChunkLoader.load(this,x,y,z)
+        for (x <- -4 to 3; y <- -4 to 3; z <- -4 to 3) {
+            chunks += Chunk.getIndex(x, y, z) -> ChunkLoader.load(this, x, y, z)
         }
 
-        for(i<-1 to 10){
-            val entity = new EntityItem(GameRegister.getItemById(rand.nextInt(4)+2))
+        for (i <- 1 to 10) {
+            val entity = new EntityItem(GameRegister.getItemById(rand.nextInt(4) + 2))
             entity.setWorld(this)
-            entity.setPosition(rand.nextInt(i)-i/2,5,rand.nextInt(i)-i/2)
-            entitiesItem += entity
+            entity.setPosition(rand.nextInt(i) - i / 2, 5, rand.nextInt(i) - i / 2)
+            entities += entity
         }
 
-        
+
     }
 
-    def update(){
-        entitiesItem.foreach(_.update())
+    def update() {
+        entities.foreach(_.update())
 
         chunks.values.foreach(_.updateRandomBlocks(rand))
 
 
     }
 
-    def  setBlock(pos:BlockWorldPos ,block:Block ) {
-        if(!validBlockPos(pos)){return;}
+    def setBlock(pos: BlockWorldPos, block: Block) {
+        if (!validBlockPos(pos)) {
+            return;
+        }
 
 
-        getChunk(pos).setBlockWorldCord(pos,block)
+        getChunk(pos).setBlockWorldCord(pos, block)
         worldRenderer.reRender(pos)
     }
 
-    def  setAirBlock(pos:BlockWorldPos) {
-        setBlock(pos,Blocks.air)
+    def setAirBlock(pos: BlockWorldPos) {
+        setBlock(pos, Blocks.air)
     }
 
 
-    def setEntity(entity:Entity): Unit ={
-        entitiesItem += entity.asInstanceOf
+    def spawnEntityInWorld(entity: Entity): Unit = {
+        entities += entity
     }
 
     def getChunk(blockPos: BlockWorldPos): Chunk = getChunk(blockPos.worldX >> 4, blockPos.worldY >> 4, blockPos.worldZ >> 4)
 
     def getChunk(x: Int, y: Int, z: Int): Chunk = {
-        try{
+        try {
             chunks(Chunk.getIndex(x, y, z))
 
-        }catch {
-            case e:NoSuchElementException =>
-                println(x+" "+y+" "+z)
+        } catch {
+            case e: NoSuchElementException =>
+                println(x + " " + y + " " + z)
                 null
         }
 
     }
-    def isAirBlock(blockPos: BlockWorldPos): Boolean = if ( validBlockPos(blockPos)) getChunk(blockPos).isAirBlockWorldCord(blockPos) else true
+
+    def isAirBlock(blockPos: BlockWorldPos): Boolean = if (validBlockPos(blockPos)) getChunk(blockPos).isAirBlockWorldCord(blockPos) else true
 
 
     def getBlock(pos: BlockWorldPos): AMultiBlock = if (!validBlockPos(pos)) Blocks.multiAir else getChunk(pos).getBlockWorldCord(pos)
 
     def validBlockPos(pos: BlockWorldPos): Boolean = !(pos.worldZ < -width || pos.worldY < -height || pos.worldX < -length) && !(pos.worldZ > width - 1 || pos.worldY > height - 1 || pos.worldX > length - 1)
 
-    def isOpaqueCube(blockPos:BlockWorldPos ):Boolean = getBlock(blockPos).isOpaqueCube
+    def isOpaqueCube(blockPos: BlockWorldPos): Boolean = getBlock(blockPos).isOpaqueCube
 
-    def addBlocksInList(aabb: AxisAlignedBB): mutable.ArrayBuffer[AxisAlignedBB] ={
+    def addBlocksInList(aabb: AxisAlignedBB): mutable.ArrayBuffer[AxisAlignedBB] = {
         var x0: Int = Math.floor(aabb.getMinX).toInt
         var y0: Int = Math.floor(aabb.getMinY).toInt
         var z0: Int = Math.floor(aabb.getMinZ).toInt
@@ -115,20 +118,20 @@ class World(val length: Int,val height: Int,val width: Int) {
             z1 = width
         }
         var blockPos: BlockWorldPos = null
-        val aabbs =  mutable.ArrayBuffer[AxisAlignedBB]()
+        val aabbs = mutable.ArrayBuffer[AxisAlignedBB]()
 
-        for(x<-x0 to x1;y<-y0 to y1;z<-z0 to z1) {
+        for (x <- x0 to x1; y <- y0 to y1; z <- z0 to z1) {
 
             blockPos = new BlockWorldPos(x, y, z)
             if (!isAirBlock(blockPos)) {
-                getBlock(blockPos).addCollisionList(blockPos,aabbs)
+                getBlock(blockPos).addCollisionList(blockPos, aabbs)
             }
         }
         aabbs
     }
 
-    def  save(): Unit = {
-          chunks.values.foreach(_.save())
+    def save(): Unit = {
+        chunks.values.foreach(_.save())
     }
 
     def rayTraceBlocks(vec1: Vector3f, vec32: Vector3f, stopOnLiquid: Boolean, ignoreBlockWithoutBoundingBox: Boolean, returnLastUncollidableBlock: Boolean): RayTraceResult = {
@@ -144,9 +147,9 @@ class World(val length: Int,val height: Int,val width: Int) {
         val raytraceresult2: RayTraceResult = null
 
 
-        var k1:Int = 200
-        while (k1 >=0) {
-            k1-=1
+        var k1: Int = 200
+        while (k1 >= 0) {
+            k1 -= 1
             if (l == i && i1 == j && j1 == k) {
                 return if (returnLastUncollidableBlock) raytraceresult2 else null
             }
@@ -228,8 +231,6 @@ class World(val length: Int,val height: Int,val width: Int) {
         if (returnLastUncollidableBlock) raytraceresult2 else null
 
     }
-
-
 
 
 }

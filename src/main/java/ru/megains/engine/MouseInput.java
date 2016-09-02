@@ -24,15 +24,14 @@ public class MouseInput {
     private boolean rightButtonPressed = false;
 
     private GLFWCursorPosCallback cursorPosCallback;
-    
+
     private GLFWCursorEnterCallback cursorEnterCallback;
-    
+
     private GLFWMouseButtonCallback mouseButtonCallback;
 
     private GLFWScrollCallback scrollCallback;
 
-    public int scroll =0;
-
+    public int scroll = 0;
 
 
     public MouseInput() {
@@ -44,7 +43,7 @@ public class MouseInput {
     public void init(Window window) {
 
 
-      //  glfwSetInputMode(window.getWindowHandle(),GLFW_CURSOR,GLFW_CURSOR_DISABLED);
+        //  glfwSetInputMode(window.getWindowHandle(),GLFW_CURSOR,GLFW_CURSOR_DISABLED);
 
         glfwSetCursorPosCallback(window.getWindowHandle(), cursorPosCallback = new GLFWCursorPosCallback() {
             @Override
@@ -85,7 +84,7 @@ public class MouseInput {
     public void input(Window window) {
         displVec.x = 0;
         displVec.y = 0;
-        if (inWindow&&isMouseGrade) {
+        if (inWindow && isMouseGrade) {
             double deltax = currentPos.x - previousPos.x;
             double deltay = currentPos.y - previousPos.y;
             boolean rotateX = deltax != 0;
@@ -100,26 +99,26 @@ public class MouseInput {
         previousPos.x = currentPos.x;
         previousPos.y = currentPos.y;
 
-        if(window.isKeyPressed(GLFW_KEY_M)){
+        if (window.isKeyPressed(GLFW_KEY_M)) {
             mouseGrade(window.getWindowHandle());
         }
     }
 
     boolean isMouseGrade = false;
-    int i =0;
+    int i = 0;
 
-    public void mouseGrade(long window){
+    public void mouseGrade(long window) {
         i++;
-       if(i==5) {
-           i=0;
-           if (isMouseGrade) {
+        if (i == 5) {
+            i = 0;
+            if (isMouseGrade) {
 
-               glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-           } else {
-               glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-           }
-           isMouseGrade = !isMouseGrade;
-       }
+                glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+            } else {
+                glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+            }
+            isMouseGrade = !isMouseGrade;
+        }
     }
 
 

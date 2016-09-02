@@ -1,25 +1,24 @@
 package ru.megains.engine;
 
 
-
 public class Timer {
 
     private double lastLoopTime;
     private int targetTick;
     private int tick;
-  //  private float ellapsedTime =0f;
+    //  private float ellapsedTime =0f;
 
 
     public Timer(int tick) {
         this.targetTick = tick;
     }
 
-    public void update(){
+    public void update() {
 
-        tick = (int) Math.floor((getTime() - lastLoopTime)*targetTick);
-        lastLoopTime+=(1f/targetTick)*tick;
-        if(tick>20){
-            tick=20;
+        tick = (int) Math.floor((getTime() - lastLoopTime) * targetTick);
+        lastLoopTime += (1f / targetTick) * tick;
+        if (tick > 20) {
+            tick = 20;
         }
 
     }

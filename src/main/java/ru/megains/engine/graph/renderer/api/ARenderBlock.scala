@@ -7,5 +7,5 @@ import ru.megains.game.world.World
 
 abstract class ARenderBlock {
 
-  def render(block: Block,world: World,posWorld:BlockWorldPos,posRender:BlockWorldPos,offset:MultiBlockPos =MultiBlockPos.default)
+    def render(block: Block, world: World, posWorld: BlockWorldPos, posRender: BlockWorldPos, offset: MultiBlockPos = MultiBlockPos.default)
 }

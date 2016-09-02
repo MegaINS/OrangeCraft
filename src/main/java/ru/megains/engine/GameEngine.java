@@ -4,9 +4,7 @@ package ru.megains.engine;
 import ru.megains.engine.graph.RenderChunk;
 import ru.megains.engine.graph.text.Hud;
 
-public class GameEngine implements Runnable  {
-
-
+public class GameEngine implements Runnable {
 
 
     private IGameLogic gameLogic;
@@ -17,16 +15,16 @@ public class GameEngine implements Runnable  {
     private final Thread gameLoopThread;
 
 
-    public GameEngine(IGameLogic gameLogic, Window window){
+    public GameEngine(IGameLogic gameLogic, Window window) {
         this.window = window;
         timer = new Timer(20);
-       mouseInput = new MouseInput();
+        mouseInput = new MouseInput();
         this.gameLogic = gameLogic;
-        this.gameLoopThread = new Thread(this,"GAME_ENGINE");
+        this.gameLoopThread = new Thread(this, "GAME_ENGINE");
     }
 
 
-    public void start(){
+    public void start() {
 
         gameLoopThread.start();
 
@@ -45,50 +43,45 @@ public class GameEngine implements Runnable  {
         }
     }
 
-   public static int frames = 0;
+    public static int frames = 0;
 
-    void gameLoop(){
-
-
+    void gameLoop() {
 
 
         boolean running = true;
         long lastTime = System.currentTimeMillis();
 
-        int tick =0;
+        int tick = 0;
         timer.init();
-        while (running && !window.windowShouldClose()){
-
-
+        while (running && !window.windowShouldClose()) {
 
 
             timer.update();
-            for(int i=0;i<timer.getTick();++i){
+            for (int i = 0; i < timer.getTick(); ++i) {
                 update();
                 tick++;
             }
-
 
 
             render();
             ++frames;
 
 
-
-            while(System.currentTimeMillis() >= lastTime + 1000L) {
-                System.out.println(frames + " fps, "+tick+" tick, "+ RenderChunk.chunkRender/(frames==0?1:frames) +" chunkRender, "+ RenderChunk.chunkUpdate+" chunkUpdate");
-                RenderChunk.chunkRender=0;
-                RenderChunk.chunkUpdate=0;
+            while (System.currentTimeMillis() >= lastTime + 1000L) {
+                System.out.println(frames + " fps, " + tick + " tick, " + RenderChunk.chunkRender / (frames == 0 ? 1 : frames) + " chunkRender, " + RenderChunk.chunkUpdate + " chunkUpdate");
+                RenderChunk.chunkRender = 0;
+                RenderChunk.chunkUpdate = 0;
                 lastTime += 1000L;
                 Hud.frames = frames;
                 frames = 0;
-                tick =0;
+                tick = 0;
                 printMemoryUsage();
             }
         }
     }
 
     static double MB = 1024 * 1024;
+
     static void printMemoryUsage() {
         Runtime r = Runtime.getRuntime();
         System.out.printf("Memory usage: total=%4.2f MB, free=%4.2f MB, max=%4.2f MB\n",
@@ -100,19 +93,22 @@ public class GameEngine implements Runnable  {
         mouseInput.init(window);
         gameLogic.init();
     }
-    void update(){
+
+    void update() {
         mouseInput.input(window);
-         gameLogic.input();
+        gameLogic.input();
         gameLogic.update(mouseInput);
     }
-    void render(){
+
+    void render() {
 
         gameLogic.render();
 
         window.update();
 
     }
-    void cleanup(){
+
+    void cleanup() {
         gameLogic.cleanup();
     }
 

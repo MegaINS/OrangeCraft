@@ -1,24 +1,20 @@
 package ru.megains.game.register
 
 
-
-
-
-
 import scala.collection.mutable
 
 
-class RegisterNamespace[T]{
+class RegisterNamespace[T] {
 
-    private val idObject: mutable.HashMap[Int,T] = new mutable.HashMap[Int,T]
-    private val objectId: mutable.HashMap[T,Int] = new mutable.HashMap[T,Int]
-    private val nameObject: mutable.HashMap[String,T] = new mutable.HashMap[String,T]
+    private val idObject: mutable.HashMap[Int, T] = new mutable.HashMap[Int, T]
+    private val objectId: mutable.HashMap[T, Int] = new mutable.HashMap[T, Int]
+    private val nameObject: mutable.HashMap[String, T] = new mutable.HashMap[String, T]
 
 
-    def registerObject(id: Int,name:String, Object: T) = {
+    def registerObject(id: Int, name: String, Object: T) = {
         idObject += id -> Object
         objectId += Object -> id
-        nameObject += name ->Object
+        nameObject += name -> Object
     }
 
     def getObjects = idObject.values
@@ -27,13 +23,9 @@ class RegisterNamespace[T]{
 
     def getObject(name: String): T = nameObject(name)
 
-    def getIdByObject(Object: T): Int = {
-        if(objectId.contains(Object)){
-            objectId.get(Object).get
-        }else{
-            -1
-        }
-    }
+    def getIdByObject(Object: T): Int = objectId.getOrElse(Object,-1)
+
+
 
     def contains(id: Int): Boolean = {
         idObject.contains(id)
@@ -46,7 +38,6 @@ class RegisterNamespace[T]{
     def contains(name: String): Boolean = {
         nameObject.contains(name)
     }
-    
-    
-    
+
+
 }

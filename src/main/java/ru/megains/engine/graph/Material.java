@@ -1,7 +1,7 @@
 package ru.megains.engine.graph;
 
 import org.joml.Vector4f;
-
+@Deprecated
 public class Material {
 
 
@@ -12,21 +12,21 @@ public class Material {
     public Vector4f emission;
     public float shininess;
 
-    public Material(Texture texture){
-      this.texture = texture;
+    public Material(Texture texture) {
+        this.texture = texture;
 
         ambient = new Vector4f();
-        diffuse= new Vector4f();
-        specular= new Vector4f();
-        emission= new Vector4f();
-  }
+        diffuse = new Vector4f();
+        specular = new Vector4f();
+        emission = new Vector4f();
+    }
 
     public Texture getTexture() {
         return texture;
     }
 
     public boolean isTextured() {
-        return texture!=null;
+        return texture != null;
     }
 
 

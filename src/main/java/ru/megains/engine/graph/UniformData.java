@@ -5,9 +5,9 @@ import java.nio.FloatBuffer;
 public class UniformData {
 
     private final int uniformLocation;
-    
+
     private FloatBuffer floatBuffer;
-    
+
     public UniformData(int uniformLocation) {
         this.uniformLocation = uniformLocation;
     }

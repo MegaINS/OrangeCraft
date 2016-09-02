@@ -17,15 +17,15 @@ public class PointLight {
 
     public PointLight() {
 
-          position = new Vector4f();
+        position = new Vector4f();
 
-          ambient= new Vector4f();
+        ambient = new Vector4f();
 
-          diffuse= new Vector4f();
+        diffuse = new Vector4f();
 
-          specular= new Vector4f();
+        specular = new Vector4f();
 
-          attenuation= new Vector3f();
+        attenuation = new Vector3f();
 
     }
 

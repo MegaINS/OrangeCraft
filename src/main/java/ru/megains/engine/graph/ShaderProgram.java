@@ -23,7 +23,6 @@ public class ShaderProgram {
     private final Map<String, UniformData> uniforms;
 
 
-
     public ShaderProgram() throws Exception {
 
         programId = glCreateProgram();
@@ -83,15 +82,13 @@ public class ShaderProgram {
     }
 
 
-
-
     public void setUniform(String uniformName, int value) {
 
         UniformData uniformData = uniforms.get(uniformName);
         if (uniformData == null) {
-           // System.out.println("Uniform [" + uniformName + "] has nor been created");
+            // System.out.println("Uniform [" + uniformName + "] has nor been created");
             return;
-          //  throw new RuntimeException("Uniform [" + uniformName + "] has nor been created");
+            //  throw new RuntimeException("Uniform [" + uniformName + "] has nor been created");
         }
         glUniform1i(uniformData.getUniformLocation(), value);
     }
@@ -111,6 +108,7 @@ public class ShaderProgram {
         }
         glUniform3f(uniformData.getUniformLocation(), value.x, value.y, value.z);
     }
+
     public void setUniform(String uniformName, Vector4f value) {
         UniformData uniformData = uniforms.get(uniformName);
         if (uniformData == null) {
@@ -183,7 +181,6 @@ public class ShaderProgram {
             glDeleteProgram(programId);
         }
     }
-
 
 
 }

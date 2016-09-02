@@ -7,12 +7,12 @@ import ru.megains.game.register.GameRegister
 import scala.collection.immutable.HashMap
 
 
-class TextureMap() extends ATexture with TTextureRegister{
+class TextureMap() extends ATexture with TTextureRegister {
 
-    var list: List[TextureAtlas] = null
-    var map:Array[Array[Boolean]] =null
-    var width:Int =1
-    var height:Int =1
+    var list: List[TextureAtlas] = _
+    var map: Array[Array[Boolean]] = _
+    var width: Int = 1
+    var height: Int = 1
     var textureBlockMap: HashMap[String, TextureAtlas] = new HashMap[String, TextureAtlas]
     val missingTexture = new TextureAtlas("missing")
 
@@ -29,7 +29,7 @@ class TextureMap() extends ATexture with TTextureRegister{
 
     }
 
-    def loadTextureAtlas(): Unit ={
+    def loadTextureAtlas(): Unit = {
 
         textureBlockMap.values.foreach(_.loadTexture())
 
@@ -42,65 +42,68 @@ class TextureMap() extends ATexture with TTextureRegister{
 
     }
 
-    override def registerTexture(textureName : String): TextureAtlas={
+    override def registerTexture(textureName: String): TextureAtlas = {
         val tTexture = new TextureAtlas(textureName)
-        if(!tTexture.isMissingTexture){
+        if (!tTexture.isMissingTexture) {
             textureBlockMap += textureName -> tTexture
             tTexture
-        }else{
-            println("Missing texture = "+textureName)
+        } else {
+            println("Missing texture = " + textureName)
             missingTexture
         }
     }
 
-    def updateTexture(): Unit ={
+    def updateTexture(): Unit = {
         glBindTexture(GL_TEXTURE_2D, getGlTextureId)
-        list.foreach(_.updateTexture(width,height))
+        list.foreach(_.updateTexture(width, height))
     }
 
-    def createTexture(): Unit ={
+    def createTexture(): Unit = {
 
-        map = Array.ofDim[Boolean](width,height)
-        list.foreach((tex:TextureAtlas)=>{
-            val size:Int = tex.height
-            searchBox(size,tex)
+        map = Array.ofDim[Boolean](width, height)
+        list.foreach((tex: TextureAtlas) => {
+            val size: Int = tex.height
+            searchBox(size, tex)
 
         })
-        glBindTexture(GL_TEXTURE_2D,getGlTextureId)
+        glBindTexture(GL_TEXTURE_2D, getGlTextureId)
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1)
+
 
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST)
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width , height , 0, GL_RGBA, GL_UNSIGNED_BYTE, 0)
-        println("Create texture block map "+width+"-"+height+" pixels")
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0)
+        println("Create texture block map " + width + "-" + height + " pixels")
     }
 
-    def searchBox(size:Int,tex:TextureAtlas): Boolean ={
+    def searchBox(size: Int, tex: TextureAtlas): Boolean = {
 
-        for(x <- 0 to (map.length - size);y <- 0 to (map(x).length - size)){
+        for (x <- 0 to (map.length - size); y <- 0 to (map(x).length - size)) {
             var boxEmpty: Boolean = true
 
-            for( i<- x to x+size-1;j<-y to y+size-1){
-                if(map(i)(j)) boxEmpty=false
+            for (i <- x until x + size; j <- y until y + size) {
+                if (map(i)(j)) boxEmpty = false
             }
 
-            if(boxEmpty){
-                for(i<-x to x+size-1;j<-y to y+size-1){map(i)(j)=true}
-                tex.startX =x
-                tex.startY =y
+            if (boxEmpty) {
+                for (i <- x until x + size; j <- y until y + size) {
+                    map(i)(j) = true
+                }
+                tex.startX = x
+                tex.startY = y
                 return true
 
             }
         }
         resizeMap()
-        searchBox(size,tex)
+        searchBox(size, tex)
     }
 
-    def resizeMap()={
-        width+=1
-        height+=1
-        val temp = Array.ofDim[Boolean](width,height)
-        for(x<-map.indices;y<- map(x).indices){
+    def resizeMap() = {
+        width += 1
+        height += 1
+        val temp = Array.ofDim[Boolean](width, height)
+        for (x <- map.indices; y <- map(x).indices) {
             temp(x)(y) = map(x)(y)
         }
         map = temp

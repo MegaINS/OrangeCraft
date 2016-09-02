@@ -9,27 +9,20 @@ import java.nio.ByteBuffer;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL30.glGenerateMipmap;
-
+@Deprecated
 public class Texture {
 
-    private  int id;
+    private int id;
 
-    private  int width;
+    private int width;
 
-    private  int height;
+    private int height;
 
     public void setId(int id) {
         this.id = id;
     }
 
-    /**
-     * Creates an empty texture.
-     *
-     * @param width Width of the texture
-     * @param height Height of the texture
-     * @param pixelFormat Specifies the format of the pixel data (GL_RGBA, etc.) 
-     * @throws Exception
-     */
+
     public Texture(int width, int height, int pixelFormat) throws Exception {
         this.id = glGenTextures();
         this.width = width;
@@ -38,16 +31,18 @@ public class Texture {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, this.width, this.height, 0, pixelFormat, GL_FLOAT, (ByteBuffer) null);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-       // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-      //  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        //  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     }
 
     public Texture(String fileName) {
         this(Texture.class.getResourceAsStream(fileName));
     }
-    public Texture(int id){
+
+    public Texture(int id) {
         this.id = id;
     }
+
     public Texture(InputStream is) {
 
 
@@ -75,8 +70,7 @@ public class Texture {
         buf.flip();
 
 
-
-        // Create a new OpenGL texture 
+        // Create a new OpenGL texture
         this.id = glGenTextures();
         // Bind the texture
         glBindTexture(GL_TEXTURE_2D, this.id);

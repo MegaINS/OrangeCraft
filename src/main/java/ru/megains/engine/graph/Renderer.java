@@ -9,10 +9,9 @@ import ru.megains.engine.graph.renderer.mesh.Mesh;
 import ru.megains.engine.graph.renderer.texture.TextureManager;
 import ru.megains.engine.graph.text.IHud;
 import ru.megains.engine.graph.text.Text;
-import ru.megains.game.CubeGame;
+import ru.megains.game.OrangeCraft;
 import ru.megains.game.blockdata.BlockWorldPos;
 import ru.megains.game.util.BlockAndPos;
-import ru.megains.game.world.WorldRenderer;
 
 import java.nio.FloatBuffer;
 
@@ -43,29 +42,26 @@ public class Renderer {
     public ShaderProgram hudShaderProgram;
     public TextureManager textureManager;
 
-  //  private ShaderProgram skyBoxShaderProgram;
+    //  private ShaderProgram skyBoxShaderProgram;
 
     private final float specularPower;
 
-    private CubeGame cubeGame;
+    private OrangeCraft cubeGame;
 
 
-
-    public Renderer(CubeGame cubeGame) {
+    public Renderer(OrangeCraft cubeGame) {
         this.cubeGame = cubeGame;
         transformation = new Transformation();
         specularPower = 10f;
     }
 
-    Text text ;
+    Text text;
+
     public void init(Window window, TextureManager textureManager) throws Exception {
         this.textureManager = textureManager;
 
 
-
-
-
-      //  setupSkyBoxShader();
+        //  setupSkyBoxShader();
 
         text = new Text("Hello");
 
@@ -73,11 +69,11 @@ public class Renderer {
         setupHudShader();
 
 
-      //  GL11.glClearDepth(1.0D);
-    //    GL11.glDepthFunc(GL_LEQUAL);
+        //  GL11.glClearDepth(1.0D);
+        //    GL11.glDepthFunc(GL_LEQUAL);
 
 
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
 
 
@@ -97,9 +93,6 @@ public class Renderer {
         glEnable(GL_CULL_FACE);
 
 
-
-
-
         glViewport(0, 0, window.getWidth(), window.getHeight());
         if (window.isResized()) {
 
@@ -110,22 +103,15 @@ public class Renderer {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
+        renderScene(window, camera, worldRenderer, frustum);
 
 
-        renderScene(window, camera, worldRenderer,frustum);
-
-
-
-
-     //   renderSkyBox(window, camera, scene);
+        //   renderSkyBox(window, camera, scene);
 
         renderHud(window, hud);
 
 
     }
-
-
-
 
 
 //    private void setupSkyBoxShader() throws Exception {
@@ -171,8 +157,6 @@ public class Renderer {
     }
 
 
-
-
 //    private void renderSkyBox(Window window, Camera camera, Scene scene) {
 //        SkyBox skyBox = scene.getSkyBox();
 //        if (skyBox != null) {
@@ -198,6 +182,7 @@ public class Renderer {
 
 
     public int a;
+
     public void renderScene(Window window, Camera camera,/*, Scene scene*/WorldRenderer worldRenderer, Frustum frustum) {
         sceneShaderProgram.bind();
 
@@ -206,38 +191,33 @@ public class Renderer {
         sceneShaderProgram.setUniform("projectionMatrix", projectionMatrix);
 
         // Render each mesh with the associated game Items
-            glEnable(GL_CULL_FACE);
-            //   glEnable(GL_BLEND);
+        glEnable(GL_CULL_FACE);
+        //   glEnable(GL_BLEND);
 
-            Matrix4f modelViewMatrix;
-            RenderChunk.clearRend();
-            scala.collection.Iterable<RenderChunk> renderChunks = worldRenderer.renderChunks().values();
-
-
-
-            scala.collection.Iterator<RenderChunk> iterable = renderChunks.iterator();
-            RenderChunk renderChunk;
-            while (iterable.hasNext()) {
-                renderChunk = iterable.next();
+        Matrix4f modelViewMatrix;
+        RenderChunk.clearRend();
+        scala.collection.Iterable<RenderChunk> renderChunks = worldRenderer.renderChunks().values();
 
 
-                if (frustum.cubeInFrustum(renderChunk.getCube())) {
-                    modelViewMatrix = transformation.buildChunkModelViewMatrix(renderChunk.chunk.position());
+        scala.collection.Iterator<RenderChunk> iterable = renderChunks.iterator();
+        RenderChunk renderChunk;
+        while (iterable.hasNext()) {
+            renderChunk = iterable.next();
 
-                    sceneShaderProgram.setUniform("modelViewMatrix", modelViewMatrix);
 
-                    renderChunk.render(0, sceneShaderProgram);
-                }
+            if (frustum.cubeInFrustum(renderChunk.getCube())) {
+                modelViewMatrix = transformation.buildChunkModelViewMatrix(renderChunk.chunk.position());
 
+                sceneShaderProgram.setUniform("modelViewMatrix", modelViewMatrix);
+
+                renderChunk.render(0, sceneShaderProgram);
             }
 
+        }
 
 
-
-
-
-       // GL11.glDepthMask(true);
-       // glDisable(GL_BLEND);
+        // GL11.glDepthMask(true);
+        // glDisable(GL_BLEND);
 
 //       for(Entity entity: worldRenderer.world.mobEntity)  {
 //
@@ -252,39 +232,31 @@ public class Renderer {
 //       }
 
 
-
-
 //       //
 
 //     //   glDisable(GL_DEPTH_TEST);
 //
 
-        worldRenderer.renderEntitiesItem(frustum,transformation,sceneShaderProgram);
+        worldRenderer.renderEntitiesItem(frustum, transformation, sceneShaderProgram);
 
 
+        glDisable(GL_CULL_FACE);
+        modelViewMatrix = transformation.buildTextModelViewMatrix(new BlockWorldPos(65, 65, 65));
+        sceneShaderProgram.setUniform("modelViewMatrix", modelViewMatrix);
 
+        text.getMesh().render(sceneShaderProgram, textureManager);
 
-            glDisable(GL_CULL_FACE);
-            modelViewMatrix = transformation.buildTextModelViewMatrix(new BlockWorldPos(65, 65, 65));
+        BlockAndPos bp = OrangeCraft.megaGame.blockAndPos;
+
+        if (bp != null) {
+            modelViewMatrix = transformation.buildBlockModelViewMatrix(bp.pos());
             sceneShaderProgram.setUniform("modelViewMatrix", modelViewMatrix);
-
-            text.getMesh().render(sceneShaderProgram,textureManager);
-
-            BlockAndPos bp = CubeGame.megaGame.blockAndPos;
-
-            if (bp != null) {
-                modelViewMatrix = transformation.buildBlockModelViewMatrix(bp.pos());
-                sceneShaderProgram.setUniform("modelViewMatrix", modelViewMatrix);
-                worldRenderer.renderBlockBounds(sceneShaderProgram);
-            }
+            worldRenderer.renderBlockBounds(sceneShaderProgram);
+        }
 
 
         sceneShaderProgram.unbind();
     }
-
-
-
-
 
 
     private void renderHud(Window window, IHud hud) {
@@ -295,7 +267,7 @@ public class Renderer {
             hudShaderProgram.bind();
 
 
-            Matrix4f ortho = transformation.getOrtho2DProjectionMatrix(0, window.getWidth(),  0,window.getHeight());
+            Matrix4f ortho = transformation.getOrtho2DProjectionMatrix(0, window.getWidth(), 0, window.getHeight());
             hudShaderProgram.setUniform("projectionMatrix", ortho);
 
             for (Text gameItem : hud.getGameItems().values()) {
@@ -303,18 +275,21 @@ public class Renderer {
 
                 Matrix4f projModelMatrix = transformation.buildOrtoProjModelMatrix(gameItem);
                 hudShaderProgram.setUniform("modelMatrix", projModelMatrix);
-                mesh.render(hudShaderProgram,textureManager);
+                mesh.render(hudShaderProgram, textureManager);
             }
 
             glEnable(GL_CULL_FACE);
-            if(cubeGame.guiScreen!=null){
+
+            cubeGame.guiManager.render();
+
+            if (cubeGame.guiScreen != null) {
                 cubeGame.guiScreen.render(this);
             }
 
             glEnable(GL_DEPTH_TEST);
             glDisable(GL_BLEND);
 
-          //  glEnable(GL_DEPTH_TEST);
+            //  glEnable(GL_DEPTH_TEST);
 
 
             hudShaderProgram.unbind();
@@ -322,7 +297,6 @@ public class Renderer {
 
         }
     }
-
 
 
     public void cleanup() {

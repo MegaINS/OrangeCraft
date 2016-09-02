@@ -7,45 +7,46 @@ import org.lwjgl.opengl.GL11._
 import org.newdawn.slick.opengl.PNGDecoder
 
 
-class TextureAtlas(val name:String) {
+class TextureAtlas(val name: String) {
 
-  var averageU: Float = _
-  var minV: Float = _
-  var minU: Float = _
-  var maxU: Float = _
-  var averageV: Float = _
-  var width: Int = _
-  var height: Int = _
-  var maxV: Float = _
+    var averageU: Float = _
+    var minV: Float = _
+    var minU: Float = _
+    var maxU: Float = _
+    var averageV: Float = _
+    var width: Int = _
+    var height: Int = _
+    var maxV: Float = _
 
- // io.Source.fromFile("/textures/"+ name+".png")
-  val is = getClass.getResourceAsStream("/textures/"+ name+".png")
-  var byteByf: ByteBuffer = null
-  var startX:Int = 0
-  var startY:Int =0
+    // io.Source.fromFile("/textures/"+ name+".png")
+    val is = getClass.getResourceAsStream("/textures/" + name + ".png")
+    var byteByf: ByteBuffer = _
+    var startX: Int = 0
+    var startY: Int = 0
 
-  def isMissingTexture = is == null
+    def isMissingTexture = is == null
 
 
-  def loadTexture(): Unit = {
+    def loadTexture(): Unit = {
 
-      val png = new PNGDecoder(is)
-      width = png.getWidth
-      height = png.getHeight
-      byteByf = ByteBuffer.allocateDirect(width*height*4)
-      png.decode(byteByf,width*4,PNGDecoder.RGBA)
-      byteByf.flip()
-  }
-  def updateTexture(widthAll:Float,heightAll:Float): Unit = {
-    minU = startX/widthAll
-    maxU =  (startX+width)/widthAll
-    minV = startY/heightAll
-    maxV = (startY+height)/heightAll
-    averageU = (minU+maxU)/2
-    averageV = (minV+maxV)/2
+        val png = new PNGDecoder(is)
+        width = png.getWidth
+        height = png.getHeight
+        byteByf = ByteBuffer.allocateDirect(width * height * 4)
+        png.decode(byteByf, width * 4, PNGDecoder.RGBA)
+        byteByf.flip()
+    }
 
-    glTexSubImage2D(GL11.GL_TEXTURE_2D, 0, startX, startY, width, height, GL_RGBA, GL_UNSIGNED_BYTE, byteByf)
-  }
+    def updateTexture(widthAll: Float, heightAll: Float): Unit = {
+        minU = startX / widthAll
+        maxU = (startX + width) / widthAll
+        minV = startY / heightAll
+        maxV = (startY + height) / heightAll
+        averageU = (minU + maxU) / 2
+        averageV = (minV + maxV) / 2
+
+        glTexSubImage2D(GL11.GL_TEXTURE_2D, 0, startX, startY, width, height, GL_RGBA, GL_UNSIGNED_BYTE, byteByf)
+    }
 
 
 }

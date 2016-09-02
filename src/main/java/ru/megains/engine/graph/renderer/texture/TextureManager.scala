@@ -8,28 +8,28 @@ import scala.collection.mutable
 class TextureManager {
 
     val textureMapBlock = new TextureMap()
-    val mapATexture:mutable.HashMap[String,ATexture] = new mutable.HashMap[String,ATexture]
+    val mapATexture: mutable.HashMap[String, ATexture] = new mutable.HashMap[String, ATexture]
 
 
-    def bindTexture(name:String) {
+    def bindTexture(name: String) {
 
-        val aTexture:ATexture =  getTexture(name)
+        val aTexture: ATexture = getTexture(name)
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, aTexture.getGlTextureId)
     }
 
     def loadTexture(name: String, aTexture: ATexture) = {
 
-        if(aTexture.loadTexture()){
+        if (aTexture.loadTexture()) {
             mapATexture += name -> aTexture
-        }else{
-            println("Error load texture "+name)
+        } else {
+            println("Error load texture " + name)
             mapATexture += name -> TextureManager.missingTexture
         }
 
     }
 
-    def getTexture(name:String): ATexture = {
-        mapATexture.getOrElse(name,default = {
+    def getTexture(name: String): ATexture = {
+        mapATexture.getOrElse(name, default = {
             val aTexture = new SimpleTexture(name)
             loadTexture(name, aTexture)
             aTexture
@@ -37,8 +37,9 @@ class TextureManager {
     }
 
 }
-object TextureManager{
+
+object TextureManager {
     val missingTexture = new SimpleTexture("missing")
     missingTexture.loadTexture()
-    val locationBlockTexture:String = "texture/blocks.png"
+    val locationBlockTexture: String = "texture/blocks.png"
 }

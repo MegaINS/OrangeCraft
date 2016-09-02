@@ -1,10 +1,25 @@
 package ru.megains.game.entity.player
 
 import ru.megains.game.entity.EntityLivingBase
+import ru.megains.game.item.ItemStack
+import ru.megains.game.register.Blocks
 
 
 class EntityPlayer extends EntityLivingBase(1.8f, 0.6f, 1.6f) {
-    setPosition(0,3, 0)
+
+    val inventory = new InventoryPlayer(this)
+    inventory.addItemStackToInventory(new ItemStack(Blocks.stone))
+    inventory.addItemStackToInventory(new ItemStack(Blocks.dirt))
+    inventory.addItemStackToInventory(new ItemStack(Blocks.grass))
+    inventory.addItemStackToInventory(new ItemStack(Blocks.glass))
+    inventory.addItemStackToInventory(new ItemStack(Blocks.micro2))
+    inventory.addItemStackToInventory(new ItemStack(Blocks.stone))
+    inventory.addItemStackToInventory(new ItemStack(Blocks.dirt))
+    inventory.addItemStackToInventory(new ItemStack(Blocks.grass))
+    inventory.addItemStackToInventory(new ItemStack(Blocks.glass))
+    inventory.addItemStackToInventory(new ItemStack(Blocks.micro2))
+
+    setPosition(0, 3, 0)
 
     def turn(xo: Float, yo: Float) {
         yRot += yo * 0.15f
@@ -21,18 +36,18 @@ class EntityPlayer extends EntityLivingBase(1.8f, 0.6f, 1.6f) {
         }
         if (yRot < 0.0F) {
             yRot += 360.0F
-          //  ydRot += 360.0F
+            //  ydRot += 360.0F
         }
     }
 
     def update(xo: Float, yo: Float, zo: Float) {
-       // lastTickPosition.set(position)
-     //   prevPosition.set(position)
+        // lastTickPosition.set(position)
+        //   prevPosition.set(position)
         if (yo > 0) {
         }
-      //  ydRot = yRot
+        //  ydRot = yRot
         //xdRot = xRot
-       // rotation.set(xRot, yRot, 0)
+        // rotation.set(xRot, yRot, 0)
         motionY = yo / 2
         moveFlying(xo, zo, if (onGround) 0.04f else 0.02f)
         move(motionX, motionY, motionZ)

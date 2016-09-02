@@ -1,10 +1,10 @@
 package ru.megains.engine.graph;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL12.*;
-import static org.lwjgl.opengl.GL14.*;
+import static org.lwjgl.opengl.GL12.GL_CLAMP_TO_EDGE;
+import static org.lwjgl.opengl.GL14.GL_TEXTURE_COMPARE_MODE;
 import static org.lwjgl.opengl.GL30.*;
-import static org.lwjgl.opengl.GL32.*;
+import static org.lwjgl.opengl.GL32.glFramebufferTexture;
 
 
 public class ShadowMap {
@@ -16,7 +16,7 @@ public class ShadowMap {
     private final int depthMapFBO;
 
     public int id;
-  //  private final Texture depthMap;
+    //  private final Texture depthMap;
 
     public ShadowMap() throws Exception {
 
@@ -38,7 +38,7 @@ public class ShadowMap {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_MAP_WIDTH, SHADOW_MAP_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
 
         // проверим на наличие ошибок
-     //   OPENGL_CHECK_FOR_ERRORS();
+        //   OPENGL_CHECK_FOR_ERRORS();
 
 
         depthMapFBO = glGenFramebuffers();
@@ -65,9 +65,6 @@ public class ShadowMap {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 
-
-
-
 //        // Create a FBO to render the depth map
 //        depthMapFBO = glGenFramebuffers();
 //
@@ -90,7 +87,6 @@ public class ShadowMap {
     }
 
 
-
     // public Texture getDepthMapTexture() {
 //        return depthMap;
 //    }
@@ -98,9 +94,10 @@ public class ShadowMap {
     public int getDepthMapFBO() {
         return depthMapFBO;
     }
-//
+
+    //
     public void cleanup() {
         glDeleteFramebuffers(depthMapFBO);
-      //  depthMap.cleanup();
+        //  depthMap.cleanup();
     }
 }
