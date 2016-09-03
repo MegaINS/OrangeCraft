@@ -23,9 +23,9 @@ class GuiManager(val orangeCraft: OrangeCraft) {
 
     def render(): Unit ={
         if (guiScreen != null) {
-            guiScreen.render(renderer)
+            guiScreen.render()
         }else{
-            guiInGame.values.filter(_!=null).foreach(_.render(renderer))
+            guiInGame.values.filter(_!=null).foreach(_.render())
         }
     }
 

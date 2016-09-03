@@ -2,16 +2,14 @@ package ru.megains.engine.graph.renderer.gui
 
 import java.awt.Color
 
+import org.joml.Vector3f
+import ru.megains.engine.graph.Renderer
 import ru.megains.engine.graph.renderer.mesh.{Mesh, MeshMaker}
 
-class Gui {
+object Gui {
     val xZero = 0.0f
     val yZero = 0.0f
     val zZero = 0.0f
-
-
-
-
 
 
     def createRect(width: Int, height: Int, color: Color): Mesh = {
@@ -41,5 +39,13 @@ class Gui {
         mm.addIndex(0, 3, 2)
         mm.makeMesh()
     }
+
+    def renderObject(xPos:Int,yPos:Int,mesh: Mesh,renderer:Renderer): Unit ={
+        val shaderProgram =  renderer.hudShaderProgram
+        shaderProgram.setUniform("modelMatrix", renderer.transformation.buildOrtoProjModelMatrix(xPos,yPos))
+        shaderProgram.setUniform("colour", new Vector3f(1f, 1f, 1f))
+        mesh.render(shaderProgram, renderer.textureManager)
+    }
+
 
 }

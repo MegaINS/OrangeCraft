@@ -7,7 +7,8 @@ import ru.megains.engine.MouseInput;
 import ru.megains.engine.Window;
 import ru.megains.engine.graph.Camera;
 import ru.megains.engine.graph.Renderer;
-import ru.megains.engine.graph.renderer.gui.GuiInventory;
+import ru.megains.engine.graph.WorldRenderer;
+import ru.megains.engine.graph.renderer.ItemRender;
 import ru.megains.engine.graph.renderer.gui.GuiManager;
 import ru.megains.engine.graph.renderer.gui.GuiScreen;
 import ru.megains.engine.graph.renderer.texture.TextureManager;
@@ -18,12 +19,12 @@ import ru.megains.game.blockdata.BlockSize;
 import ru.megains.game.blockdata.BlockWorldPos;
 import ru.megains.game.entity.item.EntityItem;
 import ru.megains.game.entity.player.EntityPlayer;
+import ru.megains.game.item.ItemStack;
 import ru.megains.game.multiblock.MultiBlockSingle$;
 import ru.megains.game.register.GameRegister;
 import ru.megains.game.util.BlockAndPos;
 import ru.megains.game.util.RayTraceResult;
 import ru.megains.game.world.World;
-import ru.megains.engine.graph.WorldRenderer;
 
 import java.util.Random;
 
@@ -34,6 +35,7 @@ public class OrangeCraft implements IGameLogic {
 
     public World world;
     public Renderer renderer;
+    public ItemRender itemRender;
     public Window window;
     private Camera camera;
     private Vector3f cameraInc;
@@ -44,9 +46,7 @@ public class OrangeCraft implements IGameLogic {
 
     public TextureManager textureManager;
 
-    public GuiScreen guiScreen;
-
-    public int blockSelect = 2;
+    private GuiScreen guiScreen;
 
 
     public GuiManager guiManager;
@@ -76,13 +76,14 @@ public class OrangeCraft implements IGameLogic {
         textureManager = new TextureManager();
         textureManager.loadTexture(TextureManager.locationBlockTexture(), textureManager.textureMapBlock());
         worldRenderer = new WorldRenderer(world, textureManager);
+        itemRender = new ItemRender(this);
 
         world.init();
         worldRenderer.init();
         renderer.init(window, textureManager);
         hud = new Hud(this);
         guiManager.init();
-        setGuiScreen(new GuiInventory());
+
 
         player = new EntityPlayer();
         player.setWorld(world);
@@ -90,16 +91,7 @@ public class OrangeCraft implements IGameLogic {
     }
 
 
-    public void setGuiScreen(GuiScreen screen) {
 
-        if (guiScreen != null) {
-            guiScreen.cleanup();
-        }
-        if (screen != null) {
-            screen.init();
-        }
-        guiScreen = screen;
-    }
 
     public void input() {
         cameraInc.set(0, 0, 0);
@@ -119,35 +111,6 @@ public class OrangeCraft implements IGameLogic {
             cameraInc.y = 1;
         }
 
-        if (window.isKeyPressed(GLFW_KEY_1)) {
-            blockSelect = 2;
-        }
-        if (window.isKeyPressed(GLFW_KEY_2)) {
-            blockSelect = 3;
-        }
-        if (window.isKeyPressed(GLFW_KEY_3)) {
-            blockSelect = 4;
-        }
-        if (window.isKeyPressed(GLFW_KEY_4)) {
-            blockSelect = 5;
-        }
-        if (window.isKeyPressed(GLFW_KEY_5)) {
-            blockSelect = 6;
-        }
-        if (window.isKeyPressed(GLFW_KEY_6)) {
-            blockSelect = 7;
-        }
-        if (window.isKeyPressed(GLFW_KEY_7)) {
-            blockSelect = 8;
-        }
-
-        if (window.isKeyPressed(GLFW_KEY_Q)) {
-            is++;
-            if (is == 10) {
-                isSet = !isSet;
-                is = 0;
-            }
-        }
 
         if (window.isKeyPressed(GLFW_KEY_O)) {
             iws++;
@@ -168,9 +131,8 @@ public class OrangeCraft implements IGameLogic {
 
     }
 
-    public int iw4s = 0;
-    public int iws = 0;
-    public int is = 0;
+    private int iw4s = 0;
+    private int iws = 0;
 
     public RayTraceResult result;
 
@@ -188,21 +150,9 @@ public class OrangeCraft implements IGameLogic {
 
         camera.setPosition(player.posX(), player.posY() + player.levelView(), player.posZ());
         camera.setRotation(player.xRot(), player.yRot(), 0);
-
-
-        if (mouseInput.scroll < 0) {
-            blockSelect--;
-            if (blockSelect < 2) {
-                blockSelect = 8;
-            }
-        } else if (mouseInput.scroll > 0) {
-            blockSelect++;
-            if (blockSelect > 8) {
-                blockSelect = 2;
-            }
-        }
-
+        player.inventory().changeStackSelect(mouseInput.scroll);
         mouseInput.scroll = 0;
+
 
         result = player.rayTrace(5, 0.1f);
 
@@ -211,11 +161,13 @@ public class OrangeCraft implements IGameLogic {
 
 
         if (result != null) {
-            if (isSet) {
-                isSetBlock(mouseInput);
+            ItemStack stack = player.inventory().getStackSelect();
+            if (stack != null) {
+                isSetBlock(mouseInput, Block.getBlockFromItem(stack.item()));
             } else {
                 isBreakBlock(mouseInput);
             }
+
         } else {
             blockAndPos = null;
         }
@@ -223,29 +175,26 @@ public class OrangeCraft implements IGameLogic {
         if (blockAndPos != null) {
             worldRenderer.updateBlockBounds(blockAndPos);
         }
-        //  worldRenderer.update();
 
 
     }
 
 
-    public boolean isSet = true;
+    private void isSetBlock(MouseInput mouseInput, Block block) {
 
-    public void isSetBlock(MouseInput mouseInput) {
 
-        Block selectBlock = Block.getBlockById(blockSelect);
         BlockWorldPos posTarget = result.getBlockWorldPos();
         BlockWorldPos posSet;
-        if (selectBlock.isFullBlock()) {
+        if (block.isFullBlock()) {
             posSet = posTarget.sum(result.sideHit);
         } else {
             posSet = new BlockWorldPos(posTarget.sum(result.sideHit), BlockSize.get(result.hitVec.x), BlockSize.get(result.hitVec.y), BlockSize.get(result.hitVec.z));
         }
 
 
-        if (selectBlock.isFullBlock()) {
+        if (block.isFullBlock()) {
             if (world.isAirBlock(posSet)) {
-                blockAndPos = new BlockAndPos(selectBlock, posSet);
+                blockAndPos = new BlockAndPos(block, posSet);
             } else {
                 blockAndPos = null;
             }
@@ -270,14 +219,14 @@ public class OrangeCraft implements IGameLogic {
                 z = 1;
             }
 
-            if (x + selectBlock.getPhysicsBody().getMaxX() > 1) {
-                x = 1 - selectBlock.getPhysicsBody().getMaxX();
+            if (x + block.getPhysicsBody().getMaxX() > 1) {
+                x = 1 - block.getPhysicsBody().getMaxX();
             }
-            if (y + selectBlock.getPhysicsBody().getMaxY() > 1) {
-                y = 1 - selectBlock.getPhysicsBody().getMaxY();
+            if (y + block.getPhysicsBody().getMaxY() > 1) {
+                y = 1 - block.getPhysicsBody().getMaxY();
             }
-            if (z + selectBlock.getPhysicsBody().getMaxZ() > 1) {
-                z = 1 - selectBlock.getPhysicsBody().getMaxZ();
+            if (z + block.getPhysicsBody().getMaxZ() > 1) {
+                z = 1 - block.getPhysicsBody().getMaxZ();
             }
             posSet = new BlockWorldPos(posSet, BlockSize.get(x), BlockSize.get(y), BlockSize.get(z));
 
@@ -285,10 +234,10 @@ public class OrangeCraft implements IGameLogic {
             if (world.getBlock(posTarget).isFullBlock()) {
 
                 if (world.isAirBlock(posSet)) {
-                    blockAndPos = new BlockAndPos(selectBlock, posSet);
+                    blockAndPos = new BlockAndPos(block, posSet);
                 } else {
-                    if (world.getBlock(posSet).isCanPut(posSet, selectBlock)) {
-                        blockAndPos = new BlockAndPos(selectBlock, posSet);
+                    if (world.getBlock(posSet).isCanPut(posSet, block)) {
+                        blockAndPos = new BlockAndPos(block, posSet);
                     } else {
                         blockAndPos = null;
                     }
@@ -302,62 +251,62 @@ public class OrangeCraft implements IGameLogic {
                 float z1 = posTarget.blockZ().value();
 
                 if (bd == BlockDirection.UP()) {
-                    if (y1 + selectBlock.getPhysicsBody().getMaxY() > 1) {
-                        y1 = 1 - selectBlock.getPhysicsBody().getMaxY();
+                    if (y1 + block.getPhysicsBody().getMaxY() > 1) {
+                        y1 = 1 - block.getPhysicsBody().getMaxY();
                     }
                 } else if (bd == BlockDirection.DOWN()) {
 
-                    if (y1 - selectBlock.getPhysicsBody().getMaxY() <= 0) {
+                    if (y1 - block.getPhysicsBody().getMaxY() <= 0) {
                         y1 = 0;
                     } else {
-                        y1 = y1 - selectBlock.getPhysicsBody().getMaxY();
+                        y1 = y1 - block.getPhysicsBody().getMaxY();
                     }
                 } else if (bd == BlockDirection.NORTH()) {
-                    if (z1 - selectBlock.getPhysicsBody().getMaxZ() <= 0) {
+                    if (z1 - block.getPhysicsBody().getMaxZ() <= 0) {
                         z1 = 0;
                     } else {
-                        z1 = z1 - selectBlock.getPhysicsBody().getMaxZ();
+                        z1 = z1 - block.getPhysicsBody().getMaxZ();
                     }
                 } else if (bd == BlockDirection.SOUTH()) {
-                    if (z1 + selectBlock.getPhysicsBody().getMaxZ() > 1) {
-                        z1 = 1 - selectBlock.getPhysicsBody().getMaxZ();
+                    if (z1 + block.getPhysicsBody().getMaxZ() > 1) {
+                        z1 = 1 - block.getPhysicsBody().getMaxZ();
                     }
                 } else if (bd == BlockDirection.WEST()) {
-                    if (x1 - selectBlock.getPhysicsBody().getMaxX() <= 0) {
+                    if (x1 - block.getPhysicsBody().getMaxX() <= 0) {
                         x1 = 0;
                     } else {
-                        x1 = x1 - selectBlock.getPhysicsBody().getMaxX();
+                        x1 = x1 - block.getPhysicsBody().getMaxX();
                     }
                 } else if (bd == BlockDirection.EAST()) {
-                    if (x1 + selectBlock.getPhysicsBody().getMaxX() > 1) {
-                        x1 = 1 - selectBlock.getPhysicsBody().getMaxX();
+                    if (x1 + block.getPhysicsBody().getMaxX() > 1) {
+                        x1 = 1 - block.getPhysicsBody().getMaxX();
                     }
                 }
 
-                if (x1 + selectBlock.getPhysicsBody().getMaxX() > 1) {
-                    x1 = 1 - selectBlock.getPhysicsBody().getMaxX();
+                if (x1 + block.getPhysicsBody().getMaxX() > 1) {
+                    x1 = 1 - block.getPhysicsBody().getMaxX();
                 }
-                if (y1 + selectBlock.getPhysicsBody().getMaxY() > 1) {
-                    y1 = 1 - selectBlock.getPhysicsBody().getMaxY();
+                if (y1 + block.getPhysicsBody().getMaxY() > 1) {
+                    y1 = 1 - block.getPhysicsBody().getMaxY();
                 }
-                if (z1 + selectBlock.getPhysicsBody().getMaxZ() > 1) {
-                    z1 = 1 - selectBlock.getPhysicsBody().getMaxZ();
+                if (z1 + block.getPhysicsBody().getMaxZ() > 1) {
+                    z1 = 1 - block.getPhysicsBody().getMaxZ();
                 }
 
                 posTarget = new BlockWorldPos(posTarget, BlockSize.get(x1), BlockSize.get(y1), BlockSize.get(z1));
 
 
-                if (world.getBlock(posTarget).isCanPut(posTarget, selectBlock)) {
+                if (world.getBlock(posTarget).isCanPut(posTarget, block)) {
 
-                    blockAndPos = new BlockAndPos(selectBlock, posTarget);
+                    blockAndPos = new BlockAndPos(block, posTarget);
                 } else {
 
 
                     if (world.isAirBlock(posSet)) {
-                        blockAndPos = new BlockAndPos(selectBlock, posSet);
+                        blockAndPos = new BlockAndPos(block, posSet);
                     } else {
-                        if (world.getBlock(posSet).isCanPut(posSet, selectBlock)) {
-                            blockAndPos = new BlockAndPos(selectBlock, posSet);
+                        if (world.getBlock(posSet).isCanPut(posSet, block)) {
+                            blockAndPos = new BlockAndPos(block, posSet);
                         } else {
                             blockAndPos = null;
                         }
@@ -377,7 +326,7 @@ public class OrangeCraft implements IGameLogic {
         }
     }
 
-    public void isBreakBlock(MouseInput mouseInput) {
+    private void isBreakBlock(MouseInput mouseInput) {
 
         if (result.block.isFullBlock()) {
             blockAndPos = new BlockAndPos(result.block, new BlockWorldPos(result.getBlockWorldPos()));
@@ -397,8 +346,9 @@ public class OrangeCraft implements IGameLogic {
     }
 
 
-    boolean clickL = false;
-    boolean clickP = false;
+    private boolean clickL = false;
+    private boolean clickP = false;
+
 
     @Override
     public void render() {
@@ -406,8 +356,8 @@ public class OrangeCraft implements IGameLogic {
         renderer.render(window, camera, hud, worldRenderer);
 
 
-
     }
+
 
     @Override
     public void cleanup() {

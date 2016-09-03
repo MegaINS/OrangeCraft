@@ -16,10 +16,10 @@ class EntityPlayer extends EntityLivingBase(1.8f, 0.6f, 1.6f) {
     inventory.addItemStackToInventory(new ItemStack(Blocks.stone))
     inventory.addItemStackToInventory(new ItemStack(Blocks.dirt))
     inventory.addItemStackToInventory(new ItemStack(Blocks.grass))
-    inventory.addItemStackToInventory(new ItemStack(Blocks.glass))
-    inventory.addItemStackToInventory(new ItemStack(Blocks.micro2))
+
 
     setPosition(0, 3, 0)
+
 
     def turn(xo: Float, yo: Float) {
         yRot += yo * 0.15f
@@ -66,6 +66,8 @@ class EntityPlayer extends EntityLivingBase(1.8f, 0.6f, 1.6f) {
         }
     }
 
-    override def update(): Unit = ???
+    override def update(): Unit = {
+
+    }
 
 }

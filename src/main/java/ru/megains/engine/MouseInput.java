@@ -34,7 +34,7 @@ public class MouseInput {
     public int scroll = 0;
 
 
-    public MouseInput() {
+    MouseInput() {
         previousPos = new Vector2d(-1, -1);
         currentPos = new Vector2d(0, 0);
         displVec = new Vector2f();
@@ -70,7 +70,7 @@ public class MouseInput {
         glfwSetScrollCallback(window.getWindowHandle(), scrollCallback = new GLFWScrollCallback() {
             @Override
             public void invoke(long window, double xoffset, double yoffset) {
-                scroll = (int) yoffset;
+                scroll = (int) yoffset *-1;
             }
         });
 
@@ -81,7 +81,8 @@ public class MouseInput {
         return displVec;
     }
 
-    public void input(Window window) {
+    void input(Window window) {
+
         displVec.x = 0;
         displVec.y = 0;
         if (inWindow && isMouseGrade) {
@@ -104,10 +105,10 @@ public class MouseInput {
         }
     }
 
-    boolean isMouseGrade = false;
-    int i = 0;
+    private boolean isMouseGrade = false;
+    private int i = 0;
 
-    public void mouseGrade(long window) {
+    private void mouseGrade(long window) {
         i++;
         if (i == 5) {
             i = 0;

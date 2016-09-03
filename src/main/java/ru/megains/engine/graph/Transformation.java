@@ -31,7 +31,7 @@ public class Transformation {
 
     private final Matrix4f orthoModelMatrix;
 
-    public Transformation() {
+    Transformation() {
         projectionMatrix = new Matrix4f();
         modelMatrix = new Matrix4f();
         modelViewMatrix = new Matrix4f();
@@ -44,11 +44,11 @@ public class Transformation {
         lightViewMatrix = new Matrix4f();
     }
 
-    public Matrix4f getProjectionMatrix() {
+    Matrix4f getProjectionMatrix() {
         return projectionMatrix;
     }
 
-    public Matrix4f updateProjectionMatrix(float fov, float width, float height, float zNear, float zFar, Camera camera) {
+    Matrix4f updateProjectionMatrix(float fov, float width, float height, float zNear, float zFar, Camera camera) {
         float aspectRatio = width / height;
         projectionMatrix.identity();
         projectionMatrix.perspective(fov, aspectRatio, zNear, zFar);
@@ -80,11 +80,11 @@ public class Transformation {
         return orthoProjMatrix;
     }
 
-    public Matrix4f getViewMatrix() {
+    Matrix4f getViewMatrix() {
         return viewMatrix;
     }
 
-    public Matrix4f updateViewMatrix(Camera camera) {
+    Matrix4f updateViewMatrix(Camera camera) {
         return updateGenericViewMatrix(camera.getPosition(), camera.getRotation(), viewMatrix);
     }
 
@@ -111,14 +111,14 @@ public class Transformation {
         return matrix;
     }
 
-    public final Matrix4f getOrtho2DProjectionMatrix(float left, float right, float bottom, float top) {
+    final Matrix4f getOrtho2DProjectionMatrix(float left, float right, float bottom, float top) {
         ortho2DMatrix.identity();
         // ortho2DMatrix.setOrtho2D(left, right, bottom, top);
         ortho2DMatrix.setOrtho(left, right, bottom, top, -100, 2000);
         return ortho2DMatrix;
     }
 
-    public Matrix4f buildTextModelViewMatrix(BlockWorldPos blockPos) {
+    Matrix4f buildTextModelViewMatrix(BlockWorldPos blockPos) {
         //    Vector3f rotation = gameItem.getRotation();
         modelMatrix.identity().translate(blockPos.worldX(), blockPos.worldY(), blockPos.worldZ())
 //                rotateX((float)Math.toRadians(-rotation.x)).
@@ -129,7 +129,7 @@ public class Transformation {
         return modelViewMatrix.set(modelMatrix);//.mul(modelMatrix);
     }
 
-    public Matrix4f buildBlockModelViewMatrix(BlockWorldPos blockPos) {
+    Matrix4f buildBlockModelViewMatrix(BlockWorldPos blockPos) {
         //    Vector3f rotation = gameItem.getRotation();
         modelMatrix.identity().translate(blockPos.worldX() + blockPos.blockX().value(),
                 blockPos.worldY() + blockPos.blockY().value(),
@@ -142,7 +142,7 @@ public class Transformation {
         return modelViewMatrix.set(modelMatrix);//.mul(modelMatrix);
     }
 
-    public Matrix4f buildChunkModelViewMatrix(ChunkPosition position) {
+    Matrix4f buildChunkModelViewMatrix(ChunkPosition position) {
         modelMatrix.identity().translate(position.minX(), position.minY(), position.minZ());
         return modelViewMatrix.set(modelMatrix);
     }
@@ -158,7 +158,7 @@ public class Transformation {
 //        return modelLightViewMatrix.mul(modelLightMatrix);
 //    }
 
-    public Matrix4f buildOrtoProjModelMatrix(Text gameItem) {
+    Matrix4f buildOrtoProjModelMatrix(Text gameItem) {
         Vector3f rotation = gameItem.getRotation();
         modelMatrix.identity().translate(gameItem.getPosition()).
                 rotateX((float) Math.toRadians(-rotation.x)).
@@ -166,6 +166,22 @@ public class Transformation {
                 rotateZ((float) Math.toRadians(-rotation.z)).
                 scale(gameItem.getScale());
         return modelMatrix;
+    }
+
+    public Matrix4f buildOrtoProjModelMatrix(int x,int y) {
+
+        return  modelMatrix.identity().translate(x,y,0);
+
+    }
+    public Matrix4f buildOrtoProjModelMatrix(int xPos,int yPos,int zPos,int xPot,int yPot,int zPot,float scale) {
+
+        return  modelMatrix.identity()
+                .translate(xPos,yPos,zPos)
+                .rotateXYZ( (float)Math.toRadians(-xPot),
+                            (float)Math.toRadians(-yPot),
+                            (float)Math.toRadians(-zPot))
+                .scale(scale);
+
     }
 
     public Matrix4f buildOrtoProjModelMatrix(GuiRenderInfo item) {

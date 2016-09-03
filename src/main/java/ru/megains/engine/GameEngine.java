@@ -43,9 +43,9 @@ public class GameEngine implements Runnable {
         }
     }
 
-    public static int frames = 0;
+    private static int frames = 0;
 
-    void gameLoop() {
+    private void gameLoop() {
 
 
         boolean running = true;
@@ -80,27 +80,27 @@ public class GameEngine implements Runnable {
         }
     }
 
-    static double MB = 1024 * 1024;
+    private static double MB = 1024 * 1024;
 
-    static void printMemoryUsage() {
+    private static void printMemoryUsage() {
         Runtime r = Runtime.getRuntime();
         System.out.printf("Memory usage: total=%4.2f MB, free=%4.2f MB, max=%4.2f MB\n",
                 r.totalMemory() / MB, r.freeMemory() / MB, r.maxMemory() / MB);
     }
 
-    void init() throws Exception {
+    private void init() throws Exception {
         window.init();
         mouseInput.init(window);
         gameLogic.init();
     }
 
-    void update() {
+    private void update() {
         mouseInput.input(window);
         gameLogic.input();
         gameLogic.update(mouseInput);
     }
 
-    void render() {
+    private void render() {
 
         gameLogic.render();
 
@@ -108,7 +108,7 @@ public class GameEngine implements Runnable {
 
     }
 
-    void cleanup() {
+    private void cleanup() {
         gameLogic.cleanup();
     }
 

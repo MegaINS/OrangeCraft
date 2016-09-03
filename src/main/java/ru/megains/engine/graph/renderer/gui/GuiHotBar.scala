@@ -1,47 +1,32 @@
 package ru.megains.engine.graph.renderer.gui
 
-import java.awt.Color
-
-import org.joml.{Matrix4f, Vector3f}
 import ru.megains.engine.graph.renderer.mesh.Mesh
-import ru.megains.engine.graph.{Renderer, ShaderProgram}
 import ru.megains.game.OrangeCraft
-import ru.megains.game.register.GameRegister
 
-class GuiHotBar(orangeCraft: OrangeCraft) extends GuiInGame {
+class GuiHotBar(orangeCraft: OrangeCraft) extends GuiInGame(orangeCraft) {
 
-    private[graph] var selectItemPos: GuiRenderInfo = new GuiRenderInfo(300, 40)
-    private[graph] var rectPos: GuiRenderInfo = new GuiRenderInfo(200, 0, 0, 0, 0, 1f)
-    var rect: Mesh = _
+    var hotBar: Mesh = _
+    var stackSelect: Mesh = _
+
     override def init(): Unit = {
-        rect = createRect(400,80,Color.orange)
+        stackSelect = createTextureRect(56, 54, "gui/stackSelect")
+        hotBar = createTextureRect(484, 52, "gui/hotBar")
     }
 
-    override def render(renderer: Renderer): Unit = {
+    override def render(): Unit = {
 
         val inventory = orangeCraft.player.inventory
-        var projModelMatrix: Matrix4f = null
-        val shaderProgram: ShaderProgram = renderer.hudShaderProgram
 
-        projModelMatrix = renderer.transformation.buildOrtoProjModelMatrix(rectPos)
-        shaderProgram.setUniform("modelMatrix", projModelMatrix)
-        shaderProgram.setUniform("colour", new Vector3f(1f, 1f, 1f))
-        rect.render(shaderProgram, renderer.textureManager)
-
-        for (i<-0 to 9){
-            val itemStack  = inventory.getStackForIndex(i)
-            if (itemStack != null) {
-                val selectItemPos: GuiRenderInfo = new GuiRenderInfo(230+i*50, 40)
-                projModelMatrix = renderer.transformation.buildOrtoProjModelMatrix(selectItemPos)
-                shaderProgram.setUniform("modelMatrix", projModelMatrix)
-                shaderProgram.setUniform("colour", new Vector3f(1f, 1f, 1f))
-                GameRegister.getItemRender(itemStack.item).renderInInventory(shaderProgram, renderer.textureManager)
-            }
-
+        renderObject(158, 0, hotBar)
+        renderObject(156 + inventory.stackSelect * 48, 0, stackSelect)
+        for (i <- 0 to 9) {
+            renderItemStack(184 + i * 48, 26, inventory.getStackForIndex(i))
         }
 
 
     }
 
-    override def cleanup(): Unit = ???
+    override def cleanup(): Unit = {
+        hotBar.cleanUp()
+    }
 }

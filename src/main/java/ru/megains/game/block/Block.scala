@@ -5,6 +5,7 @@ import org.joml.Vector3f
 import ru.megains.engine.graph.renderer.block.RenderBlockGlass
 import ru.megains.engine.graph.renderer.texture.{TTextureRegister, TextureAtlas}
 import ru.megains.game.blockdata.{BlockDirection, BlockSize, BlockWorldPos, MultiBlockPos}
+import ru.megains.game.item.Item
 import ru.megains.game.physics.{AxisAlignedBB, BlockAxisAlignedBB}
 import ru.megains.game.register.{Blocks, GameRegister}
 import ru.megains.game.util.RayTraceResult
@@ -71,6 +72,9 @@ object Block {
         GameRegister.getIdByBlock(block)
     }
 
+    def getBlockFromItem(item: Item) ={
+        GameRegister.getBlockFromItem(item)
+    }
 
     def getBlockById(id: Int): Block = {
         val block: Block = GameRegister.getBlockById(id)

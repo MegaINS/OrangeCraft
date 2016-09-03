@@ -10,6 +10,7 @@ import ru.megains.game.multiblock.{AMultiBlock, MultiBlock, MultiBlockSingle}
 object GameRegister {
 
 
+
     private val blockData = new RegisterNamespace[Block] with RegisterRender[ARenderBlock] {
         override val default = RenderBlockStandart
 
@@ -74,6 +75,9 @@ object GameRegister {
         }
         false
     }
+
+
+    def getBlockFromItem(item: Item) = blockData.getObject(itemData.getIdByObject(item))
 
 
     def getItemFromBlock(block: Block): Item = itemData.getObject(blockData.getIdByObject(block))

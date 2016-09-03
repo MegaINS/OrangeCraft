@@ -63,7 +63,7 @@ class Chunk(val world: World, val position: ChunkPosition) {
             if (targetId == MultiBlock.id) {
                 val multi = blockStorage.getMultiBlock(x, y, z)
                 multi.putBlock(pos.multiPos, block)
-                if (multi.isEmpty()) {
+                if (multi.isEmpty) {
                     blockStorage.setBlockId(x, y, z, id)
                     blockStorage.removeMultiBlock(x, y, z)
                 }

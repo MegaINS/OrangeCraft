@@ -55,7 +55,7 @@ public class Renderer {
         specularPower = 10f;
     }
 
-    Text text;
+    private Text text;
 
     public void init(Window window, TextureManager textureManager) throws Exception {
         this.textureManager = textureManager;
@@ -183,7 +183,7 @@ public class Renderer {
 
     public int a;
 
-    public void renderScene(Window window, Camera camera,/*, Scene scene*/WorldRenderer worldRenderer, Frustum frustum) {
+    private void renderScene(Window window, Camera camera,/*, Scene scene*/WorldRenderer worldRenderer, Frustum frustum) {
         sceneShaderProgram.bind();
 
 
@@ -282,9 +282,6 @@ public class Renderer {
 
             cubeGame.guiManager.render();
 
-            if (cubeGame.guiScreen != null) {
-                cubeGame.guiScreen.render(this);
-            }
 
             glEnable(GL_DEPTH_TEST);
             glDisable(GL_BLEND);

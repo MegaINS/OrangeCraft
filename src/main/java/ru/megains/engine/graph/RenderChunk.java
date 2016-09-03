@@ -12,9 +12,8 @@ import ru.megains.game.world.chunk.Chunk;
 
 public class RenderChunk {
 
-    public static int chunkSize = 16;
+    private static int chunkSize = 16;
     private static int rend = 0;
-    public static Material material;
     public static int chunkRender = 0;
     public static int chunkUpdate = 0;
     private boolean isReRender = true;
@@ -107,11 +106,11 @@ public class RenderChunk {
         isReRender = true;
     }
 
-    public static void clearRend() {
+    static void clearRend() {
         rend = 0;
     }
 
-    public AxisAlignedBB getCube() {
+    AxisAlignedBB getCube() {
         return cube;
     }
 
