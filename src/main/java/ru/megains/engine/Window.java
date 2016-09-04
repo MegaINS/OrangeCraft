@@ -1,9 +1,6 @@
 package ru.megains.engine;
 
-import org.lwjgl.glfw.GLFWErrorCallback;
-import org.lwjgl.glfw.GLFWKeyCallback;
-import org.lwjgl.glfw.GLFWVidMode;
-import org.lwjgl.glfw.GLFWWindowSizeCallback;
+import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.GL;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -76,9 +73,18 @@ public class Window {
         glfwSetKeyCallback(windowHandle, keyCallback = new GLFWKeyCallback() {
             @Override
             public void invoke(long window, int key, int scancode, int action, int mods) {
+
+
+                    System.out.println((char) key+" "+scancode+" "+action+" "+mods);
                 if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
                     glfwSetWindowShouldClose(window, true);
                 }
+            }
+        });
+        glfwSetCharCallback(windowHandle, new GLFWCharCallback() {
+            @Override
+            public void invoke(long window, int codepoint) {
+                System.out.println( codepoint);
             }
         });
 
@@ -115,7 +121,9 @@ public class Window {
     }
 
     public boolean isKeyPressed(int keyCode) {
-        return glfwGetKey(windowHandle, keyCode) == GLFW_PRESS;
+
+
+        return glfwGetKey(windowHandle,keyCode)== GLFW_PRESS;
     }
 
 

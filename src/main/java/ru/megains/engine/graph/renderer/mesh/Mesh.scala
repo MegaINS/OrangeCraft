@@ -18,7 +18,7 @@ class Mesh private[mesh](val makeMode: Int, val vertexCount: Int) {
         this(makeMode, indices.length)
         glBindVertexArray(vaoId)
         bindArray(0, 3, positions)
-        bindArray(1, 3, colours)
+        bindArray(1, 4, colours)
         bindArrayIndices(indices)
         glBindVertexArray(0)
     }

@@ -1,12 +1,12 @@
 #version 330
 
 layout (location=0) in vec3 position;
-layout (location=1) in vec3 colors;
+layout (location=1) in vec4 colors;
 layout (location=2) in vec2 texCoord;
 layout (location=3) in vec3 vertexNormal;
 
 
-out vec3 outColor;
+out vec4 outColor;
 out vec2 outTexCoord;
 
 uniform mat4 projectionMatrix;

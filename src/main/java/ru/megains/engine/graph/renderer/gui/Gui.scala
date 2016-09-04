@@ -16,7 +16,7 @@ object Gui {
 
         val mm = MeshMaker.getMeshMaker
         mm.startMakeTriangles()
-        mm.addColor(color.getRed / 255f, color.getGreen / 255f, color.getBlue / 255f)
+        mm.addColor(color.getRed / 255f, color.getGreen / 255f, color.getBlue / 255f,color.getAlpha / 255f)
         mm.addVertex(xZero, zZero, zZero)
         mm.addVertex(xZero, height, zZero)
         mm.addVertex(width, height, zZero)

@@ -3,7 +3,7 @@ package ru.megains.engine.graph.renderer.gui
 import ru.megains.engine.graph.renderer.mesh.Mesh
 import ru.megains.game.OrangeCraft
 
-class GuiHotBar(orangeCraft: OrangeCraft) extends GuiInGame(orangeCraft) {
+class GuiHotBar(orangeCraft: OrangeCraft) extends GuiInGame() {
 
     var hotBar: Mesh = _
     var stackSelect: Mesh = _
@@ -13,14 +13,14 @@ class GuiHotBar(orangeCraft: OrangeCraft) extends GuiInGame(orangeCraft) {
         hotBar = createTextureRect(484, 52, "gui/hotBar")
     }
 
-    override def render(): Unit = {
+    override def drawScreen(mouseX:Int,mouseY:Int): Unit = {
 
         val inventory = orangeCraft.player.inventory
 
-        renderObject(158, 0, hotBar)
-        renderObject(156 + inventory.stackSelect * 48, 0, stackSelect)
+        drawObject(hotBar,158, 0)
+        drawObject(stackSelect,156 + inventory.stackSelect * 48, 0 )
         for (i <- 0 to 9) {
-            renderItemStack(184 + i * 48, 26, inventory.getStackForIndex(i))
+            drawItemStack( inventory.getStackInSlot(i),184 + i * 48, 26)
         }
 
 

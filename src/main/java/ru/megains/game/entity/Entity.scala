@@ -9,9 +9,7 @@ import ru.megains.game.world.World
 import scala.collection.mutable
 
 
-abstract class Entity(val height: Float, val wight: Float, val levelView: Float) {
-    var world: World = _
-
+abstract class Entity(var world: World, val height: Float, val wight: Float, val levelView: Float) {
 
     var posX: Float = 0
     var posY: Float = 0

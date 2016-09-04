@@ -1,6 +1,5 @@
 package ru.megains.engine.graph.renderer.gui
 
-import ru.megains.engine.graph.Renderer
 import ru.megains.game.OrangeCraft
 
 import scala.collection.mutable
@@ -9,7 +8,7 @@ import scala.collection.mutable
 
 class GuiManager(val orangeCraft: OrangeCraft) {
 
-    val renderer:Renderer = orangeCraft.renderer
+
     private val guiInGame:mutable.HashMap[String,GuiInGame] = mutable.HashMap[String,GuiInGame]()
     private var guiScreen:GuiScreen = _
 
@@ -17,21 +16,21 @@ class GuiManager(val orangeCraft: OrangeCraft) {
         addGuiInGame("hotBar",new GuiHotBar(orangeCraft))
     }
 
+    def isGuiScreen:Boolean = guiScreen != null
 
 
 
-
-    def render(): Unit ={
+    def render(mouseX:Int,mouseY:Int): Unit ={
         if (guiScreen != null) {
-            guiScreen.render()
+            guiScreen.drawScreen(mouseX,mouseY)
         }else{
-            guiInGame.values.filter(_!=null).foreach(_.render())
+            guiInGame.values.filter(_!=null).foreach(_.drawScreen(mouseX,mouseY))
         }
     }
 
     def setGuiScreen(screen: GuiScreen) {
-        if (guiScreen != null) guiScreen.cleanup()
-        if (screen != null) screen.init()
+        if (guiScreen != null) {guiScreen.cleanup()}
+        if (screen != null) {screen.init()}
         guiScreen = screen
     }
 

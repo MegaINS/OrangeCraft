@@ -33,7 +33,7 @@ class ExtendedBlockStorage {
     def getMultiBlock(x: Int, y: Int, z: Int): AMultiBlock = multiBlockStorage.getOrElse(
         getIndex(x, y, z),
         default = {
-            println("Error not multiBlock " + x + " " + y + " " + z)
+          //  println("Error not multiBlock " + x + " " + y + " " + z)
             Blocks.multiAir
         }
     )

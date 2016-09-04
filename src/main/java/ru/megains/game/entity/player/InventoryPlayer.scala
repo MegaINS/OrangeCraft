@@ -1,8 +1,9 @@
 package ru.megains.game.entity.player
 
+import ru.megains.game.inventory.AInventory
 import ru.megains.game.item.ItemStack
 
-class InventoryPlayer(val entityPlayer: EntityPlayer) {
+class InventoryPlayer(val entityPlayer: EntityPlayer) extends AInventory{
 
     val mainInventory: Array[ItemStack] = new Array[ItemStack](40)
     var stackSelect: Int = 0
@@ -44,5 +45,6 @@ class InventoryPlayer(val entityPlayer: EntityPlayer) {
 
     def getStackSelect: ItemStack = mainInventory(stackSelect)
 
-    def getStackForIndex(index: Int): ItemStack = mainInventory(index)
+
+    override def getStackInSlot(index: Int): ItemStack = mainInventory(index)
 }

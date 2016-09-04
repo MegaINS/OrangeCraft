@@ -3,6 +3,7 @@ package ru.megains.engine.graph;
 import org.joml.Matrix4f;
 import org.lwjgl.BufferUtils;
 import ru.megains.engine.Frustum;
+import ru.megains.engine.MouseInput;
 import ru.megains.engine.Utils;
 import ru.megains.engine.Window;
 import ru.megains.engine.graph.renderer.mesh.Mesh;
@@ -246,7 +247,7 @@ public class Renderer {
 
         text.getMesh().render(sceneShaderProgram, textureManager);
 
-        BlockAndPos bp = OrangeCraft.megaGame.blockAndPos;
+        BlockAndPos bp = OrangeCraft.orangeCraft.blockAndPos;
 
         if (bp != null) {
             modelViewMatrix = transformation.buildBlockModelViewMatrix(bp.pos());
@@ -280,7 +281,8 @@ public class Renderer {
 
             glEnable(GL_CULL_FACE);
 
-            cubeGame.guiManager.render();
+
+            cubeGame.guiManager.render((int) MouseInput.currentPos.x,(int)MouseInput.currentPos.y);
 
 
             glEnable(GL_DEPTH_TEST);

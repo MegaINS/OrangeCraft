@@ -2,8 +2,9 @@ package ru.megains.game.entity.item
 
 import ru.megains.game.entity.Entity
 import ru.megains.game.item.Item
+import ru.megains.game.world.World
 
-class EntityItem(val item: Item) extends Entity(0.25f, 0.25f, 0.25f) {
+class EntityItem(world:World, val item: Item) extends Entity(world , 0.25f, 0.25f, 0.25f) {
 
 
     override def update(): Unit = {

@@ -1,13 +1,18 @@
 package ru.megains.game.entity.player
 
 import ru.megains.game.entity.EntityLivingBase
+import ru.megains.game.inventory.{Container, ContainerPlayerInventory}
 import ru.megains.game.item.ItemStack
 import ru.megains.game.register.Blocks
+import ru.megains.game.world.World
 
 
-class EntityPlayer extends EntityLivingBase(1.8f, 0.6f, 1.6f) {
+class EntityPlayer(world: World) extends EntityLivingBase(world,1.8f, 0.6f, 1.6f) {
+
+
 
     val inventory = new InventoryPlayer(this)
+    val inventoryContainer: Container = new ContainerPlayerInventory(inventory)
     inventory.addItemStackToInventory(new ItemStack(Blocks.stone))
     inventory.addItemStackToInventory(new ItemStack(Blocks.dirt))
     inventory.addItemStackToInventory(new ItemStack(Blocks.grass))
@@ -16,7 +21,9 @@ class EntityPlayer extends EntityLivingBase(1.8f, 0.6f, 1.6f) {
     inventory.addItemStackToInventory(new ItemStack(Blocks.stone))
     inventory.addItemStackToInventory(new ItemStack(Blocks.dirt))
     inventory.addItemStackToInventory(new ItemStack(Blocks.grass))
-
+    for(i<-0 to 30 ) {
+        inventory.addItemStackToInventory(new ItemStack(Blocks.stone))
+    }
 
     setPosition(0, 3, 0)
 

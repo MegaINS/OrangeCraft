@@ -1,5 +1,9 @@
 package ru.megains.game.entity
 
-abstract class EntityLivingBase(height: Float, wight: Float, levelView: Float) extends Entity(height, wight, levelView) {
+import ru.megains.game.world.World
+
+abstract class EntityLivingBase(world: World, height: Float, wight: Float, levelView: Float) extends Entity(world,height, wight, levelView) {
+
+
 
 }

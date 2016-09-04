@@ -13,7 +13,7 @@ public class MouseInput {
 
     private final Vector2d previousPos;
 
-    private final Vector2d currentPos;
+    public static final Vector2d currentPos= new Vector2d(0, 0);
 
     private final Vector2f displVec;
 
@@ -36,7 +36,6 @@ public class MouseInput {
 
     MouseInput() {
         previousPos = new Vector2d(-1, -1);
-        currentPos = new Vector2d(0, 0);
         displVec = new Vector2f();
     }
 
@@ -48,8 +47,8 @@ public class MouseInput {
         glfwSetCursorPosCallback(window.getWindowHandle(), cursorPosCallback = new GLFWCursorPosCallback() {
             @Override
             public void invoke(long window, double xpos, double ypos) {
-                currentPos.x = xpos;
-                currentPos.y = ypos;
+                currentPos.x = xpos  ;
+                currentPos.y = (ypos-600)*-1;
             }
         });
         glfwSetCursorEnterCallback(window.getWindowHandle(), cursorEnterCallback = new GLFWCursorEnterCallback() {

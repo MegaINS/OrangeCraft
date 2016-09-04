@@ -14,17 +14,18 @@ object MeshMaker {
     private var normalsArray: ArrayBuffer[Float] = ArrayBuffer[Float]()
     private var indicesArray: ArrayBuffer[Int] = ArrayBuffer[Int]()
 
-    private var colorR: Float = 1
-    private var colorG: Float = 1
-    private var colorB: Float = 1
-    private var textureU: Float = 0
-    private var textureV: Float = 0
-    private var normalX: Float = 0
-    private var normalY: Float = 0
-    private var normalZ: Float = 0
-    private var currentIndex: Int = 0
-    private var vertexCount: Int = 0
-    private var makeMode: Int = 0
+    private var colorR: Float = _
+    private var colorG: Float = _
+    private var colorB: Float = _
+    private var colorA: Float = _
+    private var textureU: Float = _
+    private var textureV: Float = _
+    private var normalX: Float = _
+    private var normalY: Float = _
+    private var normalZ: Float = _
+    private var currentIndex: Int = _
+    private var vertexCount: Int = _
+    private var makeMode: Int = _
     private var isStartMake: Boolean = false
     private var isNormals: Boolean = false
     private var textureName: String = ""
@@ -75,16 +76,21 @@ object MeshMaker {
 
     def addVertex(x: Float, y: Float, z: Float) {
         textCordsArray += (textureU, textureV)
-        colourArray += (colorR, colorG, colorB)
+        colourArray += (colorR, colorG, colorB,colorA)
         normalsArray += (normalX, normalY, normalZ)
         posArray += (x, y, z)
         vertexCount += 1
     }
 
-    def addColor(r: Float, g: Float, b: Float) {
+    def addColor(r: Float, g: Float, b: Float): Unit = addColor(r,g,b,1)
+
+
+
+    def addColor(r: Float, g: Float, b: Float, a: Float) {
         colorR = r
         colorG = g
         colorB = b
+        colorA = a
     }
 
     def addTextureUV(u: Float, v: Float) {
@@ -102,6 +108,7 @@ object MeshMaker {
         colorR = 1
         colorG = 1
         colorB = 1
+        colorA = 1
         textureV = 0
         textureU = 0
         normalX = 0

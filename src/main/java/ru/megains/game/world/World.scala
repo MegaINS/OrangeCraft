@@ -33,7 +33,7 @@ class World(val length: Int, val height: Int, val width: Int) {
         }
 
         for (i <- 1 to 10) {
-            val entity = new EntityItem(GameRegister.getItemById(rand.nextInt(4) + 2))
+            val entity = new EntityItem(this, GameRegister.getItemById(rand.nextInt(4) + 2))
             entity.setWorld(this)
             entity.setPosition(rand.nextInt(i) - i / 2, 5, rand.nextInt(i) - i / 2)
             entities += entity

@@ -1,9 +1,10 @@
 package ru.megains.game.entity.mob
 
 import ru.megains.game.entity.EntityLivingBase
+import ru.megains.game.world.World
 
 
-class EntityCube(height: Float, wight: Float, levelView: Float) extends EntityLivingBase(height, wight, levelView) {
+class EntityCube(world: World, height: Float, wight: Float, levelView: Float) extends EntityLivingBase(world, height, wight, levelView) {
 
 
     override def update(): Unit = {

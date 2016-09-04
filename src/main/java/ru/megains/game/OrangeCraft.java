@@ -8,9 +8,9 @@ import ru.megains.engine.Window;
 import ru.megains.engine.graph.Camera;
 import ru.megains.engine.graph.Renderer;
 import ru.megains.engine.graph.WorldRenderer;
-import ru.megains.engine.graph.renderer.ItemRender;
+import ru.megains.engine.graph.renderer.RenderItem;
+import ru.megains.engine.graph.renderer.gui.GuiPlayerInventory;
 import ru.megains.engine.graph.renderer.gui.GuiManager;
-import ru.megains.engine.graph.renderer.gui.GuiScreen;
 import ru.megains.engine.graph.renderer.texture.TextureManager;
 import ru.megains.engine.graph.text.Hud;
 import ru.megains.game.block.Block;
@@ -35,25 +35,21 @@ public class OrangeCraft implements IGameLogic {
 
     public World world;
     public Renderer renderer;
-    public ItemRender itemRender;
+    public RenderItem itemRender;
     public Window window;
     private Camera camera;
     private Vector3f cameraInc;
     private WorldRenderer worldRenderer;
     public EntityPlayer player;
     private Hud hud;
-    public static OrangeCraft megaGame;
+    public static OrangeCraft orangeCraft;
 
     public TextureManager textureManager;
-
-    private GuiScreen guiScreen;
-
-
     public GuiManager guiManager;
 
 
     public OrangeCraft(Window window) {
-        megaGame = this;
+        orangeCraft = this;
         this.window = window;
         world = new World(64, 64, 64);
 
@@ -76,7 +72,7 @@ public class OrangeCraft implements IGameLogic {
         textureManager = new TextureManager();
         textureManager.loadTexture(TextureManager.locationBlockTexture(), textureManager.textureMapBlock());
         worldRenderer = new WorldRenderer(world, textureManager);
-        itemRender = new ItemRender(this);
+        itemRender = new RenderItem(this);
 
         world.init();
         worldRenderer.init();
@@ -85,8 +81,9 @@ public class OrangeCraft implements IGameLogic {
         guiManager.init();
 
 
-        player = new EntityPlayer();
-        player.setWorld(world);
+        player = new EntityPlayer(world);
+
+        guiManager.setGuiScreen(new GuiPlayerInventory(player));
 
     }
 
@@ -111,6 +108,13 @@ public class OrangeCraft implements IGameLogic {
             cameraInc.y = 1;
         }
 
+        if (window.isKeyPressed(GLFW_KEY_E)) {
+           if(guiManager.isGuiScreen()){
+               guiManager.setGuiScreen(null);
+           }else{
+               guiManager.setGuiScreen(new GuiPlayerInventory(player));
+           }
+        }
 
         if (window.isKeyPressed(GLFW_KEY_O)) {
             iws++;
@@ -118,7 +122,7 @@ public class OrangeCraft implements IGameLogic {
                 iws = 0;
                 Random rand = new Random();
                 for (int i = 0; i < 100; i++) {
-                    EntityItem entityItem = new EntityItem(GameRegister.getItemById(rand.nextInt(4) + 2));
+                    EntityItem entityItem = new EntityItem(world, GameRegister.getItemById(rand.nextInt(4) + 2));
                     entityItem.setWorld(world);
                     entityItem.setPosition(rand.nextInt(128) - 64, 10, rand.nextInt(128) - 64);
                     world.spawnEntityInWorld(entityItem);
