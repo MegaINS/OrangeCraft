@@ -8,7 +8,7 @@ public interface IGameLogic {
 
     void input();
 
-    void update(MouseInput mouseInput);
+    void update();
 
     void render();
 

@@ -1,24 +1,23 @@
 package ru.megains.engine;
 
 
+import org.lwjgl.opengl.Display;
 import ru.megains.engine.graph.RenderChunk;
 import ru.megains.engine.graph.text.Hud;
 
 public class GameEngine implements Runnable {
 
 
+    private  float TARGET_FPS = 60 ;
     private IGameLogic gameLogic;
     private Timer timer;
-    private Window window;
-    private MouseInput mouseInput;
+
 
     private final Thread gameLoopThread;
 
 
-    public GameEngine(IGameLogic gameLogic, Window window) {
-        this.window = window;
+    public GameEngine(IGameLogic gameLogic) {
         timer = new Timer(20);
-        mouseInput = new MouseInput();
         this.gameLogic = gameLogic;
         this.gameLoopThread = new Thread(this, "GAME_ENGINE");
     }
@@ -26,12 +25,13 @@ public class GameEngine implements Runnable {
 
     public void start() {
 
+
         gameLoopThread.start();
 
     }
 
 
-    @Override
+
     public void run() {
         try {
             init();
@@ -53,8 +53,10 @@ public class GameEngine implements Runnable {
 
         int tick = 0;
         timer.init();
-        while (running && !window.windowShouldClose()) {
-
+        while (running) {
+            if(Display.isCloseRequested()&&Display.isCreated()){
+                running = false;
+            }
 
             timer.update();
             for (int i = 0; i < timer.getTick(); ++i) {
@@ -77,6 +79,18 @@ public class GameEngine implements Runnable {
                 tick = 0;
                 printMemoryUsage();
             }
+            sync();
+        }
+    }
+
+    private void sync() {
+        float loopSlot = 1f / TARGET_FPS;
+        double endTime = timer.getLastLoopTime() + loopSlot;
+        while (timer.getTime() < endTime) {
+            try {
+                Thread.sleep(1);
+            } catch (InterruptedException ie) {
+            }
         }
     }
 
@@ -89,22 +103,23 @@ public class GameEngine implements Runnable {
     }
 
     private void init() throws Exception {
-        window.init();
-        mouseInput.init(window);
+
         gameLogic.init();
+
     }
 
     private void update() {
-        mouseInput.input(window);
+
         gameLogic.input();
-        gameLogic.update(mouseInput);
+        gameLogic.update();
     }
 
     private void render() {
 
         gameLogic.render();
 
-        window.update();
+
+
 
     }
 

@@ -1,5 +1,6 @@
 package ru.megains.engine.graph.renderer.mesh
 
+import org.lwjgl.BufferUtils
 import org.lwjgl.opengl.GL11._
 import org.lwjgl.opengl.GL15._
 import org.lwjgl.opengl.GL20._
@@ -26,8 +27,11 @@ class Mesh private[mesh](val makeMode: Int, val vertexCount: Int) {
     def bindArray(index: Int, size: Int, array: Array[Float]): Unit = {
         val vboId: Int = glGenBuffers
         vboIdList += vboId
+
         glBindBuffer(GL_ARRAY_BUFFER, vboId)
-        glBufferData(GL_ARRAY_BUFFER, array, GL_STATIC_DRAW)
+        val buffer = BufferUtils.createFloatBuffer(array.length).put(array)
+        buffer.flip()
+        glBufferData(GL_ARRAY_BUFFER, buffer, GL_STATIC_DRAW)
         glVertexAttribPointer(index, size, GL_FLOAT, false, 0, 0)
         glBindBuffer(GL_ARRAY_BUFFER, 0)
     }
@@ -35,8 +39,10 @@ class Mesh private[mesh](val makeMode: Int, val vertexCount: Int) {
     def bindArrayIndices(array: Array[Int]): Unit = {
         val vboId: Int = glGenBuffers
         vboIdList += vboId
+        val buffer = BufferUtils.createIntBuffer(array.length).put(array)
+        buffer.flip()
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboId)
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, array, GL_STATIC_DRAW)
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER,buffer, GL_STATIC_DRAW)
         glBindBuffer(GL_ARRAY_BUFFER, 0)
     }
 

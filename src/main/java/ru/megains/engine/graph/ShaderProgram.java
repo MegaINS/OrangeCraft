@@ -62,7 +62,7 @@ public class ShaderProgram {
         }
         // Dump the matrix into a float buffer
         value.get(fb);
-        glUniformMatrix4fv(uniformData.getUniformLocation(), false, fb);
+        glUniformMatrix4(uniformData.getUniformLocation(), false, fb);
     }
 
     public void setUniform(String uniformName, Matrix3f value) {
@@ -78,7 +78,7 @@ public class ShaderProgram {
         }
         // Dump the matrix into a float buffer
         value.get(fb);
-        glUniformMatrix3fv(uniformData.getUniformLocation(), false, fb);
+        glUniformMatrix3(uniformData.getUniformLocation(), false, fb);
     }
 
 

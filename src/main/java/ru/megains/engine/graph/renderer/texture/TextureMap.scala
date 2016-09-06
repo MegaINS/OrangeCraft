@@ -1,5 +1,8 @@
 package ru.megains.engine.graph.renderer.texture
 
+
+import java.nio.ByteBuffer
+
 import org.lwjgl.opengl.GL11._
 import org.lwjgl.opengl.GL30._
 import ru.megains.game.register.GameRegister
@@ -72,7 +75,8 @@ class TextureMap() extends ATexture with TTextureRegister {
 
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST)
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0)
+        val byteBuffer:ByteBuffer = null
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, byteBuffer)
         println("Create texture block map " + width + "-" + height + " pixels")
     }
 

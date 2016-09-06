@@ -12,10 +12,9 @@
     <orderEntry type="jdk" jdkName="1.8" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="scala-sdk-2.11.6" level="application" />
+    <orderEntry type="library" name="scala-sdk-2.11.8" level="application" />
+    <orderEntry type="library" name="lwjgl" level="project" />
     <orderEntry type="library" name="Maven: org.joml:joml:1.8.2" level="project" />
-    <orderEntry type="library" name="Maven: org.lwjgl:lwjgl:3.0.0" level="project" />
-    <orderEntry type="library" name="Maven: org.lwjgl:lwjgl-platform:natives-windows:3.0.0" level="project" />
-    <orderEntry type="library" name="Maven: org.lwjgl:lwjgl-platform:natives-linux:3.0.0" level="project" />
     <orderEntry type="library" name="Maven: io.netty:netty-all:5.0.0.Alpha2" level="project" />
     <orderEntry type="library" name="Maven: org.scala-lang:scala-library:2.11.8" level="project" />
     <orderEntry type="library" name="Maven: org.slick2d:slick2d-core:1.0.1" level="project" />
@@ -38,6 +37,5 @@
       </library>
     </orderEntry>
     <orderEntry type="library" name="Maven: org.jcraft:jorbis:0.0.17" level="project" />
-    <orderEntry type="library" name="scala-sdk-2.11.8" level="application" />
   </component>
 </module>

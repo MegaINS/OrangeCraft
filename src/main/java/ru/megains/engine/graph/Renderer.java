@@ -2,10 +2,10 @@ package ru.megains.engine.graph;
 
 import org.joml.Matrix4f;
 import org.lwjgl.BufferUtils;
+import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.Display;
 import ru.megains.engine.Frustum;
-import ru.megains.engine.MouseInput;
 import ru.megains.engine.Utils;
-import ru.megains.engine.Window;
 import ru.megains.engine.graph.renderer.mesh.Mesh;
 import ru.megains.engine.graph.renderer.texture.TextureManager;
 import ru.megains.engine.graph.text.IHud;
@@ -58,7 +58,7 @@ public class Renderer {
 
     private Text text;
 
-    public void init(Window window, TextureManager textureManager) throws Exception {
+    public void init( TextureManager textureManager) throws Exception {
         this.textureManager = textureManager;
 
 
@@ -78,10 +78,10 @@ public class Renderer {
     }
 
 
-    public void render(Window window, Camera camera, IHud hud, WorldRenderer worldRenderer) {
+    public void render(Camera camera, IHud hud, WorldRenderer worldRenderer) {
 
 
-        transformation.updateProjectionMatrix(FOV, window.getWidth(), window.getHeight(), Z_NEAR, Z_FAR, camera);
+        transformation.updateProjectionMatrix(FOV, 800, 600, Z_NEAR, Z_FAR, camera);
         transformation.updateViewMatrix(camera);
         Matrix4f projectionMatrix = transformation.getProjectionMatrix();
         Matrix4f viewMatrix = transformation.getViewMatrix();
@@ -94,23 +94,26 @@ public class Renderer {
         glEnable(GL_CULL_FACE);
 
 
-        glViewport(0, 0, window.getWidth(), window.getHeight());
-        if (window.isResized()) {
-
-            window.setResized(false);
-        }
+      //  glViewport(0, 0, 800, 600);
+//        if (Display.isResized()) {
+//
+//            Display.setResized(false);
+//        }
 
         // Update projection and view atrices once per render cycle
+
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
-        renderScene(window, camera, worldRenderer, frustum);
+        renderScene( camera, worldRenderer, frustum);
 
 
         //   renderSkyBox(window, camera, scene);
 
-        renderHud(window, hud);
+        renderHud( hud);
 
+
+        Display.update();
 
     }
 
@@ -184,7 +187,7 @@ public class Renderer {
 
     public int a;
 
-    private void renderScene(Window window, Camera camera,/*, Scene scene*/WorldRenderer worldRenderer, Frustum frustum) {
+    private void renderScene( Camera camera,/*, Scene scene*/WorldRenderer worldRenderer, Frustum frustum) {
         sceneShaderProgram.bind();
 
 
@@ -260,15 +263,16 @@ public class Renderer {
     }
 
 
-    private void renderHud(Window window, IHud hud) {
+    private void renderHud( IHud hud) {
         if (hud != null) {
             glEnable(GL_BLEND);
             glDisable(GL_CULL_FACE);
             glDisable(GL_DEPTH_TEST);
+
             hudShaderProgram.bind();
 
 
-            Matrix4f ortho = transformation.getOrtho2DProjectionMatrix(0, window.getWidth(), 0, window.getHeight());
+            Matrix4f ortho = transformation.getOrtho2DProjectionMatrix(0, 800, 0, 600);
             hudShaderProgram.setUniform("projectionMatrix", ortho);
 
             for (Text gameItem : hud.getGameItems().values()) {
@@ -282,7 +286,7 @@ public class Renderer {
             glEnable(GL_CULL_FACE);
 
 
-            cubeGame.guiManager.render((int) MouseInput.currentPos.x,(int)MouseInput.currentPos.y);
+            cubeGame.guiManager.render(Mouse.getX(),Mouse.getY());
 
 
             glEnable(GL_DEPTH_TEST);

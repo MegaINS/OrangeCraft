@@ -1,5 +1,6 @@
 package ru.megains.engine.graph.renderer.gui
 
+import org.lwjgl.input.Keyboard
 import ru.megains.game.OrangeCraft
 
 import scala.collection.mutable
@@ -13,7 +14,7 @@ class GuiManager(val orangeCraft: OrangeCraft) {
     private var guiScreen:GuiScreen = _
 
     def init(): Unit ={
-        addGuiInGame("hotBar",new GuiHotBar(orangeCraft))
+        addGuiInGame("hotBar",new GuiHotBar())
     }
 
     def isGuiScreen:Boolean = guiScreen != null
@@ -30,13 +31,18 @@ class GuiManager(val orangeCraft: OrangeCraft) {
 
     def setGuiScreen(screen: GuiScreen) {
         if (guiScreen != null) {guiScreen.cleanup()}
-        if (screen != null) {screen.init()}
+        if (screen != null) {
+            screen.init(orangeCraft)
+            orangeCraft.ungrabMouseCursor()
+        }else{
+            orangeCraft.grabMouseCursor()
+        }
         guiScreen = screen
     }
 
 
     def addGuiInGame(name:String,gui: GuiInGame): Unit ={
-        if (gui != null) {gui.init()}
+        if (gui != null) {gui.init(orangeCraft)}
         guiInGame += name -> gui
     }
 
@@ -45,5 +51,12 @@ class GuiManager(val orangeCraft: OrangeCraft) {
     }
     def getGuiInGame(name: String):GuiInGame ={
         guiInGame.getOrElse(name,null)
+    }
+
+    def handleInput(): Unit ={
+        while (Keyboard.next()) {
+            guiScreen.keyTyped( Keyboard.getEventCharacter,Keyboard.getEventKey)
+
+        }
     }
 }

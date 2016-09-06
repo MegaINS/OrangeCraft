@@ -10,8 +10,6 @@ abstract class GuiContainer(inventorySlots: Container) extends GuiScreen{
     def rect = createRect(40,40,new Color(200,255,100,100))
 
 
-    override def init(): Unit = {}
-
 
 
     override def drawScreen(mouseX:Int, mouseY:Int): Unit = {

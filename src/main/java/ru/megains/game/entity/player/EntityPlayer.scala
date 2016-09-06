@@ -29,8 +29,8 @@ class EntityPlayer(world: World) extends EntityLivingBase(world,1.8f, 0.6f, 1.6f
 
 
     def turn(xo: Float, yo: Float) {
-        yRot += yo * 0.15f
-        xRot += xo * 0.15f
+        yRot += xo * 0.15f
+        xRot -= yo * 0.15f
         if (xRot < -90.0F) {
             xRot = -90.0F
         }

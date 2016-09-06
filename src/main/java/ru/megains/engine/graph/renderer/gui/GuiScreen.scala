@@ -11,8 +11,10 @@ import ru.megains.game.item.ItemStack
 abstract class GuiScreen()  {
 
 
-    val itemRender:RenderItem = OrangeCraft.orangeCraft.itemRender
-    val renderer:Renderer = OrangeCraft.orangeCraft.renderer
+
+    var itemRender:RenderItem = _
+    var renderer:Renderer = _
+    var oc:OrangeCraft = _
 
     def createRect(width: Int, height: Int, color: Color): Mesh = Gui.createRect(width,height,color)
 
@@ -23,7 +25,18 @@ abstract class GuiScreen()  {
     def drawItemStack(itemStack: ItemStack,xPos:Int,yPos:Int): Unit = itemRender.renderItemStackToGui(xPos,yPos,itemStack)
 
 
-    def init(): Unit
+
+    def keyTyped(typedChar: Char, keyCode: Int) {
+        if (keyCode == 1) {
+          oc.guiManager.setGuiScreen(null)
+        }
+    }
+
+    def init(orangeCraft: OrangeCraft): Unit = {
+        oc = orangeCraft
+        itemRender = oc.itemRender
+        renderer = oc.renderer
+    }
 
     def drawScreen(mouseX:Int,mouseY:Int): Unit
 

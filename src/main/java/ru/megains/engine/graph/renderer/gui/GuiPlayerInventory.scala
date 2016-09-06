@@ -1,6 +1,7 @@
 package ru.megains.engine.graph.renderer.gui
 
 import ru.megains.engine.graph.renderer.mesh.Mesh
+import ru.megains.game.OrangeCraft
 import ru.megains.game.entity.player.EntityPlayer
 
 class GuiPlayerInventory(entityPlayer: EntityPlayer) extends GuiContainer(entityPlayer.inventoryContainer) {
@@ -8,7 +9,8 @@ class GuiPlayerInventory(entityPlayer: EntityPlayer) extends GuiContainer(entity
 
     var playerInventory: Mesh = _
 
-    override def init(): Unit = {
+    override def init(orangeCraft: OrangeCraft): Unit = {
+        super.init(orangeCraft)
         playerInventory = createTextureRect(500,240,"gui/playerInventory")
     }
 

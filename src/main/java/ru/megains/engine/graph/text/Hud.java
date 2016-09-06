@@ -2,7 +2,7 @@ package ru.megains.engine.graph.text;
 
 
 import org.joml.Vector3f;
-import ru.megains.engine.Window;
+import org.lwjgl.opengl.Display;
 import ru.megains.game.OrangeCraft;
 import ru.megains.game.blockdata.BlockWorldPos;
 import ru.megains.game.entity.player.EntityPlayer;
@@ -13,14 +13,12 @@ import java.util.HashMap;
 public class Hud implements IHud {
 
     private final HashMap<String, Text> texts;
-    private Window window;
     private OrangeCraft megaGame;
     long lastTime;
     public static int frames;
 
     public Hud(OrangeCraft megaGame) {
         this.megaGame = megaGame;
-        this.window = megaGame.window;
         texts = new HashMap<>();
         putText("playerPos", new Text("Player position:"));
         putText("playerPos.x", new Text("x:"));
@@ -58,9 +56,9 @@ public class Hud implements IHud {
         EntityPlayer player = megaGame.player;
 
 
-        if (window.isResized()) {
-            updatePos();
-        }
+//        if (window.isResized()) {
+//            updatePos();
+//        }
         getText("playerPos.x").setText("x: " + player.posX());
         getText("playerPos.y").setText("y: " + player.posY());
         getText("playerPos.z").setText("z: " + player.posZ());
@@ -99,18 +97,18 @@ public class Hud implements IHud {
 
     public void updatePos() {
 
-        getText("playerPos").setPosition(0, window.getHeight() - 20, 0);
-        getText("playerPos.x").setPosition(0, window.getHeight() - 40, 0);
-        getText("playerPos.y").setPosition(0, window.getHeight() - 60, 0);
-        getText("playerPos.z").setPosition(0, window.getHeight() - 80, 0);
-        getText("BlockWorldPos").setPosition(0, window.getHeight() - 100, 0);
-        getText("BlockWorldPos.name").setPosition(0, window.getHeight() - 120, 0);
-        getText("BlockWorldPos.side").setPosition(0, window.getHeight() - 140, 0);
-        getText("BlockWorldPos.x").setPosition(0, window.getHeight() - 160, 0);
-        getText("BlockWorldPos.y").setPosition(0, window.getHeight() - 180, 0);
-        getText("BlockWorldPos.z").setPosition(0, window.getHeight() - 200, 0);
-        getText("Memory use").setPosition(window.getWidth() - 200, window.getHeight() - 20, 0);
-        getText("fps").setPosition(window.getWidth() - 200, window.getHeight() - 40, 0);
+        getText("playerPos").setPosition(0, Display.getHeight() - 20, 0);
+        getText("playerPos.x").setPosition(0, Display.getHeight() - 40, 0);
+        getText("playerPos.y").setPosition(0, Display.getHeight() - 60, 0);
+        getText("playerPos.z").setPosition(0, Display.getHeight() - 80, 0);
+        getText("BlockWorldPos").setPosition(0, Display.getHeight() - 100, 0);
+        getText("BlockWorldPos.name").setPosition(0, Display.getHeight() - 120, 0);
+        getText("BlockWorldPos.side").setPosition(0, Display.getHeight() - 140, 0);
+        getText("BlockWorldPos.x").setPosition(0, Display.getHeight() - 160, 0);
+        getText("BlockWorldPos.y").setPosition(0, Display.getHeight() - 180, 0);
+        getText("BlockWorldPos.z").setPosition(0, Display.getHeight() - 200, 0);
+        getText("Memory use").setPosition(Display.getWidth() - 200, Display.getHeight() - 20, 0);
+        getText("fps").setPosition(Display.getWidth() - 200, Display.getHeight() - 40, 0);
 
     }
 }
