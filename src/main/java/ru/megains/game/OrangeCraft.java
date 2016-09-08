@@ -62,12 +62,17 @@ public class OrangeCraft implements IGameLogic {
     @Override
     public void init() throws Exception {
         try {
+          //  PixelFormat as = new PixelFormat(0,0,8,8,0,0,0,0,false,false);
             Display.setDisplayMode(new DisplayMode(800, 600));
+         //   Display.create(as);
             Display.create();
             GL11.glClearColor(0.5f, 0.6f, 0.7f, 0.0F);
 
+
+
         } catch (LWJGLException e) {
             e.printStackTrace();
+            System.exit(-1000);
         }
 
 
@@ -149,14 +154,17 @@ public class OrangeCraft implements IGameLogic {
             guiManager.handleInput();
         }else {
             runTickKeyboard();
+            runTickMouse();
         }
 
 
 
         world.update();
 
+        if(!guiManager.isGuiScreen()){
+            player.turn(  Mouse.getDX(),   Mouse.getDY());
+        }
 
-        player.turn(  Mouse.getDX(),   Mouse.getDY());
         player.update(cameraInc.x, cameraInc.y, cameraInc.z);
 
         camera.setPosition(player.posX(), player.posY() + player.levelView(), player.posZ());
@@ -190,17 +198,30 @@ public class OrangeCraft implements IGameLogic {
 
     }
 
+    private void runTickMouse() {
+        while (Mouse.next()){
+            int  button = Mouse.getEventButton();
+            boolean buttonState = Mouse.getEventButtonState();
+            if(button == 1 && buttonState && blockAndPos != null){
+                ItemStack stack = player.inventory().getStackSelect();
+                if (stack != null) {
+                    world.setBlock(blockAndPos.pos(), blockAndPos.block());
+                }
+            }
+        }
+    }
+
 
     private void runTickKeyboard(){
         while (Keyboard.next()){
+            if(Keyboard.getEventKeyState()){
+                switch (Keyboard.getEventKey()){
+                    case Keyboard.KEY_E:
+                        guiManager.setGuiScreen(new GuiPlayerInventory(player));
+                        break;
 
-           switch (Keyboard.getEventKey()){
-               case Keyboard.KEY_E:
-                   guiManager.setGuiScreen(new GuiPlayerInventory(player));
-                   break;
-
-           }
-
+                }
+            }
         }
     }
     public void grabMouseCursor()

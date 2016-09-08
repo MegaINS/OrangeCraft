@@ -23,11 +23,36 @@ abstract class GuiContainer(inventorySlots: Container) extends GuiScreen{
                 }
             }
         )
+        drawItemStack(inventorySlots.stackSelect,mouseX-20,mouseY-15)
 
 
     }
 
     override def cleanup(): Unit = {}
+
+
+    override def mouseClicked(x: Int, y: Int, button: Int): Unit = {
+        val slot = getSlotAtPosition(x,y)
+        if(slot!=null){
+            if(inventorySlots.stackSelect==null){
+                if(!slot.isEmpty){
+                    inventorySlots.stackSelect = slot.getStack
+                    slot.putStack(null)
+                }
+            }else{
+                if(slot.isEmpty){
+                    slot.putStack(inventorySlots.stackSelect)
+                    inventorySlots.stackSelect = null
+                }
+            }
+        }
+
+    }
+    def getSlotAtPosition(x: Int, y: Int):Slot = inventorySlots.inventorySlots.find(isMouseOverSlot(_, x, y)).orNull
+
+
+
+
 
     def isMouseOverSlot(slot: Slot,mouseX:Int, mouseY:Int): Boolean = {
             mouseX>=slot.xPos && mouseX<= slot.xPos +40 && mouseY >= slot.yPos && mouseY<= slot.yPos +40

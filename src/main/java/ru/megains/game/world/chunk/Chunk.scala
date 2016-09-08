@@ -14,17 +14,23 @@ import scala.util.Random
 
 class Chunk(val world: World, val position: ChunkPosition) {
 
+    var blockStorage: ExtendedBlockStorage = _
+    if(blockStorage == null) new ExtendedBlockStorage
 
-    def this(world: World, position: ChunkPosition, data: Array[Byte]) {
+//    def this(world: World, position: ChunkPosition, data: Array[Byte]) {
+//        this(world, position)
+//        for (x <- 0 to 15; y <- 0 to 15; z <- 0 to 15) {
+//            blockStorage.setBlockId(x, y, z, data(blockStorage.getIndex(x, y, z)))
+//        }
+//    }
+
+    def this(world: World, position: ChunkPosition,blockStorage: ExtendedBlockStorage){
         this(world, position)
-        for (x <- 0 to 15; y <- 0 to 15; z <- 0 to 15) {
-            blockStorage.setBlockId(x, y, z, data(blockStorage.getIndex(x, y, z)))
-            // setBlockChunkCord(new BlockWorldPos(x,y,z) ,Block.getBlockById(data(blockStorage.getIndex(x,y,z))))
-        }
+        this.blockStorage = blockStorage
     }
 
 
-    val blockStorage: ExtendedBlockStorage = new ExtendedBlockStorage
+
     var updateLCG: Int = new Random().nextInt()
 
 
@@ -123,6 +129,8 @@ class Chunk(val world: World, val position: ChunkPosition) {
 object Chunk {
 
     def getIndex(x: Long, y: Long, z: Long): Long = (x & 16777215l) << 40 | (z & 16777215l) << 16 | (y & 65535L)
+    def getIndex(chunk: Chunk): Long = getIndex(chunk.position.x, chunk.position.y, chunk.position.z)
+
 
     val CHUNK_SIZE = 16
 }

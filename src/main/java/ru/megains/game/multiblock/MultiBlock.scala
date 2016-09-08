@@ -12,11 +12,15 @@ import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
 
 
-class MultiBlock(firstBlock: Block, blockPos: MultiBlockPos) extends AMultiBlock {
+class MultiBlock() extends AMultiBlock {
+
+    def this(block: Block, blockPos: MultiBlockPos){
+        this()
+        putBlock(blockPos,block)
+    }
 
 
     val blockData: mutable.HashMap[MultiBlockPos, Block] = new mutable.HashMap[MultiBlockPos, Block]
-    blockData += blockPos -> firstBlock
 
     override def isFullBlock: Boolean = false
 
@@ -80,7 +84,7 @@ class MultiBlock(firstBlock: Block, blockPos: MultiBlockPos) extends AMultiBlock
 
     }
 
-    override def isEmpty(): Boolean = blockData.isEmpty
+    override def isEmpty: Boolean = blockData.isEmpty
 }
 
 object MultiBlock {

@@ -2,6 +2,7 @@ package ru.megains.engine.graph.renderer.gui
 
 import java.awt.Color
 
+import org.lwjgl.input.Keyboard._
 import ru.megains.engine.graph.Renderer
 import ru.megains.engine.graph.renderer.RenderItem
 import ru.megains.engine.graph.renderer.mesh.Mesh
@@ -24,12 +25,18 @@ abstract class GuiScreen()  {
 
     def drawItemStack(itemStack: ItemStack,xPos:Int,yPos:Int): Unit = itemRender.renderItemStackToGui(xPos,yPos,itemStack)
 
+    def mouseReleased(x: Int, y: Int, button: Int): Unit = {}
+
+    def mouseClicked(x: Int, y: Int, button: Int): Unit = {}
+
+    def mouseClickMove(x: Int, y: Int): Unit = {}
 
 
     def keyTyped(typedChar: Char, keyCode: Int) {
-        if (keyCode == 1) {
-          oc.guiManager.setGuiScreen(null)
+        keyCode match {
+            case KEY_E | KEY_ESCAPE => oc.guiManager.setGuiScreen(null)
         }
+
     }
 
     def init(orangeCraft: OrangeCraft): Unit = {

@@ -47,4 +47,8 @@ class InventoryPlayer(val entityPlayer: EntityPlayer) extends AInventory{
 
 
     override def getStackInSlot(index: Int): ItemStack = mainInventory(index)
+
+    override def setInventorySlotContents(index: Int, itemStack: ItemStack): Unit = {
+        mainInventory(index) = itemStack
+    }
 }

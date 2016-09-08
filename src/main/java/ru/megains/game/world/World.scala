@@ -131,7 +131,7 @@ class World(val length: Int, val height: Int, val width: Int) {
     }
 
     def save(): Unit = {
-        chunks.values.foreach(_.save())
+        chunks.values.foreach(ChunkLoader.save)
     }
 
     def rayTraceBlocks(vec1: Vector3f, vec32: Vector3f, stopOnLiquid: Boolean, ignoreBlockWithoutBoundingBox: Boolean, returnLastUncollidableBlock: Boolean): RayTraceResult = {

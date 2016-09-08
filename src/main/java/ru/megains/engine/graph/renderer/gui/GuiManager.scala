@@ -1,6 +1,6 @@
 package ru.megains.engine.graph.renderer.gui
 
-import org.lwjgl.input.Keyboard
+import org.lwjgl.input.{Keyboard, Mouse}
 import ru.megains.game.OrangeCraft
 
 import scala.collection.mutable
@@ -54,8 +54,30 @@ class GuiManager(val orangeCraft: OrangeCraft) {
     }
 
     def handleInput(): Unit ={
+        while(Mouse.next()){
+
+            val x = Mouse.getX
+            val y = Mouse.getY
+            val button = Mouse.getEventButton
+            val buttonState = Mouse.getEventButtonState
+            if(button == -1){
+                guiScreen.mouseClickMove(x,y)
+            }else if(buttonState){
+                guiScreen.mouseClicked(x,y,button)
+            }else{
+                guiScreen.mouseReleased(x,y,button)
+            }
+
+
+        }
+
+
         while (Keyboard.next()) {
-            guiScreen.keyTyped( Keyboard.getEventCharacter,Keyboard.getEventKey)
+            if(Keyboard.getEventKeyState){
+                guiScreen.keyTyped( Keyboard.getEventCharacter,Keyboard.getEventKey)
+            }
+
+
 
         }
     }
