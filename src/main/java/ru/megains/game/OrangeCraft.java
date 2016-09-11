@@ -11,11 +11,6 @@ import ru.megains.engine.IGameLogic;
 import ru.megains.engine.graph.Camera;
 import ru.megains.engine.graph.Renderer;
 import ru.megains.engine.graph.WorldRenderer;
-import ru.megains.engine.graph.renderer.RenderItem;
-import ru.megains.engine.graph.renderer.gui.GuiManager;
-import ru.megains.engine.graph.renderer.gui.GuiPlayerInventory;
-import ru.megains.engine.graph.renderer.texture.TextureManager;
-import ru.megains.engine.graph.text.Hud;
 import ru.megains.game.block.Block;
 import ru.megains.game.blockdata.BlockDirection;
 import ru.megains.game.blockdata.BlockSize;
@@ -26,22 +21,31 @@ import ru.megains.game.multiblock.MultiBlockSingle$;
 import ru.megains.game.util.BlockAndPos;
 import ru.megains.game.util.RayTraceResult;
 import ru.megains.game.world.World;
+import ru.megains.managers.GuiManager;
+import ru.megains.managers.TextureManager;
+import ru.megains.renderer.FontRender;
+import ru.megains.renderer.RenderItem;
+import ru.megains.renderer.gui.GuiInGameMenu;
+import ru.megains.renderer.gui.GuiPlayerInventory;
 
 
 public class OrangeCraft implements IGameLogic {
 
+    public static OrangeCraft orangeCraft;
     public World world;
     public Renderer renderer;
     public RenderItem itemRender;
+    public EntityPlayer player;
+    public TextureManager textureManager;
+    public GuiManager guiManager;
+    public RayTraceResult result;
+    public BlockAndPos blockAndPos;
     private Camera camera;
     private Vector3f cameraInc;
     private WorldRenderer worldRenderer;
-    public EntityPlayer player;
-    private Hud hud;
-    public static OrangeCraft orangeCraft;
-
-    public TextureManager textureManager;
-    public GuiManager guiManager;
+    public FontRender fontRender;
+    public int frames;
+    // private Hud hud;
 
 
     public OrangeCraft() {
@@ -58,16 +62,14 @@ public class OrangeCraft implements IGameLogic {
 
     }
 
-
     @Override
     public void init() throws Exception {
         try {
-          //  PixelFormat as = new PixelFormat(0,0,8,8,0,0,0,0,false,false);
+            //  PixelFormat as = new PixelFormat(0,0,8,8,0,0,0,0,false,false);
             Display.setDisplayMode(new DisplayMode(800, 600));
-         //   Display.create(as);
+            //   Display.create(as);
             Display.create();
             GL11.glClearColor(0.5f, 0.6f, 0.7f, 0.0F);
-
 
 
         } catch (LWJGLException e) {
@@ -76,19 +78,20 @@ public class OrangeCraft implements IGameLogic {
         }
 
 
-
         Block.initBlocks();
         MultiBlockSingle$.MODULE$.initMultiBlockSingle();
         textureManager = new TextureManager();
-        renderer.init(textureManager);
-        textureManager.loadTexture(TextureManager.locationBlockTexture(), textureManager.textureMapBlock());
         worldRenderer = new WorldRenderer(world, textureManager);
+        renderer.init(textureManager, worldRenderer);
+        textureManager.loadTexture(TextureManager.locationBlockTexture(), textureManager.textureMapBlock());
+
         itemRender = new RenderItem(this);
+        fontRender = new FontRender();
 
         world.init();
         worldRenderer.init();
 
-        hud = new Hud(this);
+        //   hud = new Hud(this);
         guiManager.init();
 
 
@@ -97,9 +100,6 @@ public class OrangeCraft implements IGameLogic {
         grabMouseCursor();
 
     }
-
-
-
 
     public void input() {
         cameraInc.set(0, 0, 0);
@@ -140,49 +140,40 @@ public class OrangeCraft implements IGameLogic {
 
     }
 
-    private int iw4s = 0;
-    private int iws = 0;
-
-    public RayTraceResult result;
-
-    public BlockAndPos blockAndPos;
-
-
     public void update() {
 
-        if(guiManager.isGuiScreen()){
+        if (guiManager.isGuiScreen()) {
             guiManager.handleInput();
-        }else {
+        } else {
             runTickKeyboard();
             runTickMouse();
         }
 
 
-
         world.update();
 
-        if(!guiManager.isGuiScreen()){
-            player.turn(  Mouse.getDX(),   Mouse.getDY());
+        if (!guiManager.isGuiScreen()) {
+            player.turn(Mouse.getDX(), Mouse.getDY());
         }
 
         player.update(cameraInc.x, cameraInc.y, cameraInc.z);
 
         camera.setPosition(player.posX(), player.posY() + player.levelView(), player.posZ());
         camera.setRotation(player.xRot(), player.yRot(), 0);
-        player.inventory().changeStackSelect(Mouse.getDWheel()*-1);
-
+        player.inventory().changeStackSelect(Mouse.getDWheel() * -1);
 
 
         result = player.rayTrace(5, 0.1f);
 
 
-        hud.update();
+        //  hud.update();
+        guiManager.tick();
 
 
         if (result != null) {
             ItemStack stack = player.inventory().getStackSelect();
             if (stack != null) {
-                isSetBlock( Block.getBlockFromItem(stack.item()));
+                isSetBlock(Block.getBlockFromItem(stack.item()));
             } else {
                 isBreakBlock();
             }
@@ -196,13 +187,14 @@ public class OrangeCraft implements IGameLogic {
         }
 
 
+        renderer.tick();
     }
 
     private void runTickMouse() {
-        while (Mouse.next()){
-            int  button = Mouse.getEventButton();
+        while (Mouse.next()) {
+            int button = Mouse.getEventButton();
             boolean buttonState = Mouse.getEventButtonState();
-            if(button == 1 && buttonState && blockAndPos != null){
+            if (button == 1 && buttonState && blockAndPos != null) {
                 ItemStack stack = player.inventory().getStackSelect();
                 if (stack != null) {
                     world.setBlock(blockAndPos.pos(), blockAndPos.block());
@@ -211,21 +203,23 @@ public class OrangeCraft implements IGameLogic {
         }
     }
 
-
-    private void runTickKeyboard(){
-        while (Keyboard.next()){
-            if(Keyboard.getEventKeyState()){
-                switch (Keyboard.getEventKey()){
+    private void runTickKeyboard() {
+        while (Keyboard.next()) {
+            if (Keyboard.getEventKeyState()) {
+                switch (Keyboard.getEventKey()) {
                     case Keyboard.KEY_E:
                         guiManager.setGuiScreen(new GuiPlayerInventory(player));
+                        break;
+                    case Keyboard.KEY_ESCAPE:
+                        guiManager.setGuiScreen(new GuiInGameMenu());
                         break;
 
                 }
             }
         }
     }
-    public void grabMouseCursor()
-    {
+
+    public void grabMouseCursor() {
 
         Mouse.setGrabbed(true);
 
@@ -234,12 +228,10 @@ public class OrangeCraft implements IGameLogic {
     /**
      * Ungrabs the mouse cursor so it can be moved and set it to the center of the screen
      */
-    public void ungrabMouseCursor()
-    {
+    public void ungrabMouseCursor() {
         Mouse.setCursorPosition(Display.getWidth() / 2, Display.getHeight() / 2);
         Mouse.setGrabbed(false);
     }
-
 
     private void isSetBlock(Block block) {
 
@@ -406,15 +398,10 @@ public class OrangeCraft implements IGameLogic {
 
     }
 
-
-    private boolean clickL = false;
-    private boolean clickP = false;
-
-
     @Override
     public void render() {
 
-        renderer.render( camera, hud, worldRenderer);
+        renderer.render(camera, worldRenderer);
 
 
     }
@@ -423,13 +410,13 @@ public class OrangeCraft implements IGameLogic {
     @Override
     public void cleanup() {
 
-        if(world!=null){
+        if (world != null) {
             world.save();
         }
-        if(renderer!=null){
+        if (renderer != null) {
             renderer.cleanup();
         }
-        if(worldRenderer!=null){
+        if (worldRenderer != null) {
             worldRenderer.cleanUp();
         }
         Display.destroy();

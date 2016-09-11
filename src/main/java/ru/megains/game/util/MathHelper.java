@@ -4,10 +4,6 @@ import java.util.Random;
 
 public class MathHelper {
     /**
-     * A table of sin values computed from 0 (inclusive) to 2*pi (exclusive), with steps of 2*PI / 65536.
-     */
-    private static float[] SIN_TABLE = new float[65536];
-    /**
      * Though it looks like an array, this is really more like a mapping.  Key (index of this array) is the upper 5 bits
      * of the result of multiplying a 32-bit unsigned integer by the B(2, 5) De Bruijn sequence 0x077CB531.  Value
      * (value stored in the array) is the unique index (from the right) of the leftmost one-bit in a 32-bit unsigned
@@ -16,6 +12,18 @@ public class MathHelper {
      */
     private static final int[] multiplyDeBruijnBitPosition;
     private static final String __OBFID = "CL_00001496";
+    /**
+     * A table of sin values computed from 0 (inclusive) to 2*pi (exclusive), with steps of 2*PI / 65536.
+     */
+    private static float[] SIN_TABLE = new float[65536];
+
+    static {
+        for (int var0 = 0; var0 < 65536; ++var0) {
+            SIN_TABLE[var0] = (float) Math.sin((double) var0 * Math.PI * 2.0D / 65536.0D);
+        }
+
+        multiplyDeBruijnBitPosition = new int[]{0, 1, 28, 2, 29, 14, 24, 3, 30, 22, 20, 15, 25, 17, 4, 8, 31, 27, 13, 23, 21, 19, 16, 7, 26, 12, 18, 6, 11, 5, 10, 9};
+    }
 
     /**
      * sin looked up in a table
@@ -24,7 +32,6 @@ public class MathHelper {
 
         return 0.0625 * Math.round(a / 0.0625);
     }
-
 
     public static float sin(float p_76126_0_) {
         return SIN_TABLE[(int) (p_76126_0_ * 10430.378F) & 65535];
@@ -76,7 +83,6 @@ public class MathHelper {
         long i = (long) p_76124_0_;
         return p_76124_0_ < (double) i ? i - 1L : i;
     }
-
 
     public static int func_154353_e(double p_154353_0_) {
         return (int) (p_154353_0_ >= 0.0D ? p_154353_0_ : -p_154353_0_ + 1.0D);
@@ -329,7 +335,6 @@ public class MathHelper {
         return calculateLogBaseTwoDeBruijn(p_151239_0_) - (isPowerOfTwo(p_151239_0_) ? 0 : 1);
     }
 
-
     public static int func_154354_b(int p_154354_0_, int p_154354_1_) {
         if (p_154354_1_ == 0) {
             return 0;
@@ -341,13 +346,5 @@ public class MathHelper {
             int k = p_154354_0_ % p_154354_1_;
             return k == 0 ? p_154354_0_ : p_154354_0_ + p_154354_1_ - k;
         }
-    }
-
-    static {
-        for (int var0 = 0; var0 < 65536; ++var0) {
-            SIN_TABLE[var0] = (float) Math.sin((double) var0 * Math.PI * 2.0D / 65536.0D);
-        }
-
-        multiplyDeBruijnBitPosition = new int[]{0, 1, 28, 2, 29, 14, 24, 3, 30, 22, 20, 15, 25, 17, 4, 8, 31, 27, 13, 23, 21, 19, 16, 7, 26, 12, 18, 6, 11, 5, 10, 9};
     }
 }

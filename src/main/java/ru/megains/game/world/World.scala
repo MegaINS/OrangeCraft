@@ -20,10 +20,9 @@ import scala.util.Random
 
 class World(val length: Int, val height: Int, val width: Int) {
     val chunks: mutable.HashMap[Long, Chunk] = new mutable.HashMap[Long, Chunk]
-    var worldRenderer: WorldRenderer = _
     val rand: Random = new Random()
     val entities: ArrayBuffer[Entity] = new ArrayBuffer[Entity]()
-
+    var worldRenderer: WorldRenderer = _
 
     def init() {
 
@@ -50,6 +49,10 @@ class World(val length: Int, val height: Int, val width: Int) {
 
     }
 
+    def setAirBlock(pos: BlockWorldPos) {
+        setBlock(pos, Blocks.air)
+    }
+
     def setBlock(pos: BlockWorldPos, block: Block) {
         if (!validBlockPos(pos)) {
             return;
@@ -60,14 +63,15 @@ class World(val length: Int, val height: Int, val width: Int) {
         worldRenderer.reRender(pos)
     }
 
-    def setAirBlock(pos: BlockWorldPos) {
-        setBlock(pos, Blocks.air)
-    }
-
-
     def spawnEntityInWorld(entity: Entity): Unit = {
         entities += entity
     }
+
+    def isAirBlock(blockPos: BlockWorldPos): Boolean = if (validBlockPos(blockPos)) getChunk(blockPos).isAirBlockWorldCord(blockPos) else true
+
+    def isOpaqueCube(blockPos: BlockWorldPos): Boolean = getBlock(blockPos).isOpaqueCube
+
+    def getBlock(pos: BlockWorldPos): AMultiBlock = if (!validBlockPos(pos)) Blocks.multiAir else getChunk(pos).getBlockWorldCord(pos)
 
     def getChunk(blockPos: BlockWorldPos): Chunk = getChunk(blockPos.worldX >> 4, blockPos.worldY >> 4, blockPos.worldZ >> 4)
 
@@ -83,14 +87,7 @@ class World(val length: Int, val height: Int, val width: Int) {
 
     }
 
-    def isAirBlock(blockPos: BlockWorldPos): Boolean = if (validBlockPos(blockPos)) getChunk(blockPos).isAirBlockWorldCord(blockPos) else true
-
-
-    def getBlock(pos: BlockWorldPos): AMultiBlock = if (!validBlockPos(pos)) Blocks.multiAir else getChunk(pos).getBlockWorldCord(pos)
-
     def validBlockPos(pos: BlockWorldPos): Boolean = !(pos.worldZ < -width || pos.worldY < -height || pos.worldX < -length) && !(pos.worldZ > width - 1 || pos.worldY > height - 1 || pos.worldX > length - 1)
-
-    def isOpaqueCube(blockPos: BlockWorldPos): Boolean = getBlock(blockPos).isOpaqueCube
 
     def addBlocksInList(aabb: AxisAlignedBB): mutable.ArrayBuffer[AxisAlignedBB] = {
         var x0: Int = Math.floor(aabb.getMinX).toInt

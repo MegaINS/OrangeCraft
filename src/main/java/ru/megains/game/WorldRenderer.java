@@ -4,7 +4,7 @@
 //import ru.megains.engine.graph.Material;
 //import ru.megains.engine.graph.RenderChunk;
 //import ru.megains.engine.graph.Texture;
-//import ru.megains.engine.graph.renderer.texture.TextureLoader;
+//import ru.megains.renderer.texture.TextureLoader;
 //import ru.megains.game.blockdata.BlockPos;
 //import ru.megains.game.entity.Entity;
 //import ru.megains.game.world.World;

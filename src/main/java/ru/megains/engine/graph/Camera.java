@@ -22,6 +22,10 @@ public class Camera {
         return position;
     }
 
+    public void setPosition(Vector3f position) {
+        this.position.set(position);
+    }
+
     public void setPosition(float x, float y, float z) {
         position.x = x;
         position.y = y;
@@ -44,6 +48,10 @@ public class Camera {
         return rotation;
     }
 
+    public void setRotation(Vector3f rotation) {
+        this.rotation.set(rotation);
+    }
+
     public void setRotation(float x, float y, float z) {
         rotation.x = x;
         rotation.y = y;
@@ -54,13 +62,5 @@ public class Camera {
         rotation.x += offsetX;
         rotation.y += offsetY;
         rotation.y += offsetZ;
-    }
-
-    public void setRotation(Vector3f rotation) {
-        this.rotation.set(rotation);
-    }
-
-    public void setPosition(Vector3f position) {
-        this.position.set(position);
     }
 }

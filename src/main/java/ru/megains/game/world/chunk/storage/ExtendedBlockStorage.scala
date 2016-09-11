@@ -13,11 +13,11 @@ class ExtendedBlockStorage {
     val data: BitArray = new BitArray(4096, 16)
     val multiBlockStorage: mutable.HashMap[Int, MultiBlock] = new mutable.HashMap[Int, MultiBlock]
 
-    def getIndex(x: Int, y: Int, z: Int): Int = x << 8 | y << 4 | z
-
     def getBlockId(x: Int, y: Int, z: Int) = data.get(getIndex(x, y, z))
 
     def getBlock(x: Int, y: Int, z: Int) = Block.getBlockById(data.get(getIndex(x, y, z)))
+
+    def getIndex(x: Int, y: Int, z: Int): Int = x << 8 | y << 4 | z
 
     def setBlockId(x: Int, y: Int, z: Int, value: Int) = data.set(getIndex(x, y, z), value)
 
@@ -33,7 +33,7 @@ class ExtendedBlockStorage {
     def getMultiBlock(x: Int, y: Int, z: Int): AMultiBlock = multiBlockStorage.getOrElse(
         getIndex(x, y, z),
         default = {
-          //  println("Error not multiBlock " + x + " " + y + " " + z)
+            //  println("Error not multiBlock " + x + " " + y + " " + z)
             Blocks.multiAir
         }
     )

@@ -15,31 +15,36 @@ import scala.util.Random
 class Chunk(val world: World, val position: ChunkPosition) {
 
     var blockStorage: ExtendedBlockStorage = _
-    if(blockStorage == null) new ExtendedBlockStorage
+    if (blockStorage == null) new ExtendedBlockStorage
 
-//    def this(world: World, position: ChunkPosition, data: Array[Byte]) {
-//        this(world, position)
-//        for (x <- 0 to 15; y <- 0 to 15; z <- 0 to 15) {
-//            blockStorage.setBlockId(x, y, z, data(blockStorage.getIndex(x, y, z)))
-//        }
-//    }
+    //    def this(world: World, position: ChunkPosition, data: Array[Byte]) {
+    //        this(world, position)
+    //        for (x <- 0 to 15; y <- 0 to 15; z <- 0 to 15) {
+    //            blockStorage.setBlockId(x, y, z, data(blockStorage.getIndex(x, y, z)))
+    //        }
+    //    }
+    var updateLCG: Int = new Random().nextInt()
 
-    def this(world: World, position: ChunkPosition,blockStorage: ExtendedBlockStorage){
+    def this(world: World, position: ChunkPosition, blockStorage: ExtendedBlockStorage) {
         this(world, position)
         this.blockStorage = blockStorage
     }
-
-
-
-    var updateLCG: Int = new Random().nextInt()
-
 
     def isAirBlockWorldCord(pos: BlockWorldPos): Boolean = {
         getBlockWorldCord(pos) == Blocks.multiAir
     }
 
-    def isAirBlockChunkCord(pos: BlockWorldPos): Boolean = {
-        getBlockChunkCord(pos) == Blocks.multiAir
+    def getBlockWorldCord(pos: BlockWorldPos): AMultiBlock = getBlockChunkCord(position.blockPosWorldToLocal(pos))
+
+    def getBlockChunkCord(pos: BlockWorldPos): AMultiBlock = {
+        val id = blockStorage.getBlockId(pos.worldX, pos.worldY, pos.worldZ)
+        var multiBlock: AMultiBlock = null
+        if (id == MultiBlock.id) {
+            multiBlock = blockStorage.getMultiBlock(pos.worldX, pos.worldY, pos.worldZ)
+        } else {
+            multiBlock = MultiBlock.getMultiBlock(id)
+        }
+        multiBlock
     }
 
     def updateRandomBlocks(rand: Random): Unit = {
@@ -99,20 +104,9 @@ class Chunk(val world: World, val position: ChunkPosition) {
         }
     }
 
-
-    def getBlockChunkCord(pos: BlockWorldPos): AMultiBlock = {
-        val id = blockStorage.getBlockId(pos.worldX, pos.worldY, pos.worldZ)
-        var multiBlock: AMultiBlock = null
-        if (id == MultiBlock.id) {
-            multiBlock = blockStorage.getMultiBlock(pos.worldX, pos.worldY, pos.worldZ)
-        } else {
-            multiBlock = MultiBlock.getMultiBlock(id)
-        }
-        multiBlock
+    def isAirBlockChunkCord(pos: BlockWorldPos): Boolean = {
+        getBlockChunkCord(pos) == Blocks.multiAir
     }
-
-    def getBlockWorldCord(pos: BlockWorldPos): AMultiBlock = getBlockChunkCord(position.blockPosWorldToLocal(pos))
-
 
     def save(): Unit = {
 
@@ -128,9 +122,9 @@ class Chunk(val world: World, val position: ChunkPosition) {
 
 object Chunk {
 
-    def getIndex(x: Long, y: Long, z: Long): Long = (x & 16777215l) << 40 | (z & 16777215l) << 16 | (y & 65535L)
+    val CHUNK_SIZE = 16
+
     def getIndex(chunk: Chunk): Long = getIndex(chunk.position.x, chunk.position.y, chunk.position.z)
 
-
-    val CHUNK_SIZE = 16
+    def getIndex(x: Long, y: Long, z: Long): Long = (x & 16777215l) << 40 | (z & 16777215l) << 16 | (y & 65535L)
 }

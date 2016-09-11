@@ -12,6 +12,7 @@ public class DirectionalLight {
     public Vector4f diffuse;
 
     public Vector4f specular;
+    OrthoCoords orthoCords;
     private float shadowPosMult = 5;
 
     public DirectionalLight() {
@@ -30,8 +31,6 @@ public class DirectionalLight {
     public float getShadowPosMult() {
         return shadowPosMult;
     }
-
-    OrthoCoords orthoCords;
 
     public OrthoCoords getOrthoCoords() {
 

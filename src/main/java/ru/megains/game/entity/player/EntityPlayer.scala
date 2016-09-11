@@ -7,8 +7,7 @@ import ru.megains.game.register.Blocks
 import ru.megains.game.world.World
 
 
-class EntityPlayer(world: World) extends EntityLivingBase(world,1.8f, 0.6f, 1.6f) {
-
+class EntityPlayer(world: World) extends EntityLivingBase(world, 1.8f, 0.6f, 1.6f) {
 
 
     val inventory = new InventoryPlayer(this)
@@ -21,7 +20,7 @@ class EntityPlayer(world: World) extends EntityLivingBase(world,1.8f, 0.6f, 1.6f
     inventory.addItemStackToInventory(new ItemStack(Blocks.stone))
     inventory.addItemStackToInventory(new ItemStack(Blocks.dirt))
     inventory.addItemStackToInventory(new ItemStack(Blocks.grass))
-    for(i<-0 to 30 ) {
+    for (i <- 0 to 30) {
         inventory.addItemStackToInventory(new ItemStack(Blocks.stone))
     }
 

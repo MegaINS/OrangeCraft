@@ -6,13 +6,9 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import ru.megains.engine.Frustum;
 import ru.megains.engine.Utils;
-import ru.megains.engine.graph.renderer.mesh.Mesh;
-import ru.megains.engine.graph.renderer.texture.TextureManager;
-import ru.megains.engine.graph.text.IHud;
-import ru.megains.engine.graph.text.Text;
 import ru.megains.game.OrangeCraft;
-import ru.megains.game.blockdata.BlockWorldPos;
 import ru.megains.game.util.BlockAndPos;
+import ru.megains.managers.TextureManager;
 
 import java.nio.FloatBuffer;
 
@@ -35,20 +31,17 @@ public class Renderer {
     private static final int MAX_SPOT_LIGHTS = 5;
 
     public final Transformation transformation;
-
-
-    private ShaderProgram sceneShaderProgram;
-
-
+    private final float specularPower;
     public ShaderProgram hudShaderProgram;
     public TextureManager textureManager;
 
     //  private ShaderProgram skyBoxShaderProgram;
-
-    private final float specularPower;
-
+    public int a;
+    private ShaderProgram sceneShaderProgram;
     private OrangeCraft cubeGame;
 
+    WorldRenderer worldRenderer;
+    Frustum frustum;
 
     public Renderer(OrangeCraft cubeGame) {
         this.cubeGame = cubeGame;
@@ -56,15 +49,13 @@ public class Renderer {
         specularPower = 10f;
     }
 
-    private Text text;
-
-    public void init( TextureManager textureManager) throws Exception {
+    public void init(TextureManager textureManager, WorldRenderer worldRenderer) throws Exception {
         this.textureManager = textureManager;
-
+        this.worldRenderer = worldRenderer;
 
         //  setupSkyBoxShader();
 
-        text = new Text("Hello");
+
 
         setupSceneShader();
         setupHudShader();
@@ -75,46 +66,6 @@ public class Renderer {
 
 
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    }
-
-
-    public void render(Camera camera, IHud hud, WorldRenderer worldRenderer) {
-
-
-        transformation.updateProjectionMatrix(FOV, 800, 600, Z_NEAR, Z_FAR, camera);
-        transformation.updateViewMatrix(camera);
-        Matrix4f projectionMatrix = transformation.getProjectionMatrix();
-        Matrix4f viewMatrix = transformation.getViewMatrix();
-        FloatBuffer _proj = projectionMatrix.get(BufferUtils.createFloatBuffer(16));
-        projectionMatrix.mul(viewMatrix);
-        FloatBuffer _modl = viewMatrix.get(BufferUtils.createFloatBuffer(16));
-
-        Frustum frustum = Frustum.getFrustum(_proj, _modl);
-
-        glEnable(GL_CULL_FACE);
-
-
-      //  glViewport(0, 0, 800, 600);
-//        if (Display.isResized()) {
-//
-//            Display.setResized(false);
-//        }
-
-        // Update projection and view atrices once per render cycle
-
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-
-        renderScene( camera, worldRenderer, frustum);
-
-
-        //   renderSkyBox(window, camera, scene);
-
-        renderHud( hud);
-
-
-        Display.update();
-
     }
 
 
@@ -130,6 +81,45 @@ public class Renderer {
 //        skyBoxShaderProgram.createUniform("texture_sampler");
 //        skyBoxShaderProgram.createUniform("ambientLight");
 //    }
+
+    public void render(Camera camera, WorldRenderer worldRenderer) {
+
+
+        transformation.updateProjectionMatrix(FOV, 800, 600, Z_NEAR, Z_FAR, camera);
+        transformation.updateViewMatrix(camera);
+        Matrix4f projectionMatrix = transformation.getProjectionMatrix();
+        Matrix4f viewMatrix = transformation.getViewMatrix();
+        FloatBuffer _proj = projectionMatrix.get(BufferUtils.createFloatBuffer(16));
+        projectionMatrix.mul(viewMatrix);
+        FloatBuffer _modl = viewMatrix.get(BufferUtils.createFloatBuffer(16));
+
+        frustum = Frustum.getFrustum(_proj, _modl);
+
+        glEnable(GL_CULL_FACE);
+        glEnable(GL_DEPTH_TEST);
+
+        //  glViewport(0, 0, 800, 600);
+//        if (Display.isResized()) {
+//
+//            Display.setResized(false);
+//        }
+
+        // Update projection and view atrices once per render cycle
+
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+
+        renderScene();
+
+
+        //   renderSkyBox(window, camera, scene);
+
+        renderGui();
+
+
+        Display.update();
+
+    }
 
     private void setupSceneShader() throws Exception {
         // Create shader
@@ -156,10 +146,6 @@ public class Renderer {
         hudShaderProgram.createUniform("hasTexture");
     }
 
-    public void clear() {
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    }
-
 
 //    private void renderSkyBox(Window window, Camera camera, Scene scene) {
 //        SkyBox skyBox = scene.getSkyBox();
@@ -184,10 +170,31 @@ public class Renderer {
 //        }
 //    }
 
+    public void clear() {
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    }
 
-    public int a;
 
-    private void renderScene( Camera camera,/*, Scene scene*/WorldRenderer worldRenderer, Frustum frustum) {
+    public void tick() {
+//        if(frustum != null) {
+//            RenderChunk.clearRend();
+//            scala.collection.Iterable<RenderChunk> renderChunks = worldRenderer.renderChunks().values();
+//
+//
+//            scala.collection.Iterator<RenderChunk> iterable = renderChunks.iterator();
+//            RenderChunk renderChunk;
+//            while (iterable.hasNext()) {
+//                renderChunk = iterable.next();
+//                if (frustum.cubeInFrustum(renderChunk.getCube())) {
+//
+//                    renderChunk.tick();
+//                }
+//
+//            }
+//        }
+    }
+
+    private void renderScene() {
         sceneShaderProgram.bind();
 
 
@@ -245,10 +252,10 @@ public class Renderer {
 
 
         glDisable(GL_CULL_FACE);
-        modelViewMatrix = transformation.buildTextModelViewMatrix(new BlockWorldPos(65, 65, 65));
-        sceneShaderProgram.setUniform("modelViewMatrix", modelViewMatrix);
+        //  modelViewMatrix = transformation.buildTextModelViewMatrix(new BlockWorldPos(65, 65, 65));
+        //  sceneShaderProgram.setUniform("modelViewMatrix", modelViewMatrix);
 
-        text.getMesh().render(sceneShaderProgram, textureManager);
+        //  text.getMesh().render(sceneShaderProgram, textureManager);
 
         BlockAndPos bp = OrangeCraft.orangeCraft.blockAndPos;
 
@@ -263,42 +270,23 @@ public class Renderer {
     }
 
 
-    private void renderHud( IHud hud) {
-        if (hud != null) {
-            glEnable(GL_BLEND);
-            glDisable(GL_CULL_FACE);
-            glDisable(GL_DEPTH_TEST);
+    private void renderGui() {
 
-            hudShaderProgram.bind();
+        glEnable(GL_BLEND);
+        glEnable(GL_CULL_FACE);
+        glDisable(GL_DEPTH_TEST);
 
+        hudShaderProgram.bind();
+        Matrix4f ortho = transformation.getOrtho2DProjectionMatrix(0, 800, 0, 600);
+        hudShaderProgram.setUniform("projectionMatrix", ortho);
 
-            Matrix4f ortho = transformation.getOrtho2DProjectionMatrix(0, 800, 0, 600);
-            hudShaderProgram.setUniform("projectionMatrix", ortho);
+        cubeGame.guiManager.draw(Mouse.getX(), Mouse.getY());
 
-            for (Text gameItem : hud.getGameItems().values()) {
-                Mesh mesh = gameItem.getMesh();
+        glEnable(GL_DEPTH_TEST);
+        glDisable(GL_BLEND);
+        glDisable(GL_CULL_FACE);
+        hudShaderProgram.unbind();
 
-                Matrix4f projModelMatrix = transformation.buildOrtoProjModelMatrix(gameItem);
-                hudShaderProgram.setUniform("modelMatrix", projModelMatrix);
-                mesh.render(hudShaderProgram, textureManager);
-            }
-
-            glEnable(GL_CULL_FACE);
-
-
-            cubeGame.guiManager.render(Mouse.getX(),Mouse.getY());
-
-
-            glEnable(GL_DEPTH_TEST);
-            glDisable(GL_BLEND);
-
-            //  glEnable(GL_DEPTH_TEST);
-
-
-            hudShaderProgram.unbind();
-
-
-        }
     }
 
 

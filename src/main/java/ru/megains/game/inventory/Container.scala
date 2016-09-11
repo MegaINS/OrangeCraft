@@ -6,11 +6,11 @@ import scala.collection.mutable.ArrayBuffer
 
 abstract class Container {
 
-    val inventorySlots:ArrayBuffer[Slot] = new ArrayBuffer[Slot]()
-    var stackSelect:ItemStack = _
+    val inventorySlots: ArrayBuffer[Slot] = new ArrayBuffer[Slot]()
+    var stackSelect: ItemStack = _
 
 
-    def addSlotToContainer(slot: Slot): Unit ={
+    def addSlotToContainer(slot: Slot): Unit = {
         inventorySlots += slot
     }
 }

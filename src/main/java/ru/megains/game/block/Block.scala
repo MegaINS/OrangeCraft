@@ -2,14 +2,14 @@ package ru.megains.game.block
 
 
 import org.joml.Vector3f
-import ru.megains.engine.graph.renderer.block.RenderBlockGlass
-import ru.megains.engine.graph.renderer.texture.{TTextureRegister, TextureAtlas}
 import ru.megains.game.blockdata.{BlockDirection, BlockSize, BlockWorldPos, MultiBlockPos}
 import ru.megains.game.item.Item
 import ru.megains.game.physics.{AxisAlignedBB, BlockAxisAlignedBB}
 import ru.megains.game.register.{Blocks, GameRegister}
 import ru.megains.game.util.RayTraceResult
 import ru.megains.game.world.World
+import ru.megains.renderer.block.RenderBlockGlass
+import ru.megains.renderer.texture.{TTextureRegister, TextureAtlas}
 
 import scala.util.Random
 
@@ -43,9 +43,9 @@ class Block(val name: String) {
 
     def getPhysicsBody: BlockAxisAlignedBB = BlockSize.FULL_AABB
 
-    def getSelectedBoundingBox(pos: BlockWorldPos, offset: MultiBlockPos): AxisAlignedBB = BlockSize.FULL_AABB.sum(offset.floatX, offset.floatY, offset.floatZ)
-
     def getBoundingBox(pos: BlockWorldPos, offset: MultiBlockPos): AxisAlignedBB = getSelectedBoundingBox(pos, offset).sum(pos.worldX, pos.worldY, pos.worldZ)
+
+    def getSelectedBoundingBox(pos: BlockWorldPos, offset: MultiBlockPos): AxisAlignedBB = BlockSize.FULL_AABB.sum(offset.floatX, offset.floatY, offset.floatZ)
 
     def collisionRayTrace(world: World, pos: BlockWorldPos, start: Vector3f, end: Vector3f, offset: MultiBlockPos): RayTraceResult = {
 
@@ -72,7 +72,7 @@ object Block {
         GameRegister.getIdByBlock(block)
     }
 
-    def getBlockFromItem(item: Item) ={
+    def getBlockFromItem(item: Item) = {
         GameRegister.getBlockFromItem(item)
     }
 

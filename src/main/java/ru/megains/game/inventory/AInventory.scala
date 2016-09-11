@@ -6,6 +6,6 @@ abstract class AInventory {
 
     def getStackInSlot(index: Int): ItemStack
 
-    def setInventorySlotContents(index: Int,itemStack: ItemStack):Unit
+    def setInventorySlotContents(index: Int, itemStack: ItemStack): Unit
 
 }

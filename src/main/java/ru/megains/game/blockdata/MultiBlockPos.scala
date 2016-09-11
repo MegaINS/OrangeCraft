@@ -18,8 +18,9 @@ class MultiBlockPos(val x: BlockSize, val y: BlockSize, val z: BlockSize) {
 }
 
 object MultiBlockPos {
-    def getForIndex(index:Int):MultiBlockPos ={
-        new MultiBlockPos(BlockSize.getForId(index >> 10 & 31),BlockSize.getForId(index >> 5 & 31),BlockSize.getForId(index & 31))
-    }
     val default = new MultiBlockPos(BlockSize.Zero, BlockSize.Zero, BlockSize.Zero)
+
+    def getForIndex(index: Int): MultiBlockPos = {
+        new MultiBlockPos(BlockSize.getForId(index >> 10 & 31), BlockSize.getForId(index >> 5 & 31), BlockSize.getForId(index & 31))
+    }
 }

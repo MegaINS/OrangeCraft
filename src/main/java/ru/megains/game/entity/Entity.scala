@@ -11,6 +11,7 @@ import scala.collection.mutable
 
 abstract class Entity(var world: World, val height: Float, val wight: Float, val levelView: Float) {
 
+    val body: AxisAlignedBB = new AxisAlignedBB()
     var posX: Float = 0
     var posY: Float = 0
     var posZ: Float = 0
@@ -22,7 +23,6 @@ abstract class Entity(var world: World, val height: Float, val wight: Float, val
     var xRot: Float = 0
     var speed: Float = 3
     var onGround: Boolean = false
-    val body: AxisAlignedBB = new AxisAlignedBB()
 
     def setPosition(x: Float, y: Float, z: Float) {
 

@@ -16,8 +16,6 @@ public class RayTraceResult {
      * Used to add extra hit info
      */
     public Object hitInfo = null;
-
-    private BlockWorldPos blockPos;
     /**
      * What type of ray trace hit was this? 0 = block, 1 = entity
      */
@@ -28,6 +26,7 @@ public class RayTraceResult {
      */
     public Vector3f hitVec;
     public Block block;
+    private BlockWorldPos blockPos;
 
     /**
      * The hit entity

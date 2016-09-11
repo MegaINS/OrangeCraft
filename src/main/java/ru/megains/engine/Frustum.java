@@ -7,7 +7,6 @@ import java.nio.FloatBuffer;
 
 
 public class Frustum {
-    public float[][] m_Frustum = new float[6][4];
     public static final int RIGHT = 0;
     public static final int LEFT = 1;
     public static final int BOTTOM = 2;
@@ -19,12 +18,13 @@ public class Frustum {
     public static final int C = 2;
     public static final int D = 3;
     private static Frustum frustum = new Frustum();
-    private FloatBuffer _proj = BufferUtils.createFloatBuffer(16);
-    private FloatBuffer _modl = BufferUtils.createFloatBuffer(16);
-    private FloatBuffer _clip = BufferUtils.createFloatBuffer(16);
+    public float[][] m_Frustum = new float[6][4];
     float[] proj = new float[16];
     float[] modl = new float[16];
     float[] clip = new float[16];
+    private FloatBuffer _proj = BufferUtils.createFloatBuffer(16);
+    private FloatBuffer _modl = BufferUtils.createFloatBuffer(16);
+    private FloatBuffer _clip = BufferUtils.createFloatBuffer(16);
 
     private Frustum() {
     }

@@ -1,7 +1,7 @@
 package ru.megains.game.block
 
-import ru.megains.engine.graph.renderer.texture.TTextureRegister
 import ru.megains.game.blockdata.{BlockSize, BlockWorldPos, MultiBlockPos}
+import ru.megains.renderer.texture.TTextureRegister
 
 
 class BlockAir(name: String) extends Block(name) {

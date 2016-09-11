@@ -23,8 +23,7 @@ class RegisterNamespace[T] {
 
     def getObject(name: String): T = nameObject(name)
 
-    def getIdByObject(Object: T): Int = objectId.getOrElse(Object,-1)
-
+    def getIdByObject(Object: T): Int = objectId.getOrElse(Object, -1)
 
 
     def contains(id: Int): Boolean = {

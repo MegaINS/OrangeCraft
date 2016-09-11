@@ -3,25 +3,30 @@ package ru.megains.engine;
 
 import org.lwjgl.opengl.Display;
 import ru.megains.engine.graph.RenderChunk;
-import ru.megains.engine.graph.text.Hud;
+import ru.megains.game.OrangeCraft;
 
 public class GameEngine implements Runnable {
 
 
-    private  float TARGET_FPS = 60 ;
-    private IGameLogic gameLogic;
+    private static int frames = 0;
+    private static double MB = 1024 * 1024;
+    private final Thread gameLoopThread;
+    private float TARGET_FPS = 60;
+    private OrangeCraft gameLogic;
     private Timer timer;
 
 
-    private final Thread gameLoopThread;
-
-
-    public GameEngine(IGameLogic gameLogic) {
+    public GameEngine(OrangeCraft gameLogic) {
         timer = new Timer(20);
         this.gameLogic = gameLogic;
         this.gameLoopThread = new Thread(this, "GAME_ENGINE");
     }
 
+    private static void printMemoryUsage() {
+        Runtime r = Runtime.getRuntime();
+        System.out.printf("Memory usage: total=%4.2f MB, free=%4.2f MB, max=%4.2f MB\n",
+                r.totalMemory() / MB, r.freeMemory() / MB, r.maxMemory() / MB);
+    }
 
     public void start() {
 
@@ -29,8 +34,6 @@ public class GameEngine implements Runnable {
         gameLoopThread.start();
 
     }
-
-
 
     public void run() {
         try {
@@ -43,8 +46,6 @@ public class GameEngine implements Runnable {
         }
     }
 
-    private static int frames = 0;
-
     private void gameLoop() {
 
 
@@ -54,7 +55,7 @@ public class GameEngine implements Runnable {
         int tick = 0;
         timer.init();
         while (running) {
-            if(Display.isCloseRequested()&&Display.isCreated()){
+            if (Display.isCloseRequested() && Display.isCreated()) {
                 running = false;
             }
 
@@ -74,7 +75,8 @@ public class GameEngine implements Runnable {
                 RenderChunk.chunkRender = 0;
                 RenderChunk.chunkUpdate = 0;
                 lastTime += 1000L;
-                Hud.frames = frames;
+                gameLogic.frames = frames;
+
                 frames = 0;
                 tick = 0;
                 printMemoryUsage();
@@ -94,14 +96,6 @@ public class GameEngine implements Runnable {
         }
     }
 
-    private static double MB = 1024 * 1024;
-
-    private static void printMemoryUsage() {
-        Runtime r = Runtime.getRuntime();
-        System.out.printf("Memory usage: total=%4.2f MB, free=%4.2f MB, max=%4.2f MB\n",
-                r.totalMemory() / MB, r.freeMemory() / MB, r.maxMemory() / MB);
-    }
-
     private void init() throws Exception {
 
         gameLogic.init();
@@ -117,8 +111,6 @@ public class GameEngine implements Runnable {
     private void render() {
 
         gameLogic.render();
-
-
 
 
     }

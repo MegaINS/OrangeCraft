@@ -1,14 +1,13 @@
 package ru.megains.game.register
 
-import ru.megains.engine.graph.renderer.api.{ARenderBlock, ARenderItem}
-import ru.megains.engine.graph.renderer.block.RenderBlockStandart
-import ru.megains.engine.graph.renderer.item.{RenderItemBlock, RenderItemStandart}
 import ru.megains.game.block.Block
 import ru.megains.game.item.{Item, ItemBlock}
 import ru.megains.game.multiblock.{AMultiBlock, MultiBlock, MultiBlockSingle}
+import ru.megains.renderer.api.{ARenderBlock, ARenderItem}
+import ru.megains.renderer.block.RenderBlockStandart
+import ru.megains.renderer.item.{RenderItemBlock, RenderItemStandart}
 
 object GameRegister {
-
 
 
     private val blockData = new RegisterNamespace[Block] with RegisterRender[ARenderBlock] {
@@ -31,13 +30,6 @@ object GameRegister {
         }
     }
 
-    def registerItem(id: Int, item: Item): Unit = {
-        if (privateRegisterItem(id, item)) {
-            itemData.registerRender(id, new RenderItemStandart(item))
-        }
-    }
-
-
     private def privateRegisterBlock(id: Int, block: Block): Boolean = {
         if (blockData.contains(block)) {
             println("Block \"" + block.name + "\" already register")
@@ -56,6 +48,11 @@ object GameRegister {
         false
     }
 
+    def registerItem(id: Int, item: Item): Unit = {
+        if (privateRegisterItem(id, item)) {
+            itemData.registerRender(id, new RenderItemStandart(item))
+        }
+    }
 
     private def privateRegisterItem(id: Int, item: Item): Boolean = {
         if (itemData.contains(item)) {
@@ -86,15 +83,9 @@ object GameRegister {
 
     def getBlockById(id: Int): Block = blockData.getObject(id)
 
-    def getIdByBlock(block: Block): Int = blockData.getIdByObject(block)
-
-    def getIdByItem(item: Item): Int = itemData.getIdByObject(item)
-
     def getItemById(id: Int): Item = itemData.getObject(id)
 
-
     def getBlockByName(name: String): Block = blockData.getObject(name)
-
 
     def registerBlockRender(block: Block, aRenderBlock: ARenderBlock): Unit = {
         val id: Int = getIdByBlock(block)
@@ -107,7 +98,11 @@ object GameRegister {
 
     def getBlockRender(block: Block): ARenderBlock = blockData.getRender(getIdByBlock(block))
 
+    def getIdByBlock(block: Block): Int = blockData.getIdByObject(block)
+
     def getItemRender(item: Item): ARenderItem = itemData.getRender(getIdByItem(item))
+
+    def getIdByItem(item: Item): Int = itemData.getIdByObject(item)
 
     def registerMultiBlockSingle(multiBlock: MultiBlockSingle): Unit = {
         if (multiBlockData.contains(multiBlock)) {

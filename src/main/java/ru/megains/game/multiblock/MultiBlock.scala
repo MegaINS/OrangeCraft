@@ -14,13 +14,29 @@ import scala.collection.mutable.ArrayBuffer
 
 class MultiBlock() extends AMultiBlock {
 
-    def this(block: Block, blockPos: MultiBlockPos){
+    val blockData: mutable.HashMap[MultiBlockPos, Block] = new mutable.HashMap[MultiBlockPos, Block]
+
+    def this(block: Block, blockPos: MultiBlockPos) {
         this()
-        putBlock(blockPos,block)
+        putBlock(blockPos, block)
     }
 
+    override def putBlock(pos: MultiBlockPos, block: Block) = {
 
-    val blockData: mutable.HashMap[MultiBlockPos, Block] = new mutable.HashMap[MultiBlockPos, Block]
+        if (block == Blocks.air) {
+            var key: MultiBlockPos = null
+            blockData.foreach((bd: (MultiBlockPos, Block)) => {
+                if (bd._1 == pos) key = bd._1
+            })
+            if (key != null) {
+                blockData.remove(key)
+            }
+        } else {
+            blockData += pos -> block
+        }
+
+
+    }
 
     override def isFullBlock: Boolean = false
 
@@ -58,23 +74,6 @@ class MultiBlock() extends AMultiBlock {
 
     }
 
-    override def putBlock(pos: MultiBlockPos, block: Block) = {
-
-        if (block == Blocks.air) {
-            var key: MultiBlockPos = null
-            blockData.foreach((bd: (MultiBlockPos, Block)) => {
-                if (bd._1 == pos) key = bd._1
-            })
-            if (key != null) {
-                blockData.remove(key)
-            }
-        } else {
-            blockData += pos -> block
-        }
-
-
-    }
-
     override def isCanPut(pos: BlockWorldPos, block: Block): Boolean = {
         val aabb = block.getPhysicsBody.getCopy.move(pos.blockX.value, pos.blockY.value, pos.blockZ.value)
 
@@ -88,10 +87,10 @@ class MultiBlock() extends AMultiBlock {
 }
 
 object MultiBlock {
+    val id = 0
+
     def getId(block: Block) = GameRegister.getMultiBlockId(block)
 
     def getMultiBlock(id: Int): AMultiBlock = GameRegister.getMultiBlock(id)
-
-    val id = 0
 }
 

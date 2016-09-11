@@ -1,23 +1,23 @@
 package ru.megains.engine.graph;
 
 
-import ru.megains.engine.graph.renderer.mesh.Mesh;
-import ru.megains.engine.graph.renderer.mesh.MeshMaker;
-import ru.megains.engine.graph.renderer.texture.TextureManager;
 import ru.megains.game.blockdata.BlockWorldPos;
 import ru.megains.game.multiblock.AMultiBlock;
 import ru.megains.game.physics.AxisAlignedBB;
 import ru.megains.game.world.World;
 import ru.megains.game.world.chunk.Chunk;
+import ru.megains.managers.TextureManager;
+import ru.megains.renderer.mesh.Mesh;
+import ru.megains.renderer.mesh.MeshMaker;
 
 public class RenderChunk {
 
-    private static int chunkSize = 16;
-    private static int rend = 0;
     public static int chunkRender = 0;
     public static int chunkUpdate = 0;
-    private boolean isReRender = true;
+    private static int chunkSize = 16;
+    private static int rend = 0;
     public final Chunk chunk;
+    private boolean isReRender = true;
     private AxisAlignedBB cube;
     private int blockRender;
     private Mesh[] meshes = new Mesh[2];
@@ -38,6 +38,9 @@ public class RenderChunk {
         cube = new AxisAlignedBB(minX, minY, minZ, chunk.position().maxX(), chunk.position().maxY(), chunk.position().maxZ());
     }
 
+    static void clearRend() {
+        rend = 0;
+    }
 
     public void render(int layer, ShaderProgram shaderProgram) {
         if (isReRender) {
@@ -51,6 +54,19 @@ public class RenderChunk {
             }
         }
         renderChunk(layer, shaderProgram);
+    }
+
+    public void tick() {
+        if (isReRender) {
+            if (rend < 1) {
+                rend++;
+                blockRender = 0;
+                cleanUp();
+                reRenderChunk(0);
+                isReRender = false;
+                chunkUpdate++;
+            }
+        }
     }
 
     private void renderChunk(int layer, ShaderProgram shaderProgram) {
@@ -90,7 +106,6 @@ public class RenderChunk {
         meshes[layer] = MeshMaker.makeMesh();
     }
 
-
     public void cleanUp() {
         for (Mesh mesh : meshes) {
             if (mesh != null) {
@@ -100,14 +115,9 @@ public class RenderChunk {
 
     }
 
-
     public void reRender() {
 
         isReRender = true;
-    }
-
-    static void clearRend() {
-        rend = 0;
     }
 
     AxisAlignedBB getCube() {

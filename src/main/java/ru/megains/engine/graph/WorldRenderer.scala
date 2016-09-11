@@ -1,14 +1,14 @@
 package ru.megains.engine.graph
 
 import ru.megains.engine.Frustum
-import ru.megains.engine.graph.renderer.mesh.{Mesh, MeshMaker}
-import ru.megains.engine.graph.renderer.texture.TextureManager
 import ru.megains.game.blockdata.{BlockWorldPos, MultiBlockPos}
 import ru.megains.game.entity.item.EntityItem
 import ru.megains.game.register.GameRegister
 import ru.megains.game.util.BlockAndPos
 import ru.megains.game.world.World
 import ru.megains.game.world.chunk.{Chunk, ChunkVoid}
+import ru.megains.managers.TextureManager
+import ru.megains.renderer.mesh.{Mesh, MeshMaker}
 
 import scala.collection.mutable
 
@@ -18,11 +18,11 @@ class WorldRenderer(val world: World, val textureManager: TextureManager) {
 
     val renderChunks: mutable.HashMap[Long, RenderChunk] = new mutable.HashMap[Long, RenderChunk]
     var voidRender: RenderChunk = new RenderChunk(new ChunkVoid, textureManager)
+    var mesh: Mesh = _
 
     def init() {
         world.chunks.foreach((chunk: (Long, Chunk)) => renderChunks.put(chunk._1, new RenderChunk(chunk._2, textureManager)))
     }
-
 
     def reRender(pos: BlockWorldPos) {
         val x: Int = pos.worldX >> 4
@@ -44,8 +44,6 @@ class WorldRenderer(val world: World, val textureManager: TextureManager) {
     }
 
     def cleanUp(): Unit = renderChunks.values.foreach(_.cleanUp)
-
-    var mesh: Mesh = _
 
     def updateBlockBounds(bp: BlockAndPos): Unit = {
         if (mesh != null) {

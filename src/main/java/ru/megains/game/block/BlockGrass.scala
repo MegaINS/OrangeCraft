@@ -1,8 +1,8 @@
 package ru.megains.game.block
 
-import ru.megains.engine.graph.renderer.texture.{TTextureRegister, TextureAtlas}
 import ru.megains.game.blockdata.{BlockDirection, BlockWorldPos}
 import ru.megains.game.world.World
+import ru.megains.renderer.texture.{TTextureRegister, TextureAtlas}
 
 import scala.util.Random
 

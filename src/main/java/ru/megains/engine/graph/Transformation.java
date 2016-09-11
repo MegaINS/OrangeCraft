@@ -2,12 +2,11 @@ package ru.megains.engine.graph;
 
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
-import ru.megains.engine.graph.renderer.gui.GuiRenderInfo;
-import ru.megains.engine.graph.text.Text;
 import ru.megains.game.blockdata.BlockWorldPos;
 import ru.megains.game.entity.Entity;
 import ru.megains.game.physics.AxisAlignedBB;
 import ru.megains.game.position.ChunkPosition;
+import ru.megains.renderer.gui.GuiRenderInfo;
 
 public class Transformation {
 
@@ -158,28 +157,26 @@ public class Transformation {
 //        return modelLightViewMatrix.mul(modelLightMatrix);
 //    }
 
-    Matrix4f buildOrtoProjModelMatrix(Text gameItem) {
-        Vector3f rotation = gameItem.getRotation();
-        modelMatrix.identity().translate(gameItem.getPosition()).
-                rotateX((float) Math.toRadians(-rotation.x)).
-                rotateY((float) Math.toRadians(-rotation.y)).
-                rotateZ((float) Math.toRadians(-rotation.z)).
-                scale(gameItem.getScale());
-        return modelMatrix;
-    }
 
-    public Matrix4f buildOrtoProjModelMatrix(int x,int y) {
+    public Matrix4f buildOrtoProjModelMatrix(int x, int y) {
 
-        return  modelMatrix.identity().translate(x,y,0);
+        return modelMatrix.identity().translate(x, y, 0);
 
     }
-    public Matrix4f buildOrtoProjModelMatrix(int xPos,int yPos,int zPos,int xPot,int yPot,int zPot,float scale) {
 
-        return  modelMatrix.identity()
-                .translate(xPos,yPos,zPos)
-                .rotateXYZ( (float)Math.toRadians(-xPot),
-                            (float)Math.toRadians(-yPot),
-                            (float)Math.toRadians(-zPot))
+    public Matrix4f buildOrtoProjModelMatrix(int x, int y, float scale) {
+
+        return modelMatrix.identity().translate(x, y, 0).scale(scale);
+
+    }
+
+    public Matrix4f buildOrtoProjModelMatrix(int xPos, int yPos, int zPos, int xPot, int yPot, int zPot, float scale) {
+
+        return modelMatrix.identity()
+                .translate(xPos, yPos, zPos)
+                .rotateXYZ((float) Math.toRadians(-xPot),
+                        (float) Math.toRadians(-yPot),
+                        (float) Math.toRadians(-zPot))
                 .scale(scale);
 
     }
