@@ -1,13 +1,14 @@
 package ru.megains.engine.graph
 
-import ru.megains.engine.Frustum
+
 import ru.megains.game.blockdata.{BlockWorldPos, MultiBlockPos}
 import ru.megains.game.entity.item.EntityItem
+import ru.megains.game.managers.TextureManager
 import ru.megains.game.register.GameRegister
 import ru.megains.game.util.BlockAndPos
 import ru.megains.game.world.World
 import ru.megains.game.world.chunk.{Chunk, ChunkVoid}
-import ru.megains.managers.TextureManager
+import ru.megains.renderer.Frustum
 import ru.megains.renderer.mesh.{Mesh, MeshMaker}
 
 import scala.collection.mutable

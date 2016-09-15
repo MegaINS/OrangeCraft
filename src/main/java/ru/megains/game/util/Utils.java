@@ -1,4 +1,4 @@
-package ru.megains.engine;
+package ru.megains.game.util;
 
 import java.io.BufferedReader;
 import java.io.InputStream;

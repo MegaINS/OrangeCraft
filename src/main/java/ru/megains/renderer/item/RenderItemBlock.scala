@@ -3,7 +3,7 @@ package ru.megains.renderer.item
 import ru.megains.engine.graph.ShaderProgram
 import ru.megains.game.blockdata.BlockDirection
 import ru.megains.game.item.ItemBlock
-import ru.megains.managers.TextureManager
+import ru.megains.game.managers.TextureManager
 import ru.megains.renderer.api.ARenderItem
 import ru.megains.renderer.mesh.{Mesh, MeshMaker}
 import ru.megains.renderer.texture.TextureAtlas

@@ -1,4 +1,4 @@
-package ru.megains.engine;
+package ru.megains.renderer;
 
 import org.lwjgl.BufferUtils;
 import ru.megains.game.physics.AxisAlignedBB;

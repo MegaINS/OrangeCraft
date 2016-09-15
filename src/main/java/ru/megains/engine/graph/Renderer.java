@@ -4,11 +4,11 @@ import org.joml.Matrix4f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
-import ru.megains.engine.Frustum;
-import ru.megains.engine.Utils;
 import ru.megains.game.OrangeCraft;
+import ru.megains.game.managers.TextureManager;
 import ru.megains.game.util.BlockAndPos;
-import ru.megains.managers.TextureManager;
+import ru.megains.game.util.Utils;
+import ru.megains.renderer.Frustum;
 
 import java.nio.FloatBuffer;
 
@@ -112,7 +112,7 @@ public class Renderer {
         renderScene();
 
 
-        //   renderSkyBox(window, camera, scene);
+        // renderSkyBox(window, camera, scene);
 
         renderGui();
 
@@ -257,7 +257,7 @@ public class Renderer {
 
         //  text.getMesh().render(sceneShaderProgram, textureManager);
 
-        BlockAndPos bp = OrangeCraft.orangeCraft.blockAndPos;
+        BlockAndPos bp = cubeGame.blockAndPos();
 
         if (bp != null) {
             modelViewMatrix = transformation.buildBlockModelViewMatrix(bp.pos());
@@ -280,7 +280,8 @@ public class Renderer {
         Matrix4f ortho = transformation.getOrtho2DProjectionMatrix(0, 800, 0, 600);
         hudShaderProgram.setUniform("projectionMatrix", ortho);
 
-        cubeGame.guiManager.draw(Mouse.getX(), Mouse.getY());
+
+        cubeGame.guiManager().draw(Mouse.getX(), Mouse.getY());
 
         glEnable(GL_DEPTH_TEST);
         glDisable(GL_BLEND);

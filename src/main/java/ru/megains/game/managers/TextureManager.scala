@@ -1,4 +1,4 @@
-package ru.megains.managers
+package ru.megains.game.managers
 
 import org.lwjgl.opengl.GL11
 import ru.megains.renderer.texture.{ATexture, SimpleTexture, TextureMap}

@@ -2,11 +2,11 @@ package ru.megains.engine.graph;
 
 
 import ru.megains.game.blockdata.BlockWorldPos;
+import ru.megains.game.managers.TextureManager;
 import ru.megains.game.multiblock.AMultiBlock;
 import ru.megains.game.physics.AxisAlignedBB;
 import ru.megains.game.world.World;
 import ru.megains.game.world.chunk.Chunk;
-import ru.megains.managers.TextureManager;
 import ru.megains.renderer.mesh.Mesh;
 import ru.megains.renderer.mesh.MeshMaker;
 

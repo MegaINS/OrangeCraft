@@ -4,14 +4,14 @@ package ru.megains.renderer.texture
 import java.nio.ByteBuffer
 
 import org.lwjgl.opengl.GL11._
-import org.lwjgl.opengl.GL12._
 import org.lwjgl.opengl.GL30._
 import ru.megains.game.register.GameRegister
+import ru.megains.utils.Logger
 
 import scala.collection.immutable.HashMap
 
 
-class TextureMap() extends ATexture with TTextureRegister {
+class TextureMap() extends ATexture with TTextureRegister with Logger[TextureMap] {
 
     val missingTexture = new TextureAtlas("missing")
     var list: List[TextureAtlas] = _
@@ -77,13 +77,17 @@ class TextureMap() extends ATexture with TTextureRegister {
 
         val byteBuffer: ByteBuffer = null
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 4)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_LOD, 0)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LOD, 4)
-        glTexParameteri(GL_TEXTURE_2D, 34049, 0)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR)
+        //   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 4)
+        //  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_LOD, 0)
+        //  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LOD, 4)
+        //   glTexParameteri(GL_TEXTURE_2D, 34049, 0)
+        //  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR)
+        //  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST)
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, byteBuffer)
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, byteBuffer)
+        log.error("Create texture block map " + width + "-" + height + " pixels")
         println("Create texture block map " + width + "-" + height + " pixels")
     }
 

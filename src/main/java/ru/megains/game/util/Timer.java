@@ -1,4 +1,4 @@
-package ru.megains.engine;
+package ru.megains.game.util;
 
 
 public class Timer {
@@ -6,7 +6,7 @@ public class Timer {
     private double lastLoopTime;
     private int targetTick;
     private int tick;
-    //  private float ellapsedTime =0f;
+    private double ellapsedTime = 0f;
 
 
     public Timer(int tick) {
@@ -17,6 +17,7 @@ public class Timer {
 
         tick = (int) Math.floor((getTime() - lastLoopTime) * targetTick);
         lastLoopTime += (1f / targetTick) * tick;
+        ellapsedTime = getTime();
         if (tick > 20) {
             tick = 20;
         }
@@ -43,6 +44,6 @@ public class Timer {
     }
 
     public double getLastLoopTime() {
-        return lastLoopTime;
+        return ellapsedTime;
     }
 }

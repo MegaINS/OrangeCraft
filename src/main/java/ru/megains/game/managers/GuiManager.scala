@@ -1,4 +1,4 @@
-package ru.megains.managers
+package ru.megains.game.managers
 
 import org.lwjgl.input.{Keyboard, Mouse}
 import ru.megains.game.OrangeCraft

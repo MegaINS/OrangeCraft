@@ -11,31 +11,32 @@
     </content>
     <orderEntry type="jdk" jdkName="1.8" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="scala-sdk-2.11.6" level="application" />
-    <orderEntry type="library" name="scala-sdk-2.11.8" level="application" />
-    <orderEntry type="library" name="lwjgl" level="project" />
+    <orderEntry type="library" name="scala-sdk-2.11.81" level="application" />
     <orderEntry type="library" name="Maven: org.joml:joml:1.8.2" level="project" />
-    <orderEntry type="library" name="Maven: io.netty:netty-all:5.0.0.Alpha2" level="project" />
-    <orderEntry type="library" name="Maven: org.scala-lang:scala-library:2.11.8" level="project" />
-    <orderEntry type="library" name="Maven: org.slick2d:slick2d-core:1.0.1" level="project" />
-    <orderEntry type="library" name="Maven: org.lwjgl.lwjgl:lwjgl:2.9.1" level="project" />
-    <orderEntry type="library" name="Maven: org.lwjgl.lwjgl:lwjgl-platform:natives-windows:2.9.1" level="project" />
-    <orderEntry type="library" name="Maven: org.lwjgl.lwjgl:lwjgl-platform:natives-linux:2.9.1" level="project" />
-    <orderEntry type="library" name="Maven: org.lwjgl.lwjgl:lwjgl-platform:natives-osx:2.9.1" level="project" />
+    <orderEntry type="library" name="Maven: org.lwjgl.lwjgl:lwjgl:2.9.3" level="project" />
+    <orderEntry type="library" name="Maven: org.lwjgl.lwjgl:lwjgl-platform:natives-windows:2.9.3" level="project" />
+    <orderEntry type="library" name="Maven: org.lwjgl.lwjgl:lwjgl-platform:natives-linux:2.9.3" level="project" />
+    <orderEntry type="library" name="Maven: org.lwjgl.lwjgl:lwjgl-platform:natives-osx:2.9.3" level="project" />
     <orderEntry type="library" name="Maven: net.java.jinput:jinput:2.0.5" level="project" />
     <orderEntry type="library" name="Maven: net.java.jutils:jutils:1.0.0" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: net.java.jinput:jinput-platform:natives-linux:2.0.5" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: net.java.jinput:jinput-platform:natives-windows:2.0.5" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: net.java.jinput:jinput-platform:natives-osx:2.0.5" level="project" />
+    <orderEntry type="library" name="Maven: org.lwjgl.lwjgl:lwjgl_util:2.9.3" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-all:5.0.0.Alpha2" level="project" />
+    <orderEntry type="library" name="Maven: org.scala-lang:scala-library:2.11.8" level="project" />
+    <orderEntry type="library" name="Maven: org.slick2d:slick2d-core:1.0.2" level="project" />
     <orderEntry type="module-library">
       <library name="Maven: javax.jnlp:jnlp-api:5.0">
         <CLASSES>
-          <root url="jar://C:/Program Files/Java/jdk1.8.0_77/jre/lib/javaws.jar!/" />
+          <root url="jar://C:/Program Files/Java/jdk1.8.0_101/jre/lib/javaws.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
       </library>
     </orderEntry>
     <orderEntry type="library" name="Maven: org.jcraft:jorbis:0.0.17" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.logging.log4j:log4j-api:2.6.2" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.logging.log4j:log4j-core:2.6.2" level="project" />
   </component>
 </module>

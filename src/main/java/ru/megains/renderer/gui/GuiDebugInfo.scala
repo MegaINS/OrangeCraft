@@ -33,11 +33,17 @@ class GuiDebugInfo extends GuiInGame with GuiText {
         addText("position.y", createString("y: " + player.posY, Color.WHITE))
         addText("position.z", createString("z: " + player.posZ, Color.WHITE))
 
+        tickI += 1
+        if (tickI > 10) {
+            tickI = 0
+            val usedBytes: Long = (Runtime.getRuntime.totalMemory - Runtime.getRuntime.freeMemory) / 1048576
+            addText("memory", createString("Memory use: " + usedBytes + "/" + Runtime.getRuntime.totalMemory / 1048576 + "MB", Color.WHITE))
+            addText("fps", createString("FPS: " + oc.frames, Color.WHITE))
+        }
 
-        val usedBytes: Long = (Runtime.getRuntime.totalMemory - Runtime.getRuntime.freeMemory) / 1048576
-        addText("memory", createString("Memory use: " + usedBytes + "/" + Runtime.getRuntime.totalMemory / 1048576, Color.WHITE))
-        addText("fps", createString("FPS: " + oc.frames, Color.WHITE))
+
     }
 
+    var tickI = 0
 
 }
