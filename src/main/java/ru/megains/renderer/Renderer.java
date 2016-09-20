@@ -1,14 +1,19 @@
-package ru.megains.engine.graph;
+package ru.megains.renderer;
 
 import org.joml.Matrix4f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
+import ru.megains.engine.graph.Camera;
+import ru.megains.engine.graph.ShaderProgram;
+import ru.megains.engine.graph.Transformation;
 import ru.megains.game.OrangeCraft;
 import ru.megains.game.managers.TextureManager;
 import ru.megains.game.util.BlockAndPos;
 import ru.megains.game.util.Utils;
-import ru.megains.renderer.Frustum;
+import ru.megains.renderer.world.RenderChunk;
+import ru.megains.renderer.world.WorldRenderer;
+import scala.collection.Iterator;
 
 import java.nio.FloatBuffer;
 
@@ -31,27 +36,24 @@ public class Renderer {
     private static final int MAX_SPOT_LIGHTS = 5;
 
     public final Transformation transformation;
-    private final float specularPower;
     public ShaderProgram hudShaderProgram;
     public TextureManager textureManager;
 
     //  private ShaderProgram skyBoxShaderProgram;
     public int a;
     private ShaderProgram sceneShaderProgram;
-    private OrangeCraft cubeGame;
+    private OrangeCraft oc;
 
-    WorldRenderer worldRenderer;
+    public WorldRenderer worldRenderer;
     Frustum frustum;
 
     public Renderer(OrangeCraft cubeGame) {
-        this.cubeGame = cubeGame;
+        oc = cubeGame;
         transformation = new Transformation();
-        specularPower = 10f;
     }
 
-    public void init(TextureManager textureManager, WorldRenderer worldRenderer) throws Exception {
+    public void init(TextureManager textureManager) throws Exception {
         this.textureManager = textureManager;
-        this.worldRenderer = worldRenderer;
 
         //  setupSkyBoxShader();
 
@@ -109,7 +111,10 @@ public class Renderer {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
-        renderScene();
+        if (oc.world() != null) {
+            renderScene();
+        }
+
 
 
         // renderSkyBox(window, camera, scene);
@@ -175,24 +180,7 @@ public class Renderer {
     }
 
 
-    public void tick() {
-//        if(frustum != null) {
-//            RenderChunk.clearRend();
-//            scala.collection.Iterable<RenderChunk> renderChunks = worldRenderer.renderChunks().values();
-//
-//
-//            scala.collection.Iterator<RenderChunk> iterable = renderChunks.iterator();
-//            RenderChunk renderChunk;
-//            while (iterable.hasNext()) {
-//                renderChunk = iterable.next();
-//                if (frustum.cubeInFrustum(renderChunk.getCube())) {
-//
-//                    renderChunk.tick();
-//                }
-//
-//            }
-//        }
-    }
+
 
     private void renderScene() {
         sceneShaderProgram.bind();
@@ -207,22 +195,20 @@ public class Renderer {
 
         Matrix4f modelViewMatrix;
         RenderChunk.clearRend();
-        scala.collection.Iterable<RenderChunk> renderChunks = worldRenderer.renderChunks().values();
+
+        //   Iterable<RenderChunk> renderChunks = worldRenderer.renderChunks().values();
 
 
-        scala.collection.Iterator<RenderChunk> iterable = renderChunks.iterator();
+        // Iterator<RenderChunk> iterable = renderChunks.iterator();
+        Iterator<RenderChunk> iterable = worldRenderer.getRenderChunks(oc.player(), frustum).iterator();
         RenderChunk renderChunk;
         while (iterable.hasNext()) {
             renderChunk = iterable.next();
-
-
-            if (frustum.cubeInFrustum(renderChunk.getCube())) {
-                modelViewMatrix = transformation.buildChunkModelViewMatrix(renderChunk.chunk.position());
-
-                sceneShaderProgram.setUniform("modelViewMatrix", modelViewMatrix);
-
-                renderChunk.render(0, sceneShaderProgram);
-            }
+            //  if (frustum.cubeInFrustum(renderChunk.cube())) {
+            modelViewMatrix = transformation.buildChunkModelViewMatrix(renderChunk.chunk().position());
+            sceneShaderProgram.setUniform("modelViewMatrix", modelViewMatrix);
+            renderChunk.render(0, sceneShaderProgram);
+            //  }
 
         }
 
@@ -257,7 +243,7 @@ public class Renderer {
 
         //  text.getMesh().render(sceneShaderProgram, textureManager);
 
-        BlockAndPos bp = cubeGame.blockAndPos();
+        BlockAndPos bp = oc.blockAndPos();
 
         if (bp != null) {
             modelViewMatrix = transformation.buildBlockModelViewMatrix(bp.pos());
@@ -281,7 +267,7 @@ public class Renderer {
         hudShaderProgram.setUniform("projectionMatrix", ortho);
 
 
-        cubeGame.guiManager().draw(Mouse.getX(), Mouse.getY());
+        oc.guiManager().draw(Mouse.getX(), Mouse.getY());
 
         glEnable(GL_DEPTH_TEST);
         glDisable(GL_BLEND);
@@ -303,4 +289,5 @@ public class Renderer {
             hudShaderProgram.cleanup();
         }
     }
+
 }

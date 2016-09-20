@@ -3,19 +3,21 @@ package ru.megains.renderer.gui
 import java.awt.Color
 
 import org.lwjgl.input.Keyboard._
-import ru.megains.engine.graph.Renderer
 import ru.megains.game.OrangeCraft
 import ru.megains.game.item.ItemStack
 import ru.megains.renderer.mesh.Mesh
-import ru.megains.renderer.{FontRender, RenderItem}
+import ru.megains.renderer.{EntityRenderer, FontRender, RenderItem}
 
 import scala.collection.mutable.ArrayBuffer
 
 abstract class GuiScreen extends Gui {
 
 
+    var background: Mesh = createGradientRect(800, 600, new Color(128, 128, 128, 128), new Color(0, 0, 0, 128))
+
+
     var itemRender: RenderItem = _
-    var renderer: Renderer = _
+    var renderer: EntityRenderer = _
     var oc: OrangeCraft = _
     var fontRender: FontRender = _
     val buttonList: ArrayBuffer[GuiButton] = new ArrayBuffer[GuiButton]()
@@ -30,10 +32,23 @@ abstract class GuiScreen extends Gui {
 
     def mouseReleased(x: Int, y: Int, button: Int): Unit = {}
 
-    def mouseClicked(x: Int, y: Int, button: Int): Unit = {}
+    def mouseClicked(x: Int, y: Int, button: Int): Unit = {
+        if (button == 0) {
+            buttonList.foreach(guiButton => {
+                if (guiButton.isMouseOver(x, y)) {
+                    actionPerformed(guiButton)
+                }
+            }
+            )
+        }
+
+    }
+
 
     def mouseClickMove(x: Int, y: Int): Unit = {}
 
+
+    def actionPerformed(button: GuiButton) {}
 
     def keyTyped(typedChar: Char, keyCode: Int) {
         keyCode match {
@@ -51,6 +66,10 @@ abstract class GuiScreen extends Gui {
 
     def drawScreen(mouseX: Int, mouseY: Int): Unit = {
         buttonList.foreach(_.draw(mouseX, mouseY))
+    }
+
+    def drawDefaultBackground(): Unit = {
+        drawObject(background, 0, 0)
     }
 
     def cleanup(): Unit = {

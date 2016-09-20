@@ -15,9 +15,9 @@ class GuiButton(val id: Int, oc: OrangeCraft, buttonText: String, positionX: Int
     def draw(mouseX: Int, mouseY: Int): Unit = {
         val background: Mesh = if (isMouseOver(mouseX, mouseY)) buttonDown else buttonUp
 
-        drawObject(positionX, positionX, 1, background, oc.renderer)
+        drawObject(positionX, positionY, 1, background, oc.renderer)
 
-        drawObject(positionX, positionX, 2, textMesh, oc.renderer)
+        drawObject(positionX + weight / 2, positionY + height / 2, 2, textMesh, oc.renderer)
 
     }
 

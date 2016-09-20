@@ -57,12 +57,14 @@ class MultiBlock() extends AMultiBlock {
     override def renderBlocks(world: World, blockPos: BlockWorldPos, renderPos: BlockWorldPos): Int = {
         var renders = 0
 
-        blockData.foreach((bd: (MultiBlockPos, Block)) => {
-            if (!bd._2.isAir) {
-                GameRegister.getBlockRender(bd._2).render(bd._2, world, blockPos, renderPos, bd._1)
-                renders += 1
+        blockData.foreach(
+            (bd: (MultiBlockPos, Block)) => {
+                if (!bd._2.isAir) {
+                    GameRegister.getBlockRender(bd._2).render(bd._2, world, blockPos, renderPos, bd._1)
+                    renders += 1
+                }
             }
-        })
+        )
         renders
     }
 

@@ -9,7 +9,6 @@ abstract class GuiContainer(inventorySlots: Container) extends GuiScreen {
 
     override def drawScreen(mouseX: Int, mouseY: Int): Unit = {
 
-
         inventorySlots.inventorySlots.foreach(
             (slot) => {
                 drawSlot(slot)

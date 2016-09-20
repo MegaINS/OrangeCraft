@@ -17,12 +17,7 @@ class Chunk(val world: World, val position: ChunkPosition) {
     var blockStorage: ExtendedBlockStorage = _
     if (blockStorage == null) new ExtendedBlockStorage
 
-    //    def this(world: World, position: ChunkPosition, data: Array[Byte]) {
-    //        this(world, position)
-    //        for (x <- 0 to 15; y <- 0 to 15; z <- 0 to 15) {
-    //            blockStorage.setBlockId(x, y, z, data(blockStorage.getIndex(x, y, z)))
-    //        }
-    //    }
+
     var updateLCG: Int = new Random().nextInt()
 
     def this(world: World, position: ChunkPosition, blockStorage: ExtendedBlockStorage) {

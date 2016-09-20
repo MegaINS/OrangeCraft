@@ -24,7 +24,7 @@ class EntityPlayer(world: World) extends EntityLivingBase(world, 1.8f, 0.6f, 1.6
         inventory.addItemStackToInventory(new ItemStack(Blocks.stone))
     }
 
-    setPosition(0, 3, 0)
+    setPosition(0, 35, 0)
 
 
     def turn(xo: Float, yo: Float) {

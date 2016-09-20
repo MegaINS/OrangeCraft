@@ -28,11 +28,12 @@ class FontRender {
         mm.addColor(color)
         var startx: Float = 0
         val a: Float = 1f / 128f
-        var b: Float = .0f
+        var b: Int = 0
         var u: Float = .0f
         var v: Float = .0f
         for (character <- characters) {
-            b = charWidth(character.toInt)
+
+            b = charWidth(character)
             v = character.toInt / 16
             u = character.toInt - 16 * v
             mm.setCurrentIndex()

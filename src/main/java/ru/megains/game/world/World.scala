@@ -2,23 +2,34 @@ package ru.megains.game.world
 
 
 import org.joml.Vector3f
-import ru.megains.engine.graph.WorldRenderer
 import ru.megains.game.block.Block
 import ru.megains.game.blockdata.{BlockDirection, BlockWorldPos}
 import ru.megains.game.entity.Entity
 import ru.megains.game.entity.item.EntityItem
 import ru.megains.game.multiblock.AMultiBlock
 import ru.megains.game.physics.AxisAlignedBB
+import ru.megains.game.position.ChunkPosition
 import ru.megains.game.register.{Blocks, GameRegister}
 import ru.megains.game.util.{MathHelper, RayTraceResult}
-import ru.megains.game.world.chunk.{Chunk, ChunkLoader}
+import ru.megains.game.world.chunk.{Chunk, ChunkLoader, ChunkVoid}
+import ru.megains.renderer.world.WorldRenderer
+import ru.megains.utils.Logger
 
 import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
 import scala.util.Random
 
 
-class World(val length: Int, val height: Int, val width: Int) {
+class World() extends Logger[World] {
+
+    val heightMap: WorldHeightMap = new WorldHeightMap(15561165)
+    // The length of the world from -8000000 to 8000000
+    val length: Int = 8000000
+    // The width of the world from -8000000 to 8000000
+    val width: Int = 8000000
+    // The height of the world from -30000 to 30000
+    val height: Int = 30000
+
     val chunks: mutable.HashMap[Long, Chunk] = new mutable.HashMap[Long, Chunk]
     val rand: Random = new Random()
     val entities: ArrayBuffer[Entity] = new ArrayBuffer[Entity]()
@@ -26,10 +37,6 @@ class World(val length: Int, val height: Int, val width: Int) {
 
     def init() {
 
-
-        for (x <- -4 to 3; y <- -4 to 3; z <- -4 to 3) {
-            chunks += Chunk.getIndex(x, y, z) -> ChunkLoader.load(this, x, y, z)
-        }
 
         for (i <- 1 to 10) {
             val entity = new EntityItem(this, GameRegister.getItemById(rand.nextInt(4) + 2))
@@ -77,8 +84,15 @@ class World(val length: Int, val height: Int, val width: Int) {
 
     def getChunk(x: Int, y: Int, z: Int): Chunk = {
         try {
-            chunks(Chunk.getIndex(x, y, z))
-
+            val index = Chunk.getIndex(x, y, z)
+            if (chunks.contains(index)) {
+                chunks(index)
+            } else {
+                ChunkLoader.loadChunk(this, x, y, z)
+                val chunk = new ChunkVoid(this, new ChunkPosition(x, y, z))
+                addChunk(index, chunk)
+                chunk
+            }
         } catch {
             case e: NoSuchElementException =>
                 println(x + " " + y + " " + z)
@@ -128,7 +142,9 @@ class World(val length: Int, val height: Int, val width: Int) {
     }
 
     def save(): Unit = {
+        log.info("World saved...")
         chunks.values.foreach(ChunkLoader.save)
+        log.info("World saved completed")
     }
 
     def rayTraceBlocks(vec1: Vector3f, vec32: Vector3f, stopOnLiquid: Boolean, ignoreBlockWithoutBoundingBox: Boolean, returnLastUncollidableBlock: Boolean): RayTraceResult = {
@@ -229,5 +245,7 @@ class World(val length: Int, val height: Int, val width: Int) {
 
     }
 
-
+    def addChunk(index: Long, chunk: Chunk): Unit = {
+        chunks += index -> chunk
+    }
 }

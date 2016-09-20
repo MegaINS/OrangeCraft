@@ -3,9 +3,8 @@ package ru.megains.renderer.gui
 import java.awt.Color
 
 import org.joml.Vector3f
-import ru.megains.engine.graph.Renderer
-import ru.megains.renderer.FontRender
 import ru.megains.renderer.mesh.{Mesh, MeshMaker}
+import ru.megains.renderer.{EntityRenderer, FontRender}
 
 trait Gui {
 
@@ -61,7 +60,7 @@ trait Gui {
     }
 
 
-    def drawObject(xPos: Int, yPos: Int, scale: Float, mesh: Mesh, renderer: Renderer): Unit = {
+    def drawObject(xPos: Int, yPos: Int, scale: Float, mesh: Mesh, renderer: EntityRenderer): Unit = {
         val shaderProgram = renderer.hudShaderProgram
         shaderProgram.setUniform("modelMatrix", renderer.transformation.buildOrtoProjModelMatrix(xPos, yPos, scale))
         shaderProgram.setUniform("colour", new Vector3f(1f, 1f, 1f))

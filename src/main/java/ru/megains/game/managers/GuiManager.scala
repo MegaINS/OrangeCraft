@@ -33,16 +33,13 @@ class GuiManager(val orangeCraft: OrangeCraft) {
     def isGuiScreen: Boolean = guiScreen ne null
 
     def setGuiScreen(screen: GuiScreen) {
-        if (guiScreen ne null) {
-            guiScreen.cleanup()
-        }
+        if (guiScreen ne null) guiScreen.cleanup()
 
         if (screen ne null) {
             screen.init(orangeCraft)
-            orangeCraft.ungrabMouseCursor()
-        } else {
-            orangeCraft.grabMouseCursor()
-        }
+            if (guiScreen eq null) orangeCraft.ungrabMouseCursor()
+        } else orangeCraft.grabMouseCursor()
+
         guiScreen = screen
     }
 

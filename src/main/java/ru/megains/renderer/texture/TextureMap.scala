@@ -54,7 +54,7 @@ class TextureMap() extends ATexture with TTextureRegister with Logger[TextureMap
             textureBlockMap += textureName -> tTexture
             tTexture
         } else {
-            println("Missing texture = " + textureName)
+            log.error("Missing texture = " + textureName)
             missingTexture
         }
     }
@@ -87,8 +87,8 @@ class TextureMap() extends ATexture with TTextureRegister with Logger[TextureMap
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST)
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, byteBuffer)
-        log.error("Create texture block map " + width + "-" + height + " pixels")
-        println("Create texture block map " + width + "-" + height + " pixels")
+        log.info("Create texture block map " + width + "-" + height + " pixels")
+
     }
 
     def searchBox(size: Int, tex: TextureAtlas): Boolean = {

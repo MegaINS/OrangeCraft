@@ -30,7 +30,7 @@ public class Transformation {
 
     private final Matrix4f orthoModelMatrix;
 
-    Transformation() {
+    public Transformation() {
         projectionMatrix = new Matrix4f();
         modelMatrix = new Matrix4f();
         modelViewMatrix = new Matrix4f();
@@ -43,11 +43,11 @@ public class Transformation {
         lightViewMatrix = new Matrix4f();
     }
 
-    Matrix4f getProjectionMatrix() {
+    public Matrix4f getProjectionMatrix() {
         return projectionMatrix;
     }
 
-    Matrix4f updateProjectionMatrix(float fov, float width, float height, float zNear, float zFar, Camera camera) {
+    public Matrix4f updateProjectionMatrix(float fov, float width, float height, float zNear, float zFar, Camera camera) {
         float aspectRatio = width / height;
         projectionMatrix.identity();
         projectionMatrix.perspective(fov, aspectRatio, zNear, zFar);
@@ -79,11 +79,11 @@ public class Transformation {
         return orthoProjMatrix;
     }
 
-    Matrix4f getViewMatrix() {
+    public Matrix4f getViewMatrix() {
         return viewMatrix;
     }
 
-    Matrix4f updateViewMatrix(Camera camera) {
+    public Matrix4f updateViewMatrix(Camera camera) {
         return updateGenericViewMatrix(camera.getPosition(), camera.getRotation(), viewMatrix);
     }
 
@@ -110,7 +110,7 @@ public class Transformation {
         return matrix;
     }
 
-    final Matrix4f getOrtho2DProjectionMatrix(float left, float right, float bottom, float top) {
+    public final Matrix4f getOrtho2DProjectionMatrix(float left, float right, float bottom, float top) {
         ortho2DMatrix.identity();
         // ortho2DMatrix.setOrtho2D(left, right, bottom, top);
         ortho2DMatrix.setOrtho(left, right, bottom, top, -100, 2000);
@@ -128,7 +128,7 @@ public class Transformation {
         return modelViewMatrix.set(modelMatrix);//.mul(modelMatrix);
     }
 
-    Matrix4f buildBlockModelViewMatrix(BlockWorldPos blockPos) {
+    public Matrix4f buildBlockModelViewMatrix(BlockWorldPos blockPos) {
         //    Vector3f rotation = gameItem.getRotation();
         modelMatrix.identity().translate(blockPos.worldX() + blockPos.blockX().value(),
                 blockPos.worldY() + blockPos.blockY().value(),
@@ -141,7 +141,7 @@ public class Transformation {
         return modelViewMatrix.set(modelMatrix);//.mul(modelMatrix);
     }
 
-    Matrix4f buildChunkModelViewMatrix(ChunkPosition position) {
+    public Matrix4f buildChunkModelViewMatrix(ChunkPosition position) {
         modelMatrix.identity().translate(position.minX(), position.minY(), position.minZ());
         return modelViewMatrix.set(modelMatrix);
     }

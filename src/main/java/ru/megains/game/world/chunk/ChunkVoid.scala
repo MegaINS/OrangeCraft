@@ -1,8 +1,17 @@
 package ru.megains.game.world.chunk
 
+import ru.megains.game.blockdata.BlockWorldPos
+import ru.megains.game.multiblock.AMultiBlock
 import ru.megains.game.position.ChunkPosition
+import ru.megains.game.register.Blocks
+import ru.megains.game.world.World
 
 
-class ChunkVoid extends Chunk(null, new ChunkPosition(0, 0, 0)) {
+class ChunkVoid(world: World, position: ChunkPosition) extends Chunk(world, position) {
+
+
+    override def isAirBlockWorldCord(pos: BlockWorldPos): Boolean = true
+
+    override def getBlockWorldCord(pos: BlockWorldPos): AMultiBlock = Blocks.multiAir
 
 }

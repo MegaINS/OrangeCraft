@@ -1,13 +1,12 @@
 package ru.megains.renderer
 
 import org.joml.Vector3f
-import ru.megains.engine.graph.Renderer
 import ru.megains.game.OrangeCraft
 import ru.megains.game.item.ItemStack
 import ru.megains.game.register.GameRegister
 
 class RenderItem(orangeCraft: OrangeCraft) {
-    val renderer: Renderer = orangeCraft.renderer
+    val renderer: EntityRenderer = orangeCraft.renderer
 
     def renderItemStackToGui(xPos: Int, yPos: Int, itemStack: ItemStack): Unit = {
         if (itemStack != null) {

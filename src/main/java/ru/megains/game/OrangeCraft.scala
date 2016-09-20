@@ -4,7 +4,7 @@ import org.joml.Vector3f
 import org.lwjgl.LWJGLException
 import org.lwjgl.input.{Keyboard, Mouse}
 import org.lwjgl.opengl.{Display, DisplayMode, GL11}
-import ru.megains.engine.graph.{Camera, RenderChunk, Renderer, WorldRenderer}
+import ru.megains.engine.graph.Camera
 import ru.megains.game.block.Block
 import ru.megains.game.blockdata.{BlockDirection, BlockSize, BlockWorldPos}
 import ru.megains.game.entity.player.EntityPlayer
@@ -13,11 +13,15 @@ import ru.megains.game.managers.{GuiManager, TextureManager}
 import ru.megains.game.multiblock.MultiBlockSingle
 import ru.megains.game.util.{BlockAndPos, RayTraceResult, Timer}
 import ru.megains.game.world.World
-import ru.megains.renderer.gui.{GuiInGameMenu, GuiPlayerInventory}
-import ru.megains.renderer.{FontRender, RenderItem}
+import ru.megains.renderer.gui.{GuiInGameMenu, GuiMainMenu, GuiPlayerInventory}
+import ru.megains.renderer.world.{RenderChunk, WorldRenderer}
+import ru.megains.renderer.{EntityRenderer, FontRender, RenderItem}
+import ru.megains.utils.Logger
 
 
-class OrangeCraft() {
+class OrangeCraft() extends Logger[OrangeCraft] {
+
+
 
     var frames: Int = 0
     val MB: Double = 1024 * 1024
@@ -29,7 +33,7 @@ class OrangeCraft() {
 
     val orangeCraft: OrangeCraft = this
     var world: World = _
-    var renderer: Renderer = _
+    var renderer: EntityRenderer = _
     var itemRender: RenderItem = _
     var player: EntityPlayer = _
     var textureManager: TextureManager = _
@@ -43,12 +47,15 @@ class OrangeCraft() {
 
 
     def startGame(): Unit = {
+        log.info("Start Game")
+        log.info("OrangeCraft v0.1.2")
         try {
-
+            log.info("Display creating...")
             Display.setDisplayMode(new DisplayMode(800, 600))
             Display.create()
             Display.sync(60)
             GL11.glClearColor(0.5f, 0.6f, 0.7f, 0.0F)
+            log.info("Display create successful")
         } catch {
             case e: LWJGLException =>
                 e.printStackTrace()
@@ -56,26 +63,35 @@ class OrangeCraft() {
         }
 
 
-        world = new World(64, 64, 64)
-        renderer = new Renderer(this)
+        log.info("Renderer creating...")
+        renderer = new EntityRenderer(this)
+        log.info("Camera creating...")
         camera = new Camera
         cameraInc = new Vector3f()
+        log.info("GuiManager creating...")
         guiManager = new GuiManager(this)
-
+        log.info("Blocks init...")
         Block.initBlocks()
+        log.info("MultiBlockSingle init...")
         MultiBlockSingle.initMultiBlockSingle()
+        log.info("TextureManager creating...")
         textureManager = new TextureManager
-        worldRenderer = new WorldRenderer(world, textureManager)
-        renderer.init(textureManager, worldRenderer)
+
+        renderer.init(textureManager)
+        log.info("TextureManager loadTexture...")
         textureManager.loadTexture(TextureManager.locationBlockTexture, textureManager.textureMapBlock)
+        log.info("RenderItem creating...")
         itemRender = new RenderItem(this)
+        log.info("FontRender creating...")
         fontRender = new FontRender
-        world.init()
-        worldRenderer.init()
+
+        log.info("GuiManager init...")
         guiManager.init()
+        log.info("EntityPlayer creating...")
         player = new EntityPlayer(world)
 
-        grabMouseCursor()
+
+        guiManager.setGuiScreen(new GuiMainMenu)
 
 
     }
@@ -84,11 +100,14 @@ class OrangeCraft() {
 
         if (Display.isCloseRequested && Display.isCreated) running = false
 
+
         timer.update()
+
         for (i <- 0 until timer.getTick) {
             update()
             tick += 1
         }
+
 
         render()
         frames += 1
@@ -101,7 +120,9 @@ class OrangeCraft() {
         try {
             startGame()
         } catch {
-            case e: Exception => e.printStackTrace()
+            case e: Exception => log.fatal(e.printStackTrace())
+                running = false
+
         }
 
         var lastTime: Long = System.currentTimeMillis
@@ -113,8 +134,10 @@ class OrangeCraft() {
                 runGameLoop()
 
                 while (System.currentTimeMillis >= lastTime + 1000L) {
-                    System.out.println(frames + " fps, " + tick + " tick, " + RenderChunk.chunkRender / (if (frames == 0) 1
-                    else frames) + " chunkRender, " + RenderChunk.chunkUpdate + " chunkUpdate")
+                    log.info(s"$frames fps, $tick tick, ${RenderChunk.chunkRender / (if (frames == 0) 1 else frames)} chunkRender, ${RenderChunk.chunkUpdate} chunkUpdate")
+
+                    // System.out.println(frames + " fps, " + tick + " tick, " + RenderChunk.chunkRender / (if (frames == 0) 1
+                    //   else frames) + " chunkRender, " + RenderChunk.chunkUpdate + " chunkUpdate")
                     RenderChunk.chunkRender = 0
                     RenderChunk.chunkUpdate = 0
                     lastTime += 1000L
@@ -125,11 +148,29 @@ class OrangeCraft() {
                 }
             }
         } catch {
-            case e: Exception => e.printStackTrace()
+            case e: Exception => log.fatal("Crash", e)
         } finally {
             cleanup()
         }
     }
+
+    def setWorld(newWorld: World): Unit = {
+
+        if (world ne null) {
+            world.save()
+            worldRenderer.cleanUp()
+        }
+
+        if (newWorld ne null) {
+            worldRenderer = new WorldRenderer(newWorld, textureManager)
+            renderer.worldRenderer = worldRenderer
+            player.setWorld(newWorld)
+        }
+
+        world = newWorld
+    }
+
+
 
     private def printMemoryUsage(): Unit = {
         val r: Runtime = Runtime.getRuntime
@@ -175,41 +216,44 @@ class OrangeCraft() {
             runTickMouse()
         }
 
+        if (world ne null) {
+            world.update()
+            if (!guiManager.isGuiScreen) player.turn(Mouse.getDX, Mouse.getDY)
 
-        world.update()
+            player.update(cameraInc.x, cameraInc.y, cameraInc.z)
 
-        if (!guiManager.isGuiScreen) player.turn(Mouse.getDX, Mouse.getDY)
-
-        player.update(cameraInc.x, cameraInc.y, cameraInc.z)
-
-        camera.setPosition(player.posX, player.posY + player.levelView, player.posZ)
-        camera.setRotation(player.xRot, player.yRot, 0)
-        player.inventory.changeStackSelect(Mouse.getDWheel * -1)
-
-
-        result = player.rayTrace(5, 0.1f)
+            camera.setPosition(player.posX, player.posY + player.levelView, player.posZ)
+            camera.setRotation(player.xRot, player.yRot, 0)
+            player.inventory.changeStackSelect(Mouse.getDWheel * -1)
 
 
-        guiManager.tick()
+            result = player.rayTrace(5, 0.1f)
 
 
-        if (result != null) {
-            val stack: ItemStack = player.inventory.getStackSelect
-            if (stack != null) setBlock(Block.getBlockFromItem(stack.item))
-            else breakBlock()
+            guiManager.tick()
+
+
+            if (result != null) {
+                val stack: ItemStack = player.inventory.getStackSelect
+                if (stack != null) setBlock(Block.getBlockFromItem(stack.item))
+                else breakBlock()
+            }
+            else blockAndPos = null
+
+            if (blockAndPos != null) {
+                worldRenderer.updateBlockBounds(blockAndPos)
+            }
+
         }
-        else blockAndPos = null
-
-        if (blockAndPos != null) {
-            worldRenderer.updateBlockBounds(blockAndPos)
-        }
 
 
-        renderer.tick()
     }
 
     private def render(): Unit = {
-        renderer.render(camera, worldRenderer)
+
+        log.debug("RENDER START")
+        renderer.render(camera)
+        log.debug("RENDER STOP")
     }
 
     private def setBlock(block: Block) {
@@ -297,7 +341,9 @@ class OrangeCraft() {
     }
 
     private def cleanup(): Unit = {
+        log.info("Game stopped...")
         running = false
+
         if (world != null) world.save()
         if (renderer != null) renderer.cleanup()
         if (worldRenderer != null) worldRenderer.cleanUp()

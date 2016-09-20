@@ -18,29 +18,13 @@ import scala.reflect.io.File
 object ChunkLoader {
 
 
+
     private val LOCATION: String = getClass.getClassLoader.getResource("").getPath
     private val WORLD_LOCATION: String = LOCATION + "world/chunk/"
     var sizeWorld: Int = 0
     File(WORLD_LOCATION).createDirectory()
 
 
-    //    def load(world: World, x: Int, y: Int, z: Int): Chunk = {
-    //
-    //        val chunk: Array[Byte] = new Array[Byte](4096)
-    //
-    //        if (!load(Chunk.getIndex(x, y, z) toString, chunk)) {
-    //
-    //            for (i <- chunk.indices) {
-    //                if (y < 0) {
-    //                    chunk(i) = Block.getIdByBlock(Blocks.stone) toByte
-    //                }
-    //                else {
-    //                    chunk(i) = Block.getIdByBlock(Blocks.air) toByte
-    //                }
-    //            }
-    //        }
-    //        new Chunk(world, new ChunkPosition(x, y, z), chunk)
-    //    }
 
     def load(world: World, x: Int, y: Int, z: Int): Chunk = {
         val input = load(Chunk.getIndex(x, y, z) toString)
@@ -71,7 +55,6 @@ object ChunkLoader {
             }
             catch {
                 case var3: Exception =>
-                    println("Error load chunk " + Chunk.getIndex(x, y, z) + ".dat")
                     loadDefaultChunk(world, x, y, z)
             }
 
@@ -83,16 +66,28 @@ object ChunkLoader {
     def loadDefaultChunk(world: World, x: Int, y: Int, z: Int): Chunk = {
         val blockStorage: ExtendedBlockStorage = new ExtendedBlockStorage
         val blockData = blockStorage.data
-        for (i <- 0 until 4096) {
-            if (y < 0) {
-                blockData.set(i, Block.getIdByBlock(Blocks.grass))
+
+        if (y < 0) {
+            for (i <- 0 until 4096) {
+                blockData.set(i, Block.getIdByBlock(Blocks.stone))
             }
-            else {
-                blockData.set(i, Block.getIdByBlock(Blocks.air))
+        } else {
+            val array = world.heightMap.generateHeightMap(x, z)
+            for (x1 <- 0 to 15; y1 <- 0 to 15; z1 <- 0 to 15) {
+                if (array(x1)(z1) > y1 + (y * Chunk.CHUNK_SIZE)) {
+                    blockStorage.setBlockId(x1, y1, z1, Block.getIdByBlock(Blocks.stone))
+                } else if (array(x1)(z1) == y1 + (y * Chunk.CHUNK_SIZE)) {
+                    blockStorage.setBlockId(x1, y1, z1, Block.getIdByBlock(Blocks.grass))
+                } else {
+                    blockStorage.setBlockId(x1, y1, z1, Block.getIdByBlock(Blocks.air))
+                }
             }
         }
+
+
         new Chunk(world, new ChunkPosition(x, y, z), blockStorage)
     }
+
 
     def load(fileName: String): DataInputStream = {
 
@@ -109,22 +104,6 @@ object ChunkLoader {
 
     }
 
-    //    def load(fileName: String, data: Array[Byte]): Boolean = {
-    //
-    //        try {
-    //            val e: DataInputStream = new DataInputStream(new GZIPInputStream(new FileInputStream(new JFile(WORLD_LOCATION + fileName + ".dat"))))
-    //            e.readFully(data)
-    //            e.close()
-    //            true
-    //        }
-    //        catch {
-    //            case var3: Exception =>
-    //                println("Error load chunk " + fileName + ".dat")
-    //                false
-    //        }
-    //
-    //
-    //    }
 
     def readIntOfTwoByte(input: DataInputStream): Int = {
         input.readByte() << 8 | input.readByte()
@@ -132,35 +111,37 @@ object ChunkLoader {
 
     def save(chunk: Chunk): Unit = {
 
-        val chunkData = ArrayBuffer[Byte]()
-        val blockData = chunk.blockStorage.data
+        if (!chunk.isInstanceOf[ChunkVoid]) {
+            val chunkData = ArrayBuffer[Byte]()
+            val blockData = chunk.blockStorage.data
 
-        for (i <- 0 until 4096) {
-            addTwoByteOfInt(blockData.get(i), chunkData)
-        }
-        val multiBlockStorage = chunk.blockStorage.multiBlockStorage
-
-        //Колличество мультиБлоков
-        addTwoByteOfInt(multiBlockStorage.size, chunkData)
-
-        multiBlockStorage.foreach(
-            (data: (Int, MultiBlock)) => {
-                //Координаты мультиБлока
-                addTwoByteOfInt(data._1, chunkData)
-                val blockData = data._2.blockData
-                //Колличество блоков в мультиБлоке
-                addTwoByteOfInt(blockData.size, chunkData)
-                blockData.foreach(
-                    (data2: (MultiBlockPos, Block)) => {
-                        //Координаты блока
-                        addTwoByteOfInt(data2._1.getIndex, chunkData)
-                        //Id блока
-                        addTwoByteOfInt(Block.getIdByBlock(data2._2), chunkData)
-                    }
-                )
+            for (i <- 0 until 4096) {
+                addTwoByteOfInt(blockData.get(i), chunkData)
             }
-        )
-        save(Chunk.getIndex(chunk) toString, chunkData toArray)
+            val multiBlockStorage = chunk.blockStorage.multiBlockStorage
+
+            //Колличество мультиБлоков
+            addTwoByteOfInt(multiBlockStorage.size, chunkData)
+
+            multiBlockStorage.foreach(
+                (data: (Int, MultiBlock)) => {
+                    //Координаты мультиБлока
+                    addTwoByteOfInt(data._1, chunkData)
+                    val blockData = data._2.blockData
+                    //Колличество блоков в мультиБлоке
+                    addTwoByteOfInt(blockData.size, chunkData)
+                    blockData.foreach(
+                        (data2: (MultiBlockPos, Block)) => {
+                            //Координаты блока
+                            addTwoByteOfInt(data2._1.getIndex, chunkData)
+                            //Id блока
+                            addTwoByteOfInt(Block.getIdByBlock(data2._2), chunkData)
+                        }
+                    )
+                }
+            )
+            save(Chunk.getIndex(chunk) toString, chunkData toArray)
+        }
     }
 
     def addTwoByteOfInt(int: Int, buffer: ArrayBuffer[Byte]): Unit = {
@@ -180,6 +161,10 @@ object ChunkLoader {
             case var2: Exception =>
                 println("Error save chunk " + fileName + ".dat")
         }
+    }
+
+    def loadChunk(world: World, x: Int, y: Int, z: Int) = {
+        new Thread(new Loader(world, x, y, z)).start()
     }
 
 }
