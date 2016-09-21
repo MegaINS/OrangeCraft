@@ -1,12 +1,12 @@
 package ru.megains.renderer.world
 
-import ru.megains.engine.graph.ShaderProgram
 import ru.megains.game.blockdata.BlockWorldPos
 import ru.megains.game.managers.TextureManager
 import ru.megains.game.multiblock.AMultiBlock
 import ru.megains.game.physics.AxisAlignedBB
 import ru.megains.game.world.World
 import ru.megains.game.world.chunk.{Chunk, ChunkVoid}
+import ru.megains.renderer.graph.ShaderProgram
 import ru.megains.renderer.mesh.{Mesh, MeshMaker}
 import ru.megains.utils.Logger
 

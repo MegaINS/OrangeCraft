@@ -7,7 +7,7 @@ import ru.megains.game.multiblock.{AMultiBlock, MultiBlock}
 import ru.megains.game.position.ChunkPosition
 import ru.megains.game.register.Blocks
 import ru.megains.game.world.World
-import ru.megains.game.world.chunk.storage.ExtendedBlockStorage
+import ru.megains.game.world.storage.ExtendedBlockStorage
 
 import scala.util.Random
 
@@ -103,15 +103,6 @@ class Chunk(val world: World, val position: ChunkPosition) {
         getBlockChunkCord(pos) == Blocks.multiAir
     }
 
-    def save(): Unit = {
-
-        val chunk: Array[Byte] = new Array[Byte](4096)
-        for (x <- 0 to 15; y <- 0 to 15; z <- 0 to 15) {
-            chunk(blockStorage.getIndex(x, y, z)) = blockStorage.getBlockId(x, y, z) toByte
-
-        }
-        ChunkLoader.save(Chunk.getIndex(position.x, position.y, position.z) toString, chunk)
-    }
 
 }
 

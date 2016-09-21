@@ -15,8 +15,8 @@ class GuiBlockSelect extends GuiInGame with GuiText {
     var ray: RayTraceResult = _
     var blockSelect: Block = _
 
-    override def init(orangeCraft: OrangeCraft): Unit = {
-        super.init(orangeCraft)
+    override def initGui(orangeCraft: OrangeCraft): Unit = {
+
 
         addText("BlockWorldPos", createString("", Color.WHITE))
         addText("BlockWorldPos.side", createString("", Color.WHITE))

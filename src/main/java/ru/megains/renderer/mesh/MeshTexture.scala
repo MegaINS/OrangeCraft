@@ -3,8 +3,8 @@ package ru.megains.renderer.mesh
 import org.lwjgl.opengl.GL11._
 import org.lwjgl.opengl.GL13._
 import org.lwjgl.opengl.GL30._
-import ru.megains.engine.graph.ShaderProgram
 import ru.megains.game.managers.TextureManager
+import ru.megains.renderer.graph.ShaderProgram
 
 class MeshTexture(makeMode: Int, val textureName: String, indices: Array[Int], positions: Array[Float], colours: Array[Float], textCoords: Array[Float])
         extends Mesh(makeMode, indices, positions, colours) {

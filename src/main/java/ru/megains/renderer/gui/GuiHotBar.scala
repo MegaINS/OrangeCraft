@@ -3,13 +3,12 @@ package ru.megains.renderer.gui
 import ru.megains.game.OrangeCraft
 import ru.megains.renderer.mesh.Mesh
 
-class GuiHotBar() extends GuiInGame() {
+class GuiHotBar extends GuiInGame {
 
     var hotBar: Mesh = _
     var stackSelect: Mesh = _
 
-    override def init(orangeCraft: OrangeCraft): Unit = {
-        super.init(orangeCraft)
+    override def initGui(orangeCraft: OrangeCraft): Unit = {
         stackSelect = createTextureRect(56, 54, "gui/stackSelect")
         hotBar = createTextureRect(484, 52, "gui/hotBar")
     }

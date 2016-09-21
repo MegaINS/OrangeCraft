@@ -10,8 +10,7 @@ class GuiPlayerInventory(entityPlayer: EntityPlayer) extends GuiContainer(entity
 
     var playerInventory: Mesh = _
 
-    override def init(orangeCraft: OrangeCraft): Unit = {
-        super.init(orangeCraft)
+    override def initGui(orangeCraft: OrangeCraft): Unit = {
         playerInventory = createTextureRect(500, 240, "gui/playerInventory")
     }
 

@@ -7,7 +7,7 @@
 //import org.lwjgl.opengl.Display;
 //import org.lwjgl.opengl.DisplayMode;
 //import org.lwjgl.opengl.GL11;
-//import ru.megains.engine.graph.Camera;
+//import ru.megains.renderer.graph.Camera;
 //import ru.megains.renderer.Renderer;
 //import ru.megains.renderer.world.WorldRenderer;
 //import ru.megains.game.block.Block;

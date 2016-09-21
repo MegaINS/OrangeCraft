@@ -1,4 +1,4 @@
-package ru.megains.engine.graph;
+package ru.megains.renderer.graph;
 
 import java.nio.FloatBuffer;
 

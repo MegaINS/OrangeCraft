@@ -5,10 +5,7 @@ import ru.megains.game.OrangeCraft
 class GuiInGameMenu extends GuiScreen {
 
 
-    override def init(orangeCraft: OrangeCraft): Unit = {
-        super.init(orangeCraft)
-
-
+    override def initGui(orangeCraft: OrangeCraft): Unit = {
         buttonList += new GuiButton(0, orangeCraft, "Main menu", 250, 450, 300, 50)
         buttonList += new GuiButton(1, orangeCraft, "Option", 250, 380, 300, 50)
         buttonList += new GuiButton(2, orangeCraft, "Return to game", 250, 310, 300, 50)
@@ -17,8 +14,10 @@ class GuiInGameMenu extends GuiScreen {
 
     override def actionPerformed(button: GuiButton): Unit = {
         button.id match {
-            case 0 => oc.guiManager.setGuiScreen(new GuiMainMenu)
-                oc.setWorld(null)
+
+            case 0 => oc.setWorld(null)
+                oc.guiManager.setGuiScreen(new GuiMainMenu())
+
             case 1 => oc.guiManager.setGuiScreen(null)
             case 2 => oc.guiManager.setGuiScreen(null)
             case _ =>

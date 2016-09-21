@@ -1,4 +1,4 @@
-package ru.megains.engine.graph;
+package ru.megains.renderer.graph;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL12.GL_CLAMP_TO_EDGE;

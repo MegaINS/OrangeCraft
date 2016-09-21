@@ -1,4 +1,4 @@
-package ru.megains.game.world.chunk.storage
+package ru.megains.game.world.storage
 
 import ru.megains.game.block.Block
 import ru.megains.game.multiblock.{AMultiBlock, MultiBlock}

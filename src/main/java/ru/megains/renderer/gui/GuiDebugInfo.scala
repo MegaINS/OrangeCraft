@@ -7,8 +7,8 @@ import ru.megains.game.OrangeCraft
 
 class GuiDebugInfo extends GuiInGame with GuiText {
 
-    override def init(orangeCraft: OrangeCraft): Unit = {
-        super.init(orangeCraft)
+    override def initGui(orangeCraft: OrangeCraft): Unit = {
+
 
         addText("position", createString("Player position:", Color.WHITE))
         addText("position.x", createString("x:", Color.WHITE))
@@ -34,11 +34,11 @@ class GuiDebugInfo extends GuiInGame with GuiText {
         addText("position.z", createString("z: " + player.posZ, Color.WHITE))
 
         tickI += 1
-        if (tickI > 10) {
+        if (tickI > 19) {
             tickI = 0
             val usedBytes: Long = (Runtime.getRuntime.totalMemory - Runtime.getRuntime.freeMemory) / 1048576
             addText("memory", createString("Memory use: " + usedBytes + "/" + Runtime.getRuntime.totalMemory / 1048576 + "MB", Color.WHITE))
-            addText("fps", createString("FPS: " + oc.frames, Color.WHITE))
+            addText("fps", createString("FPS: " + oc.lastFrames, Color.WHITE))
         }
 
 

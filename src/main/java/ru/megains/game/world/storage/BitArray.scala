@@ -1,4 +1,4 @@
-package ru.megains.game.world.chunk.storage
+package ru.megains.game.world.storage
 
 
 class BitArray(arraySize: Int, bitLength: Int) {

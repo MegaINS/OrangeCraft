@@ -1,6 +1,6 @@
-package ru.megains.game.world.chunk
+package ru.megains.game.world.storage
 
-import java.io.{File => JFile, _}
+import java.io._
 import java.util.zip.{GZIPInputStream, GZIPOutputStream}
 
 import ru.megains.game.block.Block
@@ -9,21 +9,19 @@ import ru.megains.game.multiblock.MultiBlock
 import ru.megains.game.position.ChunkPosition
 import ru.megains.game.register.Blocks
 import ru.megains.game.world.World
-import ru.megains.game.world.chunk.storage.ExtendedBlockStorage
+import ru.megains.game.world.chunk.{Chunk, ChunkVoid, Loader}
 
 import scala.collection.mutable.ArrayBuffer
-import scala.reflect.io.File
+import scala.reflect.io.Directory
+
+class ChunkLoader(chunkSaveDirectory: Directory) {
+
+    chunkSaveDirectory.createDirectory()
 
 
-object ChunkLoader {
-
-
-
-    private val LOCATION: String = getClass.getClassLoader.getResource("").getPath
-    private val WORLD_LOCATION: String = LOCATION + "world/chunk/"
-    var sizeWorld: Int = 0
-    File(WORLD_LOCATION).createDirectory()
-
+    def loadChunk(world: World, x: Int, y: Int, z: Int) = {
+        new Thread(new Loader(world, this, x, y, z)).start()
+    }
 
 
     def load(world: World, x: Int, y: Int, z: Int): Chunk = {
@@ -92,7 +90,7 @@ object ChunkLoader {
     def load(fileName: String): DataInputStream = {
 
         try {
-            val e: DataInputStream = new DataInputStream(new GZIPInputStream(new FileInputStream(new JFile(WORLD_LOCATION + fileName + ".dat"))))
+            val e: DataInputStream = new DataInputStream(new GZIPInputStream(new FileInputStream(new File(chunkSaveDirectory.jfile, fileName + ".dat"))))
             e
         }
         catch {
@@ -100,14 +98,12 @@ object ChunkLoader {
                 println("Error load chunk " + fileName + ".dat")
                 null
         }
-
-
     }
-
 
     def readIntOfTwoByte(input: DataInputStream): Int = {
         input.readByte() << 8 | input.readByte()
     }
+
 
     def save(chunk: Chunk): Unit = {
 
@@ -144,16 +140,11 @@ object ChunkLoader {
         }
     }
 
-    def addTwoByteOfInt(int: Int, buffer: ArrayBuffer[Byte]): Unit = {
-        buffer += (int >> 8).toByte
-        buffer += int.toByte
-    }
-
     def save(fileName: String, data: Array[Byte]) {
 
 
         try {
-            val e: DataOutputStream = new DataOutputStream(new GZIPOutputStream(new FileOutputStream(new JFile(WORLD_LOCATION + fileName + ".dat"))))
+            val e: DataOutputStream = new DataOutputStream(new GZIPOutputStream(new FileOutputStream(new File(chunkSaveDirectory.jfile, fileName + ".dat"))))
             e.write(data)
             e.close()
         }
@@ -163,8 +154,8 @@ object ChunkLoader {
         }
     }
 
-    def loadChunk(world: World, x: Int, y: Int, z: Int) = {
-        new Thread(new Loader(world, x, y, z)).start()
+    def addTwoByteOfInt(int: Int, buffer: ArrayBuffer[Byte]): Unit = {
+        buffer += (int >> 8).toByte
+        buffer += int.toByte
     }
-
 }

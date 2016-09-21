@@ -5,19 +5,23 @@ import java.awt.Color
 import ru.megains.game.OrangeCraft
 import ru.megains.renderer.mesh.Mesh
 
-class GuiButton(val id: Int, oc: OrangeCraft, buttonText: String, positionX: Int, positionY: Int, weight: Int, height: Int) extends Gui {
+class GuiButton(val id: Int, oc: OrangeCraft, buttonText: String, positionX: Int, positionY: Int, weight: Int, height: Int) extends GuiElement(oc) {
 
-    val textMesh: Mesh = createString(oc.fontRender, buttonText, Color.WHITE)
+
+    val textMesh: Mesh = createString(buttonText, Color.WHITE)
     val buttonUp = createRect(weight, height, Color.blue)
     val buttonDown = createRect(weight, height, Color.darkGray)
+    val buttonDisable = createRect(weight, height, Color.BLACK)
+    var enable = true
 
 
     def draw(mouseX: Int, mouseY: Int): Unit = {
-        val background: Mesh = if (isMouseOver(mouseX, mouseY)) buttonDown else buttonUp
 
-        drawObject(positionX, positionY, 1, background, oc.renderer)
+        val background: Mesh = if (!enable) buttonDisable else if (isMouseOver(mouseX, mouseY)) buttonDown else buttonUp
 
-        drawObject(positionX + weight / 2, positionY + height / 2, 2, textMesh, oc.renderer)
+        drawObject(positionX, positionY, 1, background)
+
+        drawObject(positionX + weight / 2, positionY + height / 2, 2, textMesh)
 
     }
 
@@ -28,7 +32,7 @@ class GuiButton(val id: Int, oc: OrangeCraft, buttonText: String, positionX: Int
     }
 
     def isMouseOver(mouseX: Int, mouseY: Int): Boolean = {
-        mouseX >= positionX && mouseX <= positionX + weight && mouseY >= positionY && mouseY <= positionY + height
+        enable && mouseX >= positionX && mouseX <= positionX + weight && mouseY >= positionY && mouseY <= positionY + height
     }
 
 

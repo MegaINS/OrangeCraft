@@ -11,7 +11,8 @@ import ru.megains.game.physics.AxisAlignedBB
 import ru.megains.game.position.ChunkPosition
 import ru.megains.game.register.{Blocks, GameRegister}
 import ru.megains.game.util.{MathHelper, RayTraceResult}
-import ru.megains.game.world.chunk.{Chunk, ChunkLoader, ChunkVoid}
+import ru.megains.game.world.chunk.{Chunk, ChunkVoid}
+import ru.megains.game.world.storage.{AnvilSaveHandler, ChunkLoader}
 import ru.megains.renderer.world.WorldRenderer
 import ru.megains.utils.Logger
 
@@ -20,7 +21,11 @@ import scala.collection.mutable.ArrayBuffer
 import scala.util.Random
 
 
-class World() extends Logger[World] {
+class World(saveHandler: AnvilSaveHandler) extends Logger[World] {
+
+
+    val chunkLoader: ChunkLoader = saveHandler.getChunkLoader
+
 
     val heightMap: WorldHeightMap = new WorldHeightMap(15561165)
     // The length of the world from -8000000 to 8000000
@@ -88,7 +93,8 @@ class World() extends Logger[World] {
             if (chunks.contains(index)) {
                 chunks(index)
             } else {
-                ChunkLoader.loadChunk(this, x, y, z)
+                chunkLoader.loadChunk(this, x, y, z)
+                // ChunkLoader.loadChunk(this, x, y, z)
                 val chunk = new ChunkVoid(this, new ChunkPosition(x, y, z))
                 addChunk(index, chunk)
                 chunk
@@ -143,7 +149,7 @@ class World() extends Logger[World] {
 
     def save(): Unit = {
         log.info("World saved...")
-        chunks.values.foreach(ChunkLoader.save)
+        chunks.values.foreach(chunkLoader.save)
         log.info("World saved completed")
     }
 

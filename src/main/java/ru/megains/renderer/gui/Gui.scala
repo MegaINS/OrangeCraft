@@ -59,7 +59,6 @@ trait Gui {
         mm.makeMesh()
     }
 
-
     def drawObject(xPos: Int, yPos: Int, scale: Float, mesh: Mesh, renderer: EntityRenderer): Unit = {
         val shaderProgram = renderer.hudShaderProgram
         shaderProgram.setUniform("modelMatrix", renderer.transformation.buildOrtoProjModelMatrix(xPos, yPos, scale))

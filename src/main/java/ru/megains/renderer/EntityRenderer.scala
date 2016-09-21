@@ -7,10 +7,10 @@ import org.lwjgl.BufferUtils
 import org.lwjgl.input.Mouse
 import org.lwjgl.opengl.Display
 import org.lwjgl.opengl.GL11._
-import ru.megains.engine.graph.{Camera, ShaderProgram, Transformation}
 import ru.megains.game.OrangeCraft
 import ru.megains.game.managers.TextureManager
 import ru.megains.game.util.{BlockAndPos, Utils}
+import ru.megains.renderer.graph.{Camera, ShaderProgram, Transformation}
 import ru.megains.renderer.world.{RenderChunk, WorldRenderer}
 
 
@@ -59,7 +59,7 @@ class EntityRenderer(oc: OrangeCraft) {
     }
 
     def render(camera: Camera) {
-        transformation.updateProjectionMatrix(FOV, 800, 600, Z_NEAR, Z_FAR, camera)
+        transformation.updateProjectionMatrix(FOV, 1600, 1200, Z_NEAR, Z_FAR, camera)
         transformation.updateViewMatrix(camera)
         val projectionMatrix: Matrix4f = transformation.getProjectionMatrix
         val viewMatrix: Matrix4f = transformation.getViewMatrix

@@ -1,6 +1,5 @@
 package ru.megains.renderer.world
 
-import ru.megains.engine.graph.{ShaderProgram, Transformation}
 import ru.megains.game.blockdata.{BlockWorldPos, MultiBlockPos}
 import ru.megains.game.entity.item.EntityItem
 import ru.megains.game.entity.player.EntityPlayer
@@ -9,6 +8,7 @@ import ru.megains.game.register.GameRegister
 import ru.megains.game.util.BlockAndPos
 import ru.megains.game.world.World
 import ru.megains.renderer.Frustum
+import ru.megains.renderer.graph.{ShaderProgram, Transformation}
 import ru.megains.renderer.mesh.{Mesh, MeshMaker}
 
 import scala.collection.mutable

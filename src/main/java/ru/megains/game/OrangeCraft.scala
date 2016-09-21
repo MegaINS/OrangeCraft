@@ -4,7 +4,6 @@ import org.joml.Vector3f
 import org.lwjgl.LWJGLException
 import org.lwjgl.input.{Keyboard, Mouse}
 import org.lwjgl.opengl.{Display, DisplayMode, GL11}
-import ru.megains.engine.graph.Camera
 import ru.megains.game.block.Block
 import ru.megains.game.blockdata.{BlockDirection, BlockSize, BlockWorldPos}
 import ru.megains.game.entity.player.EntityPlayer
@@ -13,17 +12,22 @@ import ru.megains.game.managers.{GuiManager, TextureManager}
 import ru.megains.game.multiblock.MultiBlockSingle
 import ru.megains.game.util.{BlockAndPos, RayTraceResult, Timer}
 import ru.megains.game.world.World
+import ru.megains.game.world.storage.AnvilSaveFormat
+import ru.megains.renderer.graph.Camera
 import ru.megains.renderer.gui.{GuiInGameMenu, GuiMainMenu, GuiPlayerInventory}
 import ru.megains.renderer.world.{RenderChunk, WorldRenderer}
 import ru.megains.renderer.{EntityRenderer, FontRender, RenderItem}
 import ru.megains.utils.Logger
 
+import scala.reflect.io.Path
 
-class OrangeCraft() extends Logger[OrangeCraft] {
+
+class OrangeCraft(ocDataDir: String) extends Logger[OrangeCraft] {
 
 
 
     var frames: Int = 0
+    var lastFrames: Int = 0
     val MB: Double = 1024 * 1024
     val TARGET_FPS: Float = 60
     val timer: Timer = new Timer(20)
@@ -44,6 +48,7 @@ class OrangeCraft() extends Logger[OrangeCraft] {
     private var cameraInc: Vector3f = _
     private var worldRenderer: WorldRenderer = _
     var fontRender: FontRender = _
+    var saveLoader: AnvilSaveFormat = _
 
 
     def startGame(): Unit = {
@@ -62,6 +67,8 @@ class OrangeCraft() extends Logger[OrangeCraft] {
                 System.exit(-1000)
         }
 
+
+        saveLoader = new AnvilSaveFormat(Path(ocDataDir + "saves").toDirectory)
 
         log.info("Renderer creating...")
         renderer = new EntityRenderer(this)
@@ -91,7 +98,7 @@ class OrangeCraft() extends Logger[OrangeCraft] {
         player = new EntityPlayer(world)
 
 
-        guiManager.setGuiScreen(new GuiMainMenu)
+        guiManager.setGuiScreen(new GuiMainMenu())
 
 
     }
@@ -136,12 +143,10 @@ class OrangeCraft() extends Logger[OrangeCraft] {
                 while (System.currentTimeMillis >= lastTime + 1000L) {
                     log.info(s"$frames fps, $tick tick, ${RenderChunk.chunkRender / (if (frames == 0) 1 else frames)} chunkRender, ${RenderChunk.chunkUpdate} chunkUpdate")
 
-                    // System.out.println(frames + " fps, " + tick + " tick, " + RenderChunk.chunkRender / (if (frames == 0) 1
-                    //   else frames) + " chunkRender, " + RenderChunk.chunkUpdate + " chunkUpdate")
                     RenderChunk.chunkRender = 0
                     RenderChunk.chunkUpdate = 0
                     lastTime += 1000L
-
+                    lastFrames = frames
                     frames = 0
                     tick = 0
                     //  printMemoryUsage()
@@ -156,6 +161,8 @@ class OrangeCraft() extends Logger[OrangeCraft] {
 
     def setWorld(newWorld: World): Unit = {
 
+
+        guiManager.setGuiScreen(null)
         if (world ne null) {
             world.save()
             worldRenderer.cleanUp()
@@ -333,7 +340,7 @@ class OrangeCraft() extends Logger[OrangeCraft] {
             if (Keyboard.getEventKeyState) {
                 Keyboard.getEventKey match {
                     case Keyboard.KEY_E => guiManager.setGuiScreen(new GuiPlayerInventory(player))
-                    case Keyboard.KEY_ESCAPE => guiManager.setGuiScreen(new GuiInGameMenu)
+                    case Keyboard.KEY_ESCAPE => guiManager.setGuiScreen(new GuiInGameMenu())
                     case _ =>
                 }
             }

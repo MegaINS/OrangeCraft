@@ -14,18 +14,19 @@ class GuiManager(val orangeCraft: OrangeCraft) {
     private var guiScreen: GuiScreen = _
 
     def init(): Unit = {
-        addGuiInGame("hotBar", new GuiHotBar)
-        addGuiInGame("debugInfo", new GuiDebugInfo)
-        addGuiInGame("blockSelect", new GuiBlockSelect)
+        addGuiInGame("hotBar", new GuiHotBar())
+        addGuiInGame("debugInfo", new GuiDebugInfo())
+        addGuiInGame("blockSelect", new GuiBlockSelect())
     }
 
     def tick(): Unit = {
+        if (guiScreen ne null) guiScreen.tick()
         guiInGame.values.filter(_ ne null).foreach(_.tick())
     }
 
     def addGuiInGame(name: String, gui: GuiInGame): Unit = {
         if (gui ne null) {
-            gui.init(orangeCraft)
+            gui.setData(orangeCraft)
         }
         guiInGame += name -> gui
     }
@@ -36,7 +37,7 @@ class GuiManager(val orangeCraft: OrangeCraft) {
         if (guiScreen ne null) guiScreen.cleanup()
 
         if (screen ne null) {
-            screen.init(orangeCraft)
+            screen.setData(orangeCraft)
             if (guiScreen eq null) orangeCraft.ungrabMouseCursor()
         } else orangeCraft.grabMouseCursor()
 
