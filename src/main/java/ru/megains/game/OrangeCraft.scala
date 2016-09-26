@@ -71,6 +71,8 @@ class OrangeCraft(ocDataDir: String) extends Logger[OrangeCraft] {
 
         log.info("Renderer creating...")
         renderer = new EntityRenderer(this)
+        log.info("FontRender creating...")
+        fontRender = new FontRender
         log.info("Camera creating...")
         camera = new Camera
         cameraInc = new Vector3f()
@@ -88,10 +90,10 @@ class OrangeCraft(ocDataDir: String) extends Logger[OrangeCraft] {
         renderer.init(textureManager)
         log.info("TextureManager loadTexture...")
         textureManager.loadTexture(TextureManager.locationBlockTexture, textureManager.textureMapBlock)
+
         log.info("RenderItem creating...")
         itemRender = new RenderItem(this)
-        log.info("FontRender creating...")
-        fontRender = new FontRender
+
 
         log.info("GuiManager init...")
         guiManager.init()

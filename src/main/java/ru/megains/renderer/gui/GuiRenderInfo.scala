@@ -1,7 +1,6 @@
 package ru.megains.renderer.gui
 
 import org.joml.Vector3f
-import ru.megains.game.item.Item
 
 
 class GuiRenderInfo(val position: Vector3f, val rotation: Vector3f, val scale: Float) {
@@ -11,7 +10,7 @@ class GuiRenderInfo(val position: Vector3f, val rotation: Vector3f, val scale: F
     }
 
     def this(xPos: Int, yPos: Int) = {
-        this(xPos, yPos, -25, 45, 0, Item.SCALE)
+        this(xPos, yPos, -25, 45, 0, 25)
     }
 
 

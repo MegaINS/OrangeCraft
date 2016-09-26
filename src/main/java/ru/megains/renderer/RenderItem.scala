@@ -1,12 +1,22 @@
 package ru.megains.renderer
 
+import java.awt.Color
+
 import org.joml.Vector3f
 import ru.megains.game.OrangeCraft
 import ru.megains.game.item.{Item, ItemBlock, ItemStack}
 import ru.megains.game.register.GameRegister
+import ru.megains.renderer.gui.Gui
+import ru.megains.renderer.mesh.Mesh
 
-class RenderItem(orangeCraft: OrangeCraft) {
+import scala.collection.mutable
+
+class RenderItem(orangeCraft: OrangeCraft) extends Gui {
     val renderer: EntityRenderer = orangeCraft.renderer
+    val fontRender: FontRender = orangeCraft.fontRender
+    val cub: Mesh = createRect(15, 12, Color.white)
+    val numberMeshMap = new mutable.HashMap[Int, Mesh]()
+
 
     def renderItemStackToGui(xPos: Int, yPos: Int, itemStack: ItemStack): Unit = {
         if (itemStack != null) {
@@ -17,6 +27,14 @@ class RenderItem(orangeCraft: OrangeCraft) {
                     renderItemToGui(xPos, yPos, item)
 
             }
+            renderItemStackOverlay(xPos, yPos, itemStack)
+        }
+    }
+
+    def renderItemStackOverlay(xPos: Int, yPos: Int, itemStack: ItemStack): Unit = {
+        if (itemStack.stackSize > 1) {
+            drawObject(xPos + 2, yPos + 2, cub, renderer)
+            drawObject(xPos + 3, yPos + 3, getNumberMesh(itemStack.stackSize), renderer)
         }
     }
 
@@ -32,5 +50,13 @@ class RenderItem(orangeCraft: OrangeCraft) {
         shaderProgram.setUniform("modelMatrix", renderer.transformation.buildOrtoProjModelMatrix(xPos + 4, yPos + 4, 1))
         shaderProgram.setUniform("colour", new Vector3f(1f, 1f, 1f))
         GameRegister.getItemRender(item).renderInInventory(shaderProgram, renderer.textureManager)
+    }
+
+    def getNumberMesh(number: Int): Mesh = {
+        numberMeshMap.getOrElse(number, default = {
+            val mesh = fontRender.createStringGui(number.toString, Color.black)
+            numberMeshMap += number -> mesh
+            mesh
+        })
     }
 }

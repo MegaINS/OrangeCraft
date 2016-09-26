@@ -51,4 +51,21 @@ class InventoryPlayer(val entityPlayer: EntityPlayer) extends AInventory {
     override def setInventorySlotContents(index: Int, itemStack: ItemStack): Unit = {
         mainInventory(index) = itemStack
     }
+
+    def decrStackSize(index: Int, size: Int): ItemStack = {
+        val stack = mainInventory(index)
+        var newStack: ItemStack = null
+        if (stack ne null) {
+            if (stack.stackSize <= size) {
+                newStack = stack
+                mainInventory(index) = null
+            } else {
+                newStack = stack.splitStack(size)
+                if (stack.stackSize < 1) {
+                    mainInventory(index) = null
+                }
+            }
+        }
+        newStack
+    }
 }

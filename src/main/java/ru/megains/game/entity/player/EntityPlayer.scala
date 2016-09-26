@@ -15,10 +15,11 @@ class EntityPlayer(world: World) extends EntityLivingBase(world, 1.8f, 0.6f, 1.6
     val inventoryContainer: Container = new ContainerPlayerInventory(inventory)
 
 
-    inventory.addItemStackToInventory(new ItemStack(Items.stick))
+    inventory.addItemStackToInventory(new ItemStack(Items.stick, 10))
 
     for (id <- 2 to 13) {
-        inventory.addItemStackToInventory(new ItemStack(Block.getBlockById(id)))
+        inventory.addItemStackToInventory(new ItemStack(Block.getBlockById(id), id))
+        inventory.addItemStackToInventory(new ItemStack(Block.getBlockById(id), id))
     }
 
     //    inventory.addItemStackToInventory(new ItemStack(Blocks.stone))

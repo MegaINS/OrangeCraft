@@ -37,17 +37,7 @@ abstract class GuiContainer(inventorySlots: Container) extends GuiScreen {
     override def mouseClicked(x: Int, y: Int, button: Int): Unit = {
         val slot = getSlotAtPosition(x, y)
         if (slot != null) {
-            if (inventorySlots.stackSelect == null) {
-                if (!slot.isEmpty) {
-                    inventorySlots.stackSelect = slot.getStack
-                    slot.putStack(null)
-                }
-            } else {
-                if (slot.isEmpty) {
-                    slot.putStack(inventorySlots.stackSelect)
-                    inventorySlots.stackSelect = null
-                }
-            }
+            inventorySlots.slotClick(slot.slotNumber, button)
         }
 
     }

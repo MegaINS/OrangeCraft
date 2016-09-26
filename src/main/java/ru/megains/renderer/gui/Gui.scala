@@ -66,4 +66,7 @@ trait Gui {
         mesh.render(shaderProgram, renderer.textureManager)
     }
 
+    def drawObject(xPos: Int, yPos: Int, mesh: Mesh, renderer: EntityRenderer): Unit = drawObject(xPos, yPos, 1, mesh, renderer)
+
+
 }
