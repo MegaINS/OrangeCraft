@@ -9,12 +9,16 @@ class TextureManager {
 
     val textureMapBlock = new TextureMap()
     val mapATexture: mutable.HashMap[String, ATexture] = new mutable.HashMap[String, ATexture]
+    var currentTexture: String = _
 
 
     def bindTexture(name: String) {
 
-        val aTexture: ATexture = getTexture(name)
+        //  if(!name.equals(currentTexture)){
+        currentTexture = name
+        val aTexture: ATexture = getTexture(currentTexture)
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, aTexture.getGlTextureId)
+        // }
     }
 
     def getTexture(name: String): ATexture = {

@@ -1,9 +1,10 @@
 package ru.megains.game.entity.player
 
+import ru.megains.game.block.Block
 import ru.megains.game.entity.EntityLivingBase
 import ru.megains.game.inventory.{Container, ContainerPlayerInventory}
 import ru.megains.game.item.ItemStack
-import ru.megains.game.register.Blocks
+import ru.megains.game.register.Items
 import ru.megains.game.world.World
 
 
@@ -12,17 +13,23 @@ class EntityPlayer(world: World) extends EntityLivingBase(world, 1.8f, 0.6f, 1.6
 
     val inventory = new InventoryPlayer(this)
     val inventoryContainer: Container = new ContainerPlayerInventory(inventory)
-    inventory.addItemStackToInventory(new ItemStack(Blocks.stone))
-    inventory.addItemStackToInventory(new ItemStack(Blocks.dirt))
-    inventory.addItemStackToInventory(new ItemStack(Blocks.grass))
-    inventory.addItemStackToInventory(new ItemStack(Blocks.glass))
-    inventory.addItemStackToInventory(new ItemStack(Blocks.micro2))
-    inventory.addItemStackToInventory(new ItemStack(Blocks.stone))
-    inventory.addItemStackToInventory(new ItemStack(Blocks.dirt))
-    inventory.addItemStackToInventory(new ItemStack(Blocks.grass))
-    for (i <- 0 to 30) {
-        inventory.addItemStackToInventory(new ItemStack(Blocks.stone))
+
+
+    inventory.addItemStackToInventory(new ItemStack(Items.stick))
+
+    for (id <- 2 to 13) {
+        inventory.addItemStackToInventory(new ItemStack(Block.getBlockById(id)))
     }
+
+    //    inventory.addItemStackToInventory(new ItemStack(Blocks.stone))
+    //    inventory.addItemStackToInventory(new ItemStack(Blocks.dirt))
+    //    inventory.addItemStackToInventory(new ItemStack(Blocks.grass))
+    //    inventory.addItemStackToInventory(new ItemStack(Blocks.glass))
+    //    inventory.addItemStackToInventory(new ItemStack(Blocks.micro2))
+    //    inventory.addItemStackToInventory(new ItemStack(Blocks.stone))
+    //    inventory.addItemStackToInventory(new ItemStack(Blocks.dirt))
+    //    inventory.addItemStackToInventory(new ItemStack(Blocks.grass))
+
 
     setPosition(0, 35, 0)
 

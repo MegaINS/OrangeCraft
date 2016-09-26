@@ -27,11 +27,9 @@ class MultiBlockSingle(val block: Block) extends AMultiBlock {
     }
 
     override def renderBlocks(world: World, blockPos: BlockWorldPos, renderPos: BlockWorldPos): Int = {
-        if (block.isAir) {
-            return 0
-        }
-        GameRegister.getBlockRender(block).render(block, world, blockPos, renderPos)
-        1
+        if (block.isAir) return 0
+
+        if (GameRegister.getBlockRender(block).render(block, world, blockPos, renderPos)) 1 else 0
     }
 
     override def addCollisionList(blockPos: BlockWorldPos, aabbs: ArrayBuffer[AxisAlignedBB]): Unit = {

@@ -95,7 +95,6 @@ class ChunkLoader(chunkSaveDirectory: Directory) {
         }
         catch {
             case var3: Exception =>
-                println("Error load chunk " + fileName + ".dat")
                 null
         }
     }
@@ -107,7 +106,7 @@ class ChunkLoader(chunkSaveDirectory: Directory) {
 
     def save(chunk: Chunk): Unit = {
 
-        if (!chunk.isInstanceOf[ChunkVoid]) {
+        if (!chunk.isInstanceOf[ChunkVoid] && chunk.isSaved) {
             val chunkData = ArrayBuffer[Byte]()
             val blockData = chunk.blockStorage.data
 

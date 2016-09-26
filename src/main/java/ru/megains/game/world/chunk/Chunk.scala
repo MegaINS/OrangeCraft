@@ -5,7 +5,7 @@ import ru.megains.game.block.Block
 import ru.megains.game.blockdata.BlockWorldPos
 import ru.megains.game.multiblock.{AMultiBlock, MultiBlock}
 import ru.megains.game.position.ChunkPosition
-import ru.megains.game.register.Blocks
+import ru.megains.game.register.{Blocks, MultiBlocks}
 import ru.megains.game.world.World
 import ru.megains.game.world.storage.ExtendedBlockStorage
 
@@ -14,6 +14,8 @@ import scala.util.Random
 
 class Chunk(val world: World, val position: ChunkPosition) {
 
+
+    var isSaved = false
     var blockStorage: ExtendedBlockStorage = _
     if (blockStorage == null) new ExtendedBlockStorage
 
@@ -26,7 +28,7 @@ class Chunk(val world: World, val position: ChunkPosition) {
     }
 
     def isAirBlockWorldCord(pos: BlockWorldPos): Boolean = {
-        getBlockWorldCord(pos) == Blocks.multiAir
+        getBlockWorldCord(pos) == MultiBlocks.air
     }
 
     def getBlockWorldCord(pos: BlockWorldPos): AMultiBlock = getBlockChunkCord(position.blockPosWorldToLocal(pos))
@@ -58,6 +60,7 @@ class Chunk(val world: World, val position: ChunkPosition) {
     def setBlockChunkCord(pos: BlockWorldPos, block: Block): Boolean = {
 
 
+        isSaved = true
         val id = MultiBlock.getId(block)
         val x = pos.worldX
         val y = pos.worldY
@@ -100,7 +103,7 @@ class Chunk(val world: World, val position: ChunkPosition) {
     }
 
     def isAirBlockChunkCord(pos: BlockWorldPos): Boolean = {
-        getBlockChunkCord(pos) == Blocks.multiAir
+        getBlockChunkCord(pos) == MultiBlocks.air
     }
 
 

@@ -9,7 +9,7 @@ import ru.megains.game.entity.item.EntityItem
 import ru.megains.game.multiblock.AMultiBlock
 import ru.megains.game.physics.AxisAlignedBB
 import ru.megains.game.position.ChunkPosition
-import ru.megains.game.register.{Blocks, GameRegister}
+import ru.megains.game.register.{Blocks, GameRegister, MultiBlocks}
 import ru.megains.game.util.{MathHelper, RayTraceResult}
 import ru.megains.game.world.chunk.{Chunk, ChunkVoid}
 import ru.megains.game.world.storage.{AnvilSaveHandler, ChunkLoader}
@@ -67,7 +67,7 @@ class World(saveHandler: AnvilSaveHandler) extends Logger[World] {
 
     def setBlock(pos: BlockWorldPos, block: Block) {
         if (!validBlockPos(pos)) {
-            return;
+            return
         }
 
 
@@ -83,7 +83,7 @@ class World(saveHandler: AnvilSaveHandler) extends Logger[World] {
 
     def isOpaqueCube(blockPos: BlockWorldPos): Boolean = getBlock(blockPos).isOpaqueCube
 
-    def getBlock(pos: BlockWorldPos): AMultiBlock = if (!validBlockPos(pos)) Blocks.multiAir else getChunk(pos).getBlockWorldCord(pos)
+    def getBlock(pos: BlockWorldPos): AMultiBlock = if (!validBlockPos(pos)) MultiBlocks.air else getChunk(pos).getBlockWorldCord(pos)
 
     def getChunk(blockPos: BlockWorldPos): Chunk = getChunk(blockPos.worldX >> 4, blockPos.worldY >> 4, blockPos.worldZ >> 4)
 
@@ -94,7 +94,6 @@ class World(saveHandler: AnvilSaveHandler) extends Logger[World] {
                 chunks(index)
             } else {
                 chunkLoader.loadChunk(this, x, y, z)
-                // ChunkLoader.loadChunk(this, x, y, z)
                 val chunk = new ChunkVoid(this, new ChunkPosition(x, y, z))
                 addChunk(index, chunk)
                 chunk

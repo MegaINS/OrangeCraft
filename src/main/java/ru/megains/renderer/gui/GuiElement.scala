@@ -35,7 +35,7 @@ abstract class GuiElement extends Gui {
 
     def drawObject(xPos: Int, yPos: Int, scale: Float, mesh: Mesh): Unit = super.drawObject(xPos, yPos, scale, mesh, renderer)
 
-    def createString(text: String, color: Color): Mesh = super.createString(fontRender, text, color)
+    def createString(text: String, color: Color): Mesh = fontRender.createStringGui(text, color)
 
     def drawItemStack(itemStack: ItemStack, xPos: Int, yPos: Int): Unit = itemRender.renderItemStackToGui(xPos, yPos, itemStack)
 }

@@ -42,6 +42,9 @@ class GuiSelectWorld(guiMainMenu: GuiScreen) extends GuiScreen {
             case 1 => oc.saveLoader.deleteWorldDirectory(selectWorld.worldName)
                 oc.guiManager.setGuiScreen(this)
 
+            case 2 => val saveHandler = oc.saveLoader.getSaveLoader("World " + (worldsSlot.length + 1))
+                oc.setWorld(new World(saveHandler))
+
             case 5 => oc.guiManager.setGuiScreen(guiMainMenu)
             case _ =>
         }

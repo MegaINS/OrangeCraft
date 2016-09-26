@@ -3,11 +3,11 @@ package ru.megains.game
 import org.joml.Vector3f
 import org.lwjgl.LWJGLException
 import org.lwjgl.input.{Keyboard, Mouse}
-import org.lwjgl.opengl.{Display, DisplayMode, GL11}
+import org.lwjgl.opengl.{Display, DisplayMode, GL11, PixelFormat}
 import ru.megains.game.block.Block
 import ru.megains.game.blockdata.{BlockDirection, BlockSize, BlockWorldPos}
 import ru.megains.game.entity.player.EntityPlayer
-import ru.megains.game.item.ItemStack
+import ru.megains.game.item.{Item, ItemBlock, ItemStack}
 import ru.megains.game.managers.{GuiManager, TextureManager}
 import ru.megains.game.multiblock.MultiBlockSingle
 import ru.megains.game.util.{BlockAndPos, RayTraceResult, Timer}
@@ -57,8 +57,7 @@ class OrangeCraft(ocDataDir: String) extends Logger[OrangeCraft] {
         try {
             log.info("Display creating...")
             Display.setDisplayMode(new DisplayMode(800, 600))
-            Display.create()
-            Display.sync(60)
+            Display.create((new PixelFormat).withDepthBits(24))
             GL11.glClearColor(0.5f, 0.6f, 0.7f, 0.0F)
             log.info("Display create successful")
         } catch {
@@ -79,6 +78,8 @@ class OrangeCraft(ocDataDir: String) extends Logger[OrangeCraft] {
         guiManager = new GuiManager(this)
         log.info("Blocks init...")
         Block.initBlocks()
+        log.info("Items init...")
+        Item.initItems()
         log.info("MultiBlockSingle init...")
         MultiBlockSingle.initMultiBlockSingle()
         log.info("TextureManager creating...")
@@ -242,7 +243,7 @@ class OrangeCraft(ocDataDir: String) extends Logger[OrangeCraft] {
 
             if (result != null) {
                 val stack: ItemStack = player.inventory.getStackSelect
-                if (stack != null) setBlock(Block.getBlockFromItem(stack.item))
+                if (stack != null && stack.item.isInstanceOf[ItemBlock]) setBlock(Block.getBlockFromItem(stack.item))
                 else breakBlock()
             }
             else blockAndPos = null
@@ -330,7 +331,7 @@ class OrangeCraft(ocDataDir: String) extends Logger[OrangeCraft] {
             }
             if (button == 0 && buttonState && blockAndPos != null) {
                 val stack: ItemStack = player.inventory.getStackSelect
-                if (stack == null) world.setAirBlock(blockAndPos.pos)
+                if (stack == null || !stack.item.isInstanceOf[ItemBlock]) world.setAirBlock(blockAndPos.pos)
             }
         }
     }

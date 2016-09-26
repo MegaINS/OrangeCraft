@@ -95,6 +95,12 @@ object Block {
         GameRegister.registerBlock(6, new BlockMicroTest("micro0", 0))
         GameRegister.registerBlock(7, new BlockMicroTest("micro1", 1))
         GameRegister.registerBlock(8, new BlockMicroTest("micro2", 2))
+
+        GameRegister.registerBlock(9, new Block("brick"))
+        GameRegister.registerBlock(10, new Block("sand"))
+        GameRegister.registerBlock(11, new Block("cobblestone"))
+        GameRegister.registerBlock(12, new Block("planks_oak"))
+        GameRegister.registerBlock(13, new Block("leaves_oak"))
         GameRegister.registerBlockRender(Blocks.glass, RenderBlockGlass)
     }
 

@@ -2,7 +2,7 @@ package ru.megains.game.world.storage
 
 import ru.megains.game.block.Block
 import ru.megains.game.multiblock.{AMultiBlock, MultiBlock}
-import ru.megains.game.register.Blocks
+import ru.megains.game.register.MultiBlocks
 
 import scala.collection.mutable
 
@@ -34,7 +34,7 @@ class ExtendedBlockStorage {
         getIndex(x, y, z),
         default = {
             //  println("Error not multiBlock " + x + " " + y + " " + z)
-            Blocks.multiAir
+            MultiBlocks.air
         }
     )
 

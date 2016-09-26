@@ -1,9 +1,12 @@
 package ru.megains.game.register
 
+import ru.megains.game.item.Item
+
 
 object Items {
 
 
+    val stick: Item = GameRegister.getItemByName("stick")
     //  val grass:Item = new Item(Blocks.grass)
     //  val stone:Item = new Item(Blocks.stone)
     //  val glass:Item = new Item(Blocks.glass)

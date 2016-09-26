@@ -3,8 +3,8 @@ package ru.megains.renderer.gui
 import java.awt.Color
 
 import org.joml.Vector3f
+import ru.megains.renderer.EntityRenderer
 import ru.megains.renderer.mesh.{Mesh, MeshMaker}
-import ru.megains.renderer.{EntityRenderer, FontRender}
 
 trait Gui {
 
@@ -65,10 +65,5 @@ trait Gui {
         shaderProgram.setUniform("colour", new Vector3f(1f, 1f, 1f))
         mesh.render(shaderProgram, renderer.textureManager)
     }
-
-    def createString(fontRender: FontRender, text: String, color: Color): Mesh = {
-        fontRender.createStringGui(text, color)
-    }
-
 
 }

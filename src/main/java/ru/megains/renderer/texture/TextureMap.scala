@@ -13,7 +13,7 @@ import scala.collection.immutable.HashMap
 
 class TextureMap() extends ATexture with TTextureRegister with Logger[TextureMap] {
 
-    val missingTexture = new TextureAtlas("missing")
+    val missingTexture = new TextureAtlas("blocks/missing")
     var list: List[TextureAtlas] = _
     var map: Array[Array[Boolean]] = _
     var width: Int = 1
@@ -30,7 +30,7 @@ class TextureMap() extends ATexture with TTextureRegister with Logger[TextureMap
 
         textureBlockMap += "missing" -> missingTexture
         GameRegister.getBlocks.foreach(_.registerTexture(this))
-
+        GameRegister.getItems.foreach(_.registerTexture(this))
     }
 
 
@@ -49,7 +49,11 @@ class TextureMap() extends ATexture with TTextureRegister with Logger[TextureMap
     }
 
     override def registerTexture(textureName: String): TextureAtlas = {
-        val tTexture = new TextureAtlas(textureName)
+
+        if (textureBlockMap.contains(textureName)) return textureBlockMap(textureName)
+
+        val tTexture = new TextureAtlas("blocks/" + textureName)
+
         if (!tTexture.isMissingTexture) {
             textureBlockMap += textureName -> tTexture
             tTexture

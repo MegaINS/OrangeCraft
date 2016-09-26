@@ -28,11 +28,12 @@ class RenderChunk(val chunk: Chunk, textureManager: TextureManager) extends Logg
     def render(layer: Int, shaderProgram: ShaderProgram) {
         if (!isVoid) {
             if (isReRender) if (RenderChunk.rend < 2) {
-                RenderChunk.rend += 1
                 blockRender = 0
                 cleanUp()
                 makeChunk(0)
+
                 isReRender = false
+                RenderChunk.rend += 1
                 RenderChunk.chunkUpdate += 1
             }
             renderChunk(layer, shaderProgram)
