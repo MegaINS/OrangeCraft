@@ -1,5 +1,6 @@
 package ru.megains.game.entity.player
 
+
 import ru.megains.game.block.Block
 import ru.megains.game.entity.EntityLivingBase
 import ru.megains.game.inventory.{Container, ContainerPlayerInventory}
@@ -8,7 +9,8 @@ import ru.megains.game.register.Items
 import ru.megains.game.world.World
 
 
-class EntityPlayer(world: World) extends EntityLivingBase(world, 1.8f, 0.6f, 1.6f) {
+class EntityPlayer(val name: String, world: World) extends EntityLivingBase(world, 1.8f, 0.6f, 1.6f) {
+
 
 
     val inventory = new InventoryPlayer(this)
@@ -36,20 +38,20 @@ class EntityPlayer(world: World) extends EntityLivingBase(world, 1.8f, 0.6f, 1.6
 
 
     def turn(xo: Float, yo: Float) {
-        yRot += xo * 0.15f
-        xRot -= yo * 0.15f
-        if (xRot < -90.0F) {
-            xRot = -90.0F
+        rotationYaw += xo * 0.15f
+        rotationPitch -= yo * 0.15f
+        if (rotationPitch < -90.0F) {
+            rotationPitch = -90.0F
         }
-        if (xRot > 90.0F) {
-            xRot = 90.0F
+        if (rotationPitch > 90.0F) {
+            rotationPitch = 90.0F
         }
-        if (yRot > 360.0F) {
-            yRot -= 360.0F
+        if (rotationYaw > 360.0F) {
+            rotationYaw -= 360.0F
             //ydRot -= 360.0F
         }
-        if (yRot < 0.0F) {
-            yRot += 360.0F
+        if (rotationYaw < 0.0F) {
+            rotationYaw += 360.0F
             //  ydRot += 360.0F
         }
     }
@@ -81,6 +83,16 @@ class EntityPlayer(world: World) extends EntityLivingBase(world, 1.8f, 0.6f, 1.6
     }
 
     override def update(): Unit = {
+
+    }
+
+    override def getItemStackFromSlot: ItemStack = inventory.getStackSelect
+
+    def setItemStackToSlot(stack: ItemStack) {
+
+        // playEquipSound(stack)
+        inventory.mainInventory(inventory.stackSelect) = stack
+
 
     }
 

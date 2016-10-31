@@ -1,15 +1,17 @@
 package ru.megains.game.block
 
 
-import org.joml.Vector3f
-import ru.megains.game.blockdata.{BlockDirection, BlockSize, BlockWorldPos, MultiBlockPos}
-import ru.megains.game.item.Item
+import org.joml.{Vector3d, Vector3f}
+import ru.megains.client.renderer.block.RenderBlockGlass
+import ru.megains.client.renderer.texture.{TTextureRegister, TextureAtlas}
+import ru.megains.game.blockdata.{BlockDirection, BlockPos, BlockSize, MultiBlockPos}
+import ru.megains.game.entity.EntityLivingBase
+import ru.megains.game.entity.player.EntityPlayer
+import ru.megains.game.item.{Item, ItemStack}
 import ru.megains.game.physics.{AxisAlignedBB, BlockAxisAlignedBB}
 import ru.megains.game.register.{Blocks, GameRegister}
 import ru.megains.game.util.RayTraceResult
 import ru.megains.game.world.World
-import ru.megains.renderer.block.RenderBlockGlass
-import ru.megains.renderer.texture.{TTextureRegister, TextureAtlas}
 
 import scala.util.Random
 
@@ -21,8 +23,11 @@ class Block(val name: String) {
 
     var textureName: String = ""
 
-    def randomUpdate(world: World, blockPos: BlockWorldPos, rand: Random): Unit = {
+    def randomUpdate(world: World, blockPos: BlockPos, rand: Random): Unit = {
 
+    }
+
+    def onBlockPlacedBy(worldIn: World, pos: BlockPos, placer: EntityLivingBase, stack: ItemStack) {
     }
 
     def getATexture(blockDirection: BlockDirection): TextureAtlas = aTexture
@@ -41,23 +46,25 @@ class Block(val name: String) {
 
     def isOpaqueCube: Boolean = true
 
+    def onBlockActivated(worldIn: World, pos: BlockPos, playerIn: EntityPlayer, heldItem: ItemStack, side: BlockDirection, hitX: Float, hitY: Float, hitZ: Float): Boolean = false
+
     def getPhysicsBody: BlockAxisAlignedBB = BlockSize.FULL_AABB
 
-    def getBoundingBox(pos: BlockWorldPos, offset: MultiBlockPos): AxisAlignedBB = getSelectedBoundingBox(pos, offset).sum(pos.worldX, pos.worldY, pos.worldZ)
+    def getBoundingBox(pos: BlockPos, offset: MultiBlockPos): AxisAlignedBB = getSelectedBoundingBox(pos, offset).sum(pos.worldX, pos.worldY, pos.worldZ)
 
-    def getSelectedBoundingBox(pos: BlockWorldPos, offset: MultiBlockPos): AxisAlignedBB = BlockSize.FULL_AABB.sum(offset.floatX, offset.floatY, offset.floatZ)
+    def getSelectedBoundingBox(pos: BlockPos, offset: MultiBlockPos): AxisAlignedBB = BlockSize.FULL_AABB.sum(offset.floatX, offset.floatY, offset.floatZ)
 
-    def collisionRayTrace(world: World, pos: BlockWorldPos, start: Vector3f, end: Vector3f, offset: MultiBlockPos): RayTraceResult = {
+    def collisionRayTrace(world: World, pos: BlockPos, start: Vector3d, end: Vector3d, offset: MultiBlockPos): RayTraceResult = {
 
 
-        val vec3d = new Vector3f(start).sub(pos.worldX, pos.worldY, pos.worldZ)
-        val vec3d1 = new Vector3f(end).sub(pos.worldX, pos.worldY, pos.worldZ)
+        val vec3d = new Vector3f(start.x toFloat, start.y toFloat, start.z toFloat).sub(pos.worldX, pos.worldY, pos.worldZ)
+        val vec3d1 = new Vector3f(end.x toFloat, end.y toFloat, end.z toFloat).sub(pos.worldX, pos.worldY, pos.worldZ)
         val rayTraceResult = getSelectedBoundingBox(pos, offset).calculateIntercept(vec3d, vec3d1)
         if (rayTraceResult == null) {
             null
         } else {
 
-            new RayTraceResult(rayTraceResult.hitVec.add(pos.worldX, pos.worldY, pos.worldZ), rayTraceResult.sideHit, new BlockWorldPos(pos, offset.x, offset.y, offset.z), this)
+            new RayTraceResult(rayTraceResult.hitVec.add(pos.worldX, pos.worldY, pos.worldZ), rayTraceResult.sideHit, new BlockPos(pos, offset.x, offset.y, offset.z), this)
         }
     }
 
@@ -65,6 +72,16 @@ class Block(val name: String) {
 
     def getLayerRender: Int = 0
 
+    def removedByPlayer(world: World, pos: BlockPos, player: EntityPlayer, willHarvest: Boolean): Boolean = {
+        onBlockHarvested(world, pos, player)
+        world.setAirBlock(pos)
+    }
+
+    def onBlockHarvested(worldIn: World, pos: BlockPos, player: EntityPlayer) {
+    }
+
+    def onBlockDestroyedByPlayer(worldIn: World, pos: BlockPos) {
+    }
 }
 
 object Block {

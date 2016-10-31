@@ -1,7 +1,7 @@
 package ru.megains.game.entity
 
 
-import org.joml.Vector3f
+import org.joml.Vector3d
 import ru.megains.game.physics.AxisAlignedBB
 import ru.megains.game.util.{MathHelper, RayTraceResult}
 import ru.megains.game.world.World
@@ -12,25 +12,34 @@ import scala.collection.mutable
 abstract class Entity(var world: World, val height: Float, val wight: Float, val levelView: Float) {
 
     val body: AxisAlignedBB = new AxisAlignedBB()
-    var posX: Float = 0
-    var posY: Float = 0
-    var posZ: Float = 0
-    var motionX: Float = 0
-    var motionY: Float = 0
-    var motionZ: Float = 0
+
+    var posX: Double = .0
+    var posY: Double = .0
+    var posZ: Double = .0
+    var prevPosX: Double = .0
+    var prevPosY: Double = .0
+    var prevPosZ: Double = .0
+
+    var motionX: Double = .0
+    var motionY: Double = .0
+    var motionZ: Double = .0
     var goY: Float = 0.5f
-    var yRot: Float = 0
-    var xRot: Float = 0
-    var speed: Float = 3
+
+    var rotationYaw: Float = 0
+    var rotationPitch: Float = 0
+    var prevRotationYaw: Float = .0f
+    var prevRotationPitch: Float = .0f
+
+    var speed: Float = 5
     var onGround: Boolean = false
 
-    def setPosition(x: Float, y: Float, z: Float) {
+    def setPosition(x: Double, y: Double, z: Double) {
 
         posX = x
         posY = y
         posZ = z
         val i = wight / 2
-        body.set(x - i, y, z - i, x + i, y + height, z + i)
+        body.set(x - i toFloat, y toFloat, z - i toFloat, x + i toFloat, y + height toFloat, z + i toFloat)
     }
 
     def setWorld(world: World) {
@@ -39,13 +48,15 @@ abstract class Entity(var world: World, val height: Float, val wight: Float, val
 
     def update()
 
-    def move(x: Float, y: Float, z: Float) {
-        var x0: Float = x
-        var z0: Float = z
-        var y0: Float = y
-        var x1: Float = x
-        var z1: Float = z
-        var y1: Float = y
+    def isSneaking: Boolean = false
+
+    def move(x: Double, y: Double, z: Double) {
+        var x0: Float = x toFloat
+        var z0: Float = z toFloat
+        var y0: Float = y toFloat
+        var x1: Float = x toFloat
+        var z1: Float = z toFloat
+        var y1: Float = y toFloat
 
         val bodyCopy: AxisAlignedBB = body.getCopy
         var aabbs: mutable.ArrayBuffer[AxisAlignedBB] = world.addBlocksInList(body.expand(x0, y0, z0))
@@ -118,8 +129,8 @@ abstract class Entity(var world: World, val height: Float, val wight: Float, val
             dist = limit / dist * speed
             val x1 = dist * x
             val z1 = dist * z
-            val f4: Float = MathHelper.sin(yRot * Math.PI.toFloat / 180.0F)
-            val f5: Float = MathHelper.cos(yRot * Math.PI.toFloat / 180.0F)
+            val f4: Float = MathHelper.sin(rotationYaw * Math.PI.toFloat / 180.0F)
+            val f5: Float = MathHelper.cos(rotationYaw * Math.PI.toFloat / 180.0F)
             motionX += (x1 * f5 - z1 * f4)
             motionZ += (z1 * f5 + x1 * f4)
         }
@@ -127,27 +138,51 @@ abstract class Entity(var world: World, val height: Float, val wight: Float, val
 
     def rayTrace(blockReachDistance: Float, partialTicks: Float): RayTraceResult = {
 
-        val vec3d = new Vector3f(posX, posY + levelView, posZ)
-        val vec3d1: Vector3f = getLook(partialTicks).mul(blockReachDistance).add(vec3d)
+        val vec3d = new Vector3d(posX, posY + levelView, posZ)
+        val vec3d1: Vector3d = getLook(partialTicks).mul(blockReachDistance).add(vec3d)
         world.rayTraceBlocks(vec3d, vec3d1, false, false, true)
     }
 
-    def getLook(partialTicks: Float): Vector3f = {
+    def getLook(partialTicks: Float): Vector3d = {
         if (partialTicks == 1.0F) {
-            getVectorForRotation(this.xRot, this.yRot)
+            getVectorForRotation(rotationPitch, rotationYaw)
         }
         else {
-            val f: Float = xRot
-            val f1: Float = yRot
+            val f: Float = rotationPitch
+            val f1: Float = rotationYaw
             getVectorForRotation(f, f1)
         }
     }
 
-    def getVectorForRotation(pitch: Float, yaw: Float): Vector3f = {
+    def getVectorForRotation(pitch: Float, yaw: Float): Vector3d = {
         val f: Float = MathHelper.cos(-yaw * 0.017453292F - Math.PI.toFloat)
         val f1: Float = MathHelper.sin(-yaw * 0.017453292F - Math.PI.toFloat)
         val f2: Float = MathHelper.cos(-pitch * 0.017453292F)
         val f3: Float = MathHelper.sin(-pitch * 0.017453292F)
-        new Vector3f(f1 * f2, f3, f * f2)
+        new Vector3d(f1 * f2, f3, f * f2)
+    }
+
+    def setPositionAndRotation(x: Double, y: Double, z: Double, yaw: Float, pitchIn: Float) {
+        posX = MathHelper.clamp_double(x, -3.0E7D, 3.0E7D)
+        posY = y
+        posZ = MathHelper.clamp_double(z, -3.0E7D, 3.0E7D)
+        prevPosX = posX
+        prevPosY = posY
+        prevPosZ = posZ
+        val pitch = MathHelper.clamp_float(pitchIn, -90.0F, 90.0F)
+        rotationYaw = yaw
+        rotationPitch = pitch
+        prevRotationYaw = rotationYaw
+        prevRotationPitch = rotationPitch
+        val d0: Double = (prevRotationYaw - yaw).toDouble
+        if (d0 < -180.0D) prevRotationYaw += 360.0F
+        if (d0 >= 180.0D) prevRotationYaw -= 360.0F
+        setPosition(posX, posY, posZ)
+        setRotation(yaw, pitch)
+    }
+
+    protected def setRotation(yaw: Float, pitch: Float) {
+        this.rotationYaw = yaw % 360.0F
+        this.rotationPitch = pitch % 360.0F
     }
 }

@@ -1,8 +1,8 @@
 package ru.megains.game.multiblock
 
-import org.joml.Vector3f
+import org.joml.Vector3d
 import ru.megains.game.block.Block
-import ru.megains.game.blockdata.{BlockWorldPos, MultiBlockPos}
+import ru.megains.game.blockdata.{BlockPos, MultiBlockPos}
 import ru.megains.game.physics.AxisAlignedBB
 import ru.megains.game.util.RayTraceResult
 import ru.megains.game.world.World
@@ -13,11 +13,13 @@ import scala.collection.mutable.ArrayBuffer
 abstract class AMultiBlock {
 
 
-    def addCollisionList(blockPos: BlockWorldPos, aabbs: ArrayBuffer[AxisAlignedBB]): Unit
+    def getBlock(multiPos: MultiBlockPos): Block
 
-    def renderBlocks(world: World, blockPos: BlockWorldPos, renderPos: BlockWorldPos): Int
+    def addCollisionList(blockPos: BlockPos, aabbs: ArrayBuffer[AxisAlignedBB]): Unit
 
-    def collisionRayTrace(world: World, blockPos: BlockWorldPos, start: Vector3f, stop: Vector3f): RayTraceResult
+    def renderBlocks(world: World, blockPos: BlockPos, renderPos: BlockPos): Int
+
+    def collisionRayTrace(world: World, blockPos: BlockPos, start: Vector3d, stop: Vector3d): RayTraceResult
 
     def isOpaqueCube: Boolean
 
@@ -25,7 +27,7 @@ abstract class AMultiBlock {
 
     def putBlock(pos: MultiBlockPos, block: Block): Unit
 
-    def isCanPut(pos: BlockWorldPos, block: Block): Boolean
+    def isCanPut(pos: BlockPos, block: Block): Boolean
 
     def isEmpty: Boolean
 }

@@ -1,8 +1,8 @@
 package ru.megains.game.managers
 
 import org.lwjgl.input.{Keyboard, Mouse}
+import ru.megains.client.renderer.gui._
 import ru.megains.game.OrangeCraft
-import ru.megains.renderer.gui._
 
 import scala.collection.mutable
 
@@ -21,7 +21,9 @@ class GuiManager(val orangeCraft: OrangeCraft) {
 
     def tick(): Unit = {
         if (guiScreen ne null) guiScreen.tick()
-        guiInGame.values.filter(_ ne null).foreach(_.tick())
+        if (orangeCraft.world ne null) guiInGame.values.filter(_ ne null).foreach(_.tick())
+
+
     }
 
     def addGuiInGame(name: String, gui: GuiInGame): Unit = {

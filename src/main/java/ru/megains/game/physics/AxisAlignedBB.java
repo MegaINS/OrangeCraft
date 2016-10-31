@@ -180,26 +180,26 @@ public class AxisAlignedBB {
 
     public RayTraceResult calculateIntercept(Vector3f vecA, Vector3f vecB) {
         Vector3f vec3d = this.func_186671_a(this.minX, vecA, vecB);
-        BlockDirection enumfacing = BlockDirection.WEST();
+        BlockDirection enumfacing = BlockDirection.WEST$.MODULE$;
         Vector3f vec3d1 = this.func_186671_a(this.maxX, vecA, vecB);
 
         if (vec3d1 != null && this.func_186661_a(vecA, vec3d, vec3d1)) {
             vec3d = vec3d1;
-            enumfacing = BlockDirection.EAST();
+            enumfacing = BlockDirection.EAST$.MODULE$;
         }
 
         vec3d1 = this.func_186663_b(this.minY, vecA, vecB);
 
         if (vec3d1 != null && this.func_186661_a(vecA, vec3d, vec3d1)) {
             vec3d = vec3d1;
-            enumfacing = BlockDirection.DOWN();
+            enumfacing = BlockDirection.DOWN$.MODULE$;
         }
 
         vec3d1 = this.func_186663_b(this.maxY, vecA, vecB);
 
         if (vec3d1 != null && this.func_186661_a(vecA, vec3d, vec3d1)) {
             vec3d = vec3d1;
-            enumfacing = BlockDirection.UP();
+            enumfacing = BlockDirection.UP$.MODULE$;
         }
 
 
@@ -207,14 +207,14 @@ public class AxisAlignedBB {
 
         if (vec3d1 != null && this.func_186661_a(vecA, vec3d, vec3d1)) {
             vec3d = vec3d1;
-            enumfacing = BlockDirection.NORTH();
+            enumfacing = BlockDirection.NORTH$.MODULE$;
         }
 
         vec3d1 = this.func_186665_c(this.maxZ, vecA, vecB);
 
         if (vec3d1 != null && this.func_186661_a(vecA, vec3d, vec3d1)) {
             vec3d = vec3d1;
-            enumfacing = BlockDirection.SOUTH();
+            enumfacing = BlockDirection.SOUTH$.MODULE$;
         }
 
 

@@ -1,8 +1,8 @@
 package ru.megains.game.block
 
-import ru.megains.game.blockdata.{BlockDirection, BlockWorldPos}
+import ru.megains.client.renderer.texture.{TTextureRegister, TextureAtlas}
+import ru.megains.game.blockdata.{BlockDirection, BlockPos}
 import ru.megains.game.world.World
-import ru.megains.renderer.texture.{TTextureRegister, TextureAtlas}
 
 import scala.util.Random
 
@@ -13,7 +13,7 @@ class BlockGrass(name: String) extends Block(name) {
     var aTextureDown: TextureAtlas = _
 
 
-    override def randomUpdate(world: World, BlockWorldPos: BlockWorldPos, rand: Random): Unit = {
+    override def randomUpdate(world: World, BlockWorldPos: BlockPos, rand: Random): Unit = {
         //   for(i <- 0 to 3){
         //     val x = rand.nextInt(3)-1
         //     val y = rand.nextInt(3)-1

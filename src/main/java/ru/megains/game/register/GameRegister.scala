@@ -1,11 +1,11 @@
 package ru.megains.game.register
 
+import ru.megains.client.renderer.api.{ARenderBlock, ARenderItem}
+import ru.megains.client.renderer.block.RenderBlockStandart
+import ru.megains.client.renderer.item.{RenderItemBlock, RenderItemStandart}
 import ru.megains.game.block.Block
 import ru.megains.game.item.{Item, ItemBlock}
 import ru.megains.game.multiblock.{AMultiBlock, MultiBlock, MultiBlockSingle}
-import ru.megains.renderer.api.{ARenderBlock, ARenderItem}
-import ru.megains.renderer.block.RenderBlockStandart
-import ru.megains.renderer.item.{RenderItemBlock, RenderItemStandart}
 
 object GameRegister {
 

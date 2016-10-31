@@ -1,6 +1,6 @@
 package ru.megains.game.block
 
-import ru.megains.game.blockdata.{BlockSize, BlockWorldPos, MultiBlockPos}
+import ru.megains.game.blockdata.{BlockPos, BlockSize, MultiBlockPos}
 import ru.megains.game.physics.BlockAxisAlignedBB
 
 
@@ -18,7 +18,7 @@ class BlockMicroTest(name: String, val size: Int) extends Block(name) {
 
     override def getPhysicsBody: BlockAxisAlignedBB = boundingBox(size)
 
-    override def getSelectedBoundingBox(blockPos: BlockWorldPos, offset: MultiBlockPos) = boundingBox(size).sum(offset.floatX, offset.floatY, offset.floatZ)
+    override def getSelectedBoundingBox(blockPos: BlockPos, offset: MultiBlockPos) = boundingBox(size).sum(offset.floatX, offset.floatY, offset.floatZ)
 
     override def isOpaqueCube: Boolean = false
 

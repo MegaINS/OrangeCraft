@@ -2,7 +2,7 @@ package ru.megains.game.world.chunk
 
 
 import ru.megains.game.block.Block
-import ru.megains.game.blockdata.BlockWorldPos
+import ru.megains.game.blockdata.BlockPos
 import ru.megains.game.multiblock.{AMultiBlock, MultiBlock}
 import ru.megains.game.position.ChunkPosition
 import ru.megains.game.register.{Blocks, MultiBlocks}
@@ -15,7 +15,8 @@ import scala.util.Random
 class Chunk(val world: World, val position: ChunkPosition) {
 
 
-    var isSaved = false
+    var isSaved = true
+    var isPopulated: Boolean = true
     var blockStorage: ExtendedBlockStorage = _
     if (blockStorage == null) new ExtendedBlockStorage
 
@@ -27,13 +28,13 @@ class Chunk(val world: World, val position: ChunkPosition) {
         this.blockStorage = blockStorage
     }
 
-    def isAirBlockWorldCord(pos: BlockWorldPos): Boolean = {
+    def isAirBlockWorldCord(pos: BlockPos): Boolean = {
         getBlockWorldCord(pos) == MultiBlocks.air
     }
 
-    def getBlockWorldCord(pos: BlockWorldPos): AMultiBlock = getBlockChunkCord(position.blockPosWorldToLocal(pos))
+    def getBlockWorldCord(pos: BlockPos): AMultiBlock = getBlockChunkCord(position.blockPosWorldToLocal(pos))
 
-    def getBlockChunkCord(pos: BlockWorldPos): AMultiBlock = {
+    def getBlockChunkCord(pos: BlockPos): AMultiBlock = {
         val id = blockStorage.getBlockId(pos.worldX, pos.worldY, pos.worldZ)
         var multiBlock: AMultiBlock = null
         if (id == MultiBlock.id) {
@@ -55,9 +56,9 @@ class Chunk(val world: World, val position: ChunkPosition) {
         }
     }
 
-    def setBlockWorldCord(pos: BlockWorldPos, block: Block): Unit = setBlockChunkCord(position.blockPosWorldToLocal(pos), block)
+    def setBlockWorldCord(pos: BlockPos, block: Block): Unit = setBlockChunkCord(position.blockPosWorldToLocal(pos), block)
 
-    def setBlockChunkCord(pos: BlockWorldPos, block: Block): Boolean = {
+    def setBlockChunkCord(pos: BlockPos, block: Block): Boolean = {
 
 
         isSaved = true
@@ -102,8 +103,12 @@ class Chunk(val world: World, val position: ChunkPosition) {
         }
     }
 
-    def isAirBlockChunkCord(pos: BlockWorldPos): Boolean = {
+    def isAirBlockChunkCord(pos: BlockPos): Boolean = {
         getBlockChunkCord(pos) == MultiBlocks.air
+    }
+
+    def needsSaving(p_76601_1: Boolean): Boolean = {
+        isSaved
     }
 
 
@@ -113,7 +118,9 @@ object Chunk {
 
     val CHUNK_SIZE = 16
 
-    def getIndex(chunk: Chunk): Long = getIndex(chunk.position.x, chunk.position.y, chunk.position.z)
+    def getIndex(chunk: Chunk): Long = getIndex(chunk.position.chunkX, chunk.position.chunkY, chunk.position.chunkZ)
+
+    def getIndex(position: ChunkPosition): Long = getIndex(position.chunkX, position.chunkY, position.chunkZ)
 
     def getIndex(x: Long, y: Long, z: Long): Long = (x & 16777215l) << 40 | (z & 16777215l) << 16 | (y & 65535L)
 }

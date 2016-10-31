@@ -4,7 +4,7 @@ package ru.megains.game.util;
 import org.joml.Vector3f;
 import ru.megains.game.block.Block;
 import ru.megains.game.blockdata.BlockDirection;
-import ru.megains.game.blockdata.BlockWorldPos;
+import ru.megains.game.blockdata.BlockPos;
 
 public class RayTraceResult {
     /**
@@ -26,13 +26,13 @@ public class RayTraceResult {
      */
     public Vector3f hitVec;
     public Block block;
-    private BlockWorldPos blockPos;
+    public BlockPos blockPos;
 
     /**
      * The hit entity
      */
     // public Entity entityHit;
-    public RayTraceResult(Vector3f hitVecIn, BlockDirection sideHitIn, BlockWorldPos blockPosIn, Block block) {
+    public RayTraceResult(Vector3f hitVecIn, BlockDirection sideHitIn, BlockPos blockPosIn, Block block) {
         this(RayTraceResult.Type.BLOCK, hitVecIn, sideHitIn, blockPosIn, block);
     }
 
@@ -47,19 +47,19 @@ public class RayTraceResult {
 //        this(entityIn, new Vec3d(entityIn.posX, entityIn.posY, entityIn.posZ));
 //    }
 
-    public RayTraceResult(RayTraceResult.Type typeIn, Vector3f hitVecIn, BlockDirection sideHitIn, BlockWorldPos blockPosIn, Block block) {
+    public RayTraceResult(RayTraceResult.Type typeIn, Vector3f hitVecIn, BlockDirection sideHitIn, BlockPos blockPosIn, Block block) {
         this.typeOfHit = typeIn;
         this.blockPos = blockPosIn;
         this.sideHit = sideHitIn;
         this.hitVec = new Vector3f(Math.abs((hitVecIn.x % 1 + 1f) % 1), Math.abs((hitVecIn.y % 1 + 1f) % 1), Math.abs((hitVecIn.z % 1 + 1f) % 1));
 
-        if (sideHit == BlockDirection.UP() && hitVec.y == 0.0) {
+        if (sideHit == BlockDirection.UP$.MODULE$ && hitVec.y == 0.0) {
             hitVec.add(0, 1, 0);
         }
-        if (sideHit == BlockDirection.EAST() && hitVec.x == 0.0) {
+        if (sideHit == BlockDirection.EAST$.MODULE$ && hitVec.x == 0.0) {
             hitVec.add(1, 0, 0);
         }
-        if (sideHit == BlockDirection.SOUTH() && hitVec.z == 0.0) {
+        if (sideHit == BlockDirection.SOUTH$.MODULE$ && hitVec.z == 0.0) {
             hitVec.add(0, 0, 1);
         }
 
@@ -73,7 +73,7 @@ public class RayTraceResult {
 //        this.hitVec = hitVecIn;
 //    }
 
-    public BlockWorldPos getBlockWorldPos() {
+    public BlockPos getBlockWorldPos() {
         return this.blockPos;
     }
 

@@ -7,7 +7,6 @@ import ru.megains.game.block.Block
 import ru.megains.game.blockdata.MultiBlockPos
 import ru.megains.game.multiblock.MultiBlock
 import ru.megains.game.position.ChunkPosition
-import ru.megains.game.register.Blocks
 import ru.megains.game.world.World
 import ru.megains.game.world.chunk.{Chunk, ChunkVoid, Loader}
 
@@ -27,9 +26,7 @@ class ChunkLoader(chunkSaveDirectory: Directory) {
     def load(world: World, x: Int, y: Int, z: Int): Chunk = {
         val input = load(Chunk.getIndex(x, y, z) toString)
 
-        if (input == null) {
-            loadDefaultChunk(world, x, y, z)
-        } else {
+        if (input != null) {
             try {
                 val blockStorage: ExtendedBlockStorage = new ExtendedBlockStorage
                 val data = blockStorage.data
@@ -49,42 +46,41 @@ class ChunkLoader(chunkSaveDirectory: Directory) {
                     }
                     multiBlockStorage.put(posMultiBlock, multiBlock)
                 }
-                new Chunk(world, new ChunkPosition(x, y, z), blockStorage)
+                return new Chunk(world, new ChunkPosition(x, y, z), blockStorage)
             }
             catch {
                 case var3: Exception =>
-                    loadDefaultChunk(world, x, y, z)
+                    println("Error load chunk")
             }
-
         }
-
+        null
     }
 
 
-    def loadDefaultChunk(world: World, x: Int, y: Int, z: Int): Chunk = {
-        val blockStorage: ExtendedBlockStorage = new ExtendedBlockStorage
-        val blockData = blockStorage.data
-
-        if (y < 0) {
-            for (i <- 0 until 4096) {
-                blockData.set(i, Block.getIdByBlock(Blocks.stone))
-            }
-        } else {
-            val array = world.heightMap.generateHeightMap(x, z)
-            for (x1 <- 0 to 15; y1 <- 0 to 15; z1 <- 0 to 15) {
-                if (array(x1)(z1) > y1 + (y * Chunk.CHUNK_SIZE)) {
-                    blockStorage.setBlockId(x1, y1, z1, Block.getIdByBlock(Blocks.stone))
-                } else if (array(x1)(z1) == y1 + (y * Chunk.CHUNK_SIZE)) {
-                    blockStorage.setBlockId(x1, y1, z1, Block.getIdByBlock(Blocks.grass))
-                } else {
-                    blockStorage.setBlockId(x1, y1, z1, Block.getIdByBlock(Blocks.air))
-                }
-            }
-        }
-
-
-        new Chunk(world, new ChunkPosition(x, y, z), blockStorage)
-    }
+    //    def loadDefaultChunk(world: World, x: Int, y: Int, z: Int): Chunk = {
+    //        val blockStorage: ExtendedBlockStorage = new ExtendedBlockStorage
+    //        val blockData = blockStorage.data
+    //
+    //        if (y < 0) {
+    //            for (i <- 0 until 4096) {
+    //                blockData.set(i, Block.getIdByBlock(Blocks.stone))
+    //            }
+    //        } else {
+    //            val array = world.heightMap.generateHeightMap(x, z)
+    //            for (x1 <- 0 to 15; y1 <- 0 to 15; z1 <- 0 to 15) {
+    //                if (array(x1)(z1) > y1 + (y * Chunk.CHUNK_SIZE)) {
+    //                    blockStorage.setBlockId(x1, y1, z1, Block.getIdByBlock(Blocks.stone))
+    //                } else if (array(x1)(z1) == y1 + (y * Chunk.CHUNK_SIZE)) {
+    //                    blockStorage.setBlockId(x1, y1, z1, Block.getIdByBlock(Blocks.grass))
+    //                } else {
+    //                    blockStorage.setBlockId(x1, y1, z1, Block.getIdByBlock(Blocks.air))
+    //                }
+    //            }
+    //        }
+    //
+    //
+    //        new Chunk(world, new ChunkPosition(x, y, z), blockStorage)
+    //    }
 
 
     def load(fileName: String): DataInputStream = {
@@ -151,6 +147,10 @@ class ChunkLoader(chunkSaveDirectory: Directory) {
             case var2: Exception =>
                 println("Error save chunk " + fileName + ".dat")
         }
+    }
+
+
+    def saveExtraChunkData(worldIn: World, chunkIn: Chunk) {
     }
 
     def addTwoByteOfInt(int: Int, buffer: ArrayBuffer[Byte]): Unit = {

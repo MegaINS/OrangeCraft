@@ -78,6 +78,13 @@ public class Vector3f implements Externalizable {
      * @param y the value of y
      * @param z the value of z
      */
+    public Vector3f(double x, double y, double z) {
+        this.x = (float) x;
+        this.y = (float) y;
+        this.z = (float) z;
+    }
+
+
     public Vector3f(float x, float y, float z) {
         this.x = x;
         this.y = y;

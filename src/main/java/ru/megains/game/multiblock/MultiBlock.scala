@@ -1,8 +1,8 @@
 package ru.megains.game.multiblock
 
-import org.joml.Vector3f
+import org.joml.Vector3d
 import ru.megains.game.block.Block
-import ru.megains.game.blockdata.{BlockWorldPos, MultiBlockPos}
+import ru.megains.game.blockdata.{BlockPos, MultiBlockPos}
 import ru.megains.game.physics.AxisAlignedBB
 import ru.megains.game.register.{Blocks, GameRegister}
 import ru.megains.game.util.RayTraceResult
@@ -42,7 +42,7 @@ class MultiBlock() extends AMultiBlock {
 
     override def isOpaqueCube: Boolean = false
 
-    override def collisionRayTrace(world: World, blockPos: BlockWorldPos, start: Vector3f, stop: Vector3f): RayTraceResult = {
+    override def collisionRayTrace(world: World, blockPos: BlockPos, start: Vector3d, stop: Vector3d): RayTraceResult = {
 
         var rayTraceResult: RayTraceResult = null
 
@@ -54,7 +54,7 @@ class MultiBlock() extends AMultiBlock {
         null
     }
 
-    override def renderBlocks(world: World, blockPos: BlockWorldPos, renderPos: BlockWorldPos): Int = {
+    override def renderBlocks(world: World, blockPos: BlockPos, renderPos: BlockPos): Int = {
         var renders = 0
 
         blockData.foreach(
@@ -68,7 +68,7 @@ class MultiBlock() extends AMultiBlock {
         renders
     }
 
-    override def addCollisionList(blockPos: BlockWorldPos, aabbs: ArrayBuffer[AxisAlignedBB]): Unit = {
+    override def addCollisionList(blockPos: BlockPos, aabbs: ArrayBuffer[AxisAlignedBB]): Unit = {
 
         blockData.foreach((bd: (MultiBlockPos, Block)) => {
             aabbs += bd._2.getBoundingBox(blockPos, bd._1)
@@ -76,7 +76,7 @@ class MultiBlock() extends AMultiBlock {
 
     }
 
-    override def isCanPut(pos: BlockWorldPos, block: Block): Boolean = {
+    override def isCanPut(pos: BlockPos, block: Block): Boolean = {
         val aabb = block.getPhysicsBody.getCopy.move(pos.blockX.value, pos.blockY.value, pos.blockZ.value)
 
         blockData.forall((bd: (MultiBlockPos, Block)) => {
@@ -86,6 +86,17 @@ class MultiBlock() extends AMultiBlock {
     }
 
     override def isEmpty: Boolean = blockData.isEmpty
+
+    override def getBlock(multiPos: MultiBlockPos): Block = {
+        val bd = blockData.find((bd: (MultiBlockPos, Block)) => {
+            bd._1 == multiPos
+        })
+        if (bd.isEmpty) {
+            Blocks.air
+        } else {
+            bd.get._2
+        }
+    }
 }
 
 object MultiBlock {

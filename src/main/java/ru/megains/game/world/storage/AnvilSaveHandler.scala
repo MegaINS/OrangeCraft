@@ -2,7 +2,8 @@ package ru.megains.game.world.storage
 
 import scala.reflect.io.{Directory, Path}
 
-class AnvilSaveHandler(savesDirectory: Directory, worldName: String) {
+class AnvilSaveHandler(savesDirectory: Directory, worldName: String) extends ISaveHandler {
+    def flush(): Unit = {}
 
 
     val worldDirectory: Directory = savesDirectory / Path(worldName).toDirectory

@@ -1,6 +1,7 @@
 package ru.megains.game.entity.mob
 
 import ru.megains.game.entity.EntityLivingBase
+import ru.megains.game.item.ItemStack
 import ru.megains.game.world.World
 
 
@@ -24,5 +25,13 @@ class EntityCube(world: World, height: Float, wight: Float, levelView: Float) ex
             motionX *= 0.9f
             motionZ *= 0.9f
         }
+    }
+
+    override def getItemStackFromSlot: ItemStack = {
+        null
+    }
+
+    override def setItemStackToSlot(stack: ItemStack): Unit = {
+
     }
 }

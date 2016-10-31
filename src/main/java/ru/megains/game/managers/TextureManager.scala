@@ -1,7 +1,7 @@
 package ru.megains.game.managers
 
 import org.lwjgl.opengl.GL11
-import ru.megains.renderer.texture.{ATexture, SimpleTexture, TextureMap}
+import ru.megains.client.renderer.texture.{ATexture, SimpleTexture, TextureMap}
 
 import scala.collection.mutable
 

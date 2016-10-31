@@ -69,3 +69,11 @@ class InventoryPlayer(val entityPlayer: EntityPlayer) extends AInventory {
         newStack
     }
 }
+
+object InventoryPlayer {
+    def isHotBar(index: Int): Boolean = index > -1 && index < hotBarSize
+
+    val hotBarSize = 10
+
+
+}
