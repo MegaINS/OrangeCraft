@@ -22,7 +22,7 @@ class PlayerChunkMap(val worldServer: WorldServer) {
 
     val playerInstancesToUpdate: mutable.HashSet[PlayerChunkMapEntry] = new mutable.HashSet[PlayerChunkMapEntry]()
 
-    val playerViewRadius: Int = 3
+    val playerViewRadius: Int = 5
     var previousTotalWorldTime: Long = 0
 
     val CAN_GENERATE_CHUNKS = (player: EntityPlayerMP) => player != null
@@ -190,7 +190,6 @@ class PlayerChunkMap(val worldServer: WorldServer) {
             val mX: Int = player.managedPosX.toInt >> 4
             val mY: Int = player.managedPosX.toInt >> 4
             val mZ: Int = player.managedPosZ.toInt >> 4
-            val i1: Int = playerViewRadius
             val xmX: Int = x - mX
             val ymY: Int = y - mY
             val zmZ: Int = z - mZ
@@ -199,8 +198,8 @@ class PlayerChunkMap(val worldServer: WorldServer) {
                 for (x1 <- x - playerViewRadius to x + playerViewRadius;
                      y1 <- y - playerViewRadius to y + playerViewRadius;
                      z1 <- z - playerViewRadius to z + playerViewRadius) {
-                    if (!overlaps(x1, y1, z1, mX, mY, mZ, i1)) getOrCreateEntry(x1, y1, z1).addPlayer(player)
-                    if (!overlaps(x1 - xmX, y1 - ymY, z1 - zmZ, x, y, z, i1)) {
+                    if (!overlaps(x1, y1, z1, mX, mY, mZ, playerViewRadius)) getOrCreateEntry(x1, y1, z1).addPlayer(player)
+                    if (!overlaps(x1 - xmX, y1 - ymY, z1 - zmZ, x, y, z, playerViewRadius)) {
                         val playerchunkmapentry: PlayerChunkMapEntry = getEntry(x1 - xmX, y1 - ymY, z1 - zmZ).orNull
                         if (playerchunkmapentry != null) playerchunkmapentry.removePlayer(player)
                     }
@@ -218,7 +217,7 @@ class PlayerChunkMap(val worldServer: WorldServer) {
 
     private def overlaps(x1: Int, y1: Int, z1: Int, x2: Int, y2: Int, z2: Int, radius: Int): Boolean = {
         val x: Int = x1 - x2
-        val y: Int = z1 - z2
+        val y: Int = y1 - y2
         val z: Int = z1 - z2
 
         x >= -radius && x <= radius && y >= -radius && y <= radius && z >= -radius && z <= radius

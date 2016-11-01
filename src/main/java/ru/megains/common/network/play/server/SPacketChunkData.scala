@@ -7,8 +7,6 @@ import ru.megains.game.multiblock.MultiBlock
 import ru.megains.game.world.chunk.Chunk
 import ru.megains.game.world.storage.ExtendedBlockStorage
 
-import scala.collection.mutable.ArrayBuffer
-
 class SPacketChunkData extends Packet[INetHandlerPlayClient] {
 
 
@@ -16,10 +14,12 @@ class SPacketChunkData extends Packet[INetHandlerPlayClient] {
     var chunkY: Int = 0
     var chunkZ: Int = 0
     var blockStorage: ExtendedBlockStorage = _
+    var chunkVoid: Boolean = false
 
     def this(chunkIn: Chunk, p_i47124_2: Int) {
         this()
         blockStorage = chunkIn.blockStorage
+        chunkVoid = chunkIn.isVoid
         chunkX = chunkIn.position.chunkX
         chunkY = chunkIn.position.chunkY
         chunkZ = chunkIn.position.chunkZ
@@ -29,14 +29,16 @@ class SPacketChunkData extends Packet[INetHandlerPlayClient] {
         chunkX = buf.readInt()
         chunkY = buf.readInt()
         chunkZ = buf.readInt()
-        blockStorage = readChunk(buf)
+        chunkVoid = buf.readBoolean()
+        blockStorage = if (chunkVoid) new ExtendedBlockStorage else readChunk(buf)
     }
 
     override def writePacketData(buf: PacketBuffer): Unit = {
         buf.writeInt(chunkX)
         buf.writeInt(chunkY)
         buf.writeInt(chunkZ)
-        buf.writeBytes(writeChunk().toArray)
+        buf.writeBoolean(chunkVoid)
+        if (!chunkVoid) writeChunk(buf)
     }
 
     override def processPacket(handler: INetHandlerPlayClient): Unit = {
@@ -48,16 +50,22 @@ class SPacketChunkData extends Packet[INetHandlerPlayClient] {
         val data = blockStorage.data
         val multiBlockStorage = blockStorage.multiBlockStorage
         for (i <- 0 until 4096) {
-            data.set(i, readIntOfTwoByte(buf))
+            // data.set(i, readIntOfTwoByte(buf))
+            data.set(i, buf.readInt())
         }
-        val sizeMultiBlock = readIntOfTwoByte(buf)
+        //  val sizeMultiBlock = readIntOfTwoByte(buf)
+        val sizeMultiBlock = buf.readInt()
         for (i <- 0 until sizeMultiBlock) {
-            val posMultiBlock = readIntOfTwoByte(buf)
+            //  val posMultiBlock = readIntOfTwoByte(buf)
+            val posMultiBlock = buf.readInt()
             val multiBlock = new MultiBlock()
-            val sizeBlock = readIntOfTwoByte(buf)
+            // val sizeBlock = readIntOfTwoByte(buf)
+            val sizeBlock = buf.readInt()
             for (j <- 0 until sizeBlock) {
-                val posBlock = readIntOfTwoByte(buf)
-                val blockId = readIntOfTwoByte(buf)
+                //  val posBlock = readIntOfTwoByte(buf)
+                //  val blockId = readIntOfTwoByte(buf)
+                val posBlock = buf.readInt()
+                val blockId = buf.readInt()
                 multiBlock.putBlock(MultiBlockPos.getForIndex(posBlock), Block.getBlockById(blockId))
             }
             multiBlockStorage.put(posMultiBlock, multiBlock)
@@ -65,44 +73,53 @@ class SPacketChunkData extends Packet[INetHandlerPlayClient] {
         blockStorage
     }
 
-    def writeChunk(): ArrayBuffer[Byte] = {
-        val chunkData = ArrayBuffer[Byte]()
+    def writeChunk(buf: PacketBuffer): Unit = {
+        //  val chunkData = ArrayBuffer[Byte]()
         val blockData = blockStorage.data
 
         for (i <- 0 until 4096) {
-            addTwoByteOfInt(blockData.get(i), chunkData)
+            buf.writeInt(blockData.get(i))
+            //  addTwoByteOfInt(blockData.get(i), chunkData)
         }
+
+        //  buf.writeBytes(chunkData.toArray)
+
         val multiBlockStorage = blockStorage.multiBlockStorage
 
         //Колличество мультиБлоков
-        addTwoByteOfInt(multiBlockStorage.size, chunkData)
+        buf.writeInt(multiBlockStorage.size)
+        //  addTwoByteOfInt(multiBlockStorage.size, chunkData)
 
         multiBlockStorage.foreach(
             (data: (Int, MultiBlock)) => {
                 //Координаты мультиБлока
-                addTwoByteOfInt(data._1, chunkData)
+                buf.writeInt(data._1)
+                // addTwoByteOfInt(data._1, chunkData)
                 val blockData = data._2.blockData
                 //Колличество блоков в мультиБлоке
-                addTwoByteOfInt(blockData.size, chunkData)
+                buf.writeInt(blockData.size)
+                //  addTwoByteOfInt(blockData.size, chunkData)
                 blockData.foreach(
                     (data2: (MultiBlockPos, Block)) => {
                         //Координаты блока
-                        addTwoByteOfInt(data2._1.getIndex, chunkData)
+                        buf.writeInt(data2._1.getIndex)
+                        //  addTwoByteOfInt(data2._1.getIndex, chunkData)
                         //Id блока
-                        addTwoByteOfInt(Block.getIdByBlock(data2._2), chunkData)
+                        buf.writeInt(Block.getIdByBlock(data2._2))
+                        // addTwoByteOfInt(Block.getIdByBlock(data2._2), chunkData)
                     }
                 )
             }
         )
-        chunkData
+        // chunkData
     }
 
-    def addTwoByteOfInt(int: Int, buffer: ArrayBuffer[Byte]): Unit = {
-        buffer += (int >> 8).toByte
-        buffer += int.toByte
-    }
+    //    def addTwoByteOfInt(int: Int, buffer: ArrayBuffer[Byte]): Unit = {
+    //        buffer += (int >> 8).toByte
+    //        buffer += int.toByte
+    //    }
 
-    def readIntOfTwoByte(buf: PacketBuffer): Int = {
-        buf.readByte() << 8 | buf.readByte()
-    }
+    //    def readIntOfTwoByte(buf: PacketBuffer): Int = {
+    //        buf.readByte() << 8 | buf.readByte()
+    //    }
 }

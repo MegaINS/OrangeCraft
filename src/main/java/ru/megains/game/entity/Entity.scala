@@ -30,7 +30,7 @@ abstract class Entity(var world: World, val height: Float, val wight: Float, val
     var prevRotationYaw: Float = .0f
     var prevRotationPitch: Float = .0f
 
-    var speed: Float = 5
+    var speed: Float = 50
     var onGround: Boolean = false
 
     def setPosition(x: Double, y: Double, z: Double) {

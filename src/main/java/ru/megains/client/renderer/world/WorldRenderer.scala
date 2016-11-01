@@ -20,17 +20,17 @@ class WorldRenderer(val world: WorldClient, val textureManager: TextureManager) 
     val renderChunks: mutable.HashMap[Long, RenderChunk] = new mutable.HashMap[Long, RenderChunk]
     var blockMouseOver: Mesh = _
     var blockSelect: Mesh = _
-    val range = 4
+    val range = 3
 
 
     def getRenderChunks(entityPlayer: EntityPlayer, frustum: Frustum): IndexedSeq[RenderChunk] = {
         val posX: Int = entityPlayer.posX / 16 - (if (entityPlayer.posX < 0) 1 else 0) toInt
-        val posY: Int = entityPlayer.posY / 16 - (if (entityPlayer.posX < 0) 1 else 0) toInt
-        val posZ: Int = entityPlayer.posZ / 16 - (if (entityPlayer.posX < 0) 1 else 0) toInt
+        val posY: Int = entityPlayer.posY / 16 - (if (entityPlayer.posY < 0) 1 else 0) toInt
+        val posZ: Int = entityPlayer.posZ / 16 - (if (entityPlayer.posZ < 0) 1 else 0) toInt
 
-        for {x <- posX - range - 1 to posX + range
-             y <- posY - range / 2 - 1 to posY + range
-             z <- posZ - range - 1 to posZ + range
+        for {x <- posX - range to posX + range
+             y <- posY - range to posY + range
+             z <- posZ - range to posZ + range
              renderChunk = getRenderChunk(x, y, z)
              if frustum.cubeInFrustum(renderChunk.cube)
         } yield renderChunk

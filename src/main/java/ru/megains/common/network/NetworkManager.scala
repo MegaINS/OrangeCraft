@@ -33,7 +33,7 @@ class NetworkManager(direction: PacketDirection) extends SimpleChannelInboundHan
     }
 
     override def exceptionCaught(ctx: ChannelHandlerContext, cause: Throwable): Unit = {
-        log.info(cause)
+        log.info("exceptionCaught", cause)
         closeChannel("exceptionCaught")
     }
 

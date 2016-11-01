@@ -17,9 +17,7 @@ class Chunk(val world: World, val position: ChunkPosition) {
 
     var isSaved = true
     var isPopulated: Boolean = true
-    var blockStorage: ExtendedBlockStorage = _
-    if (blockStorage == null) new ExtendedBlockStorage
-
+    var blockStorage: ExtendedBlockStorage = new ExtendedBlockStorage
 
     var updateLCG: Int = new Random().nextInt()
 
@@ -109,6 +107,15 @@ class Chunk(val world: World, val position: ChunkPosition) {
 
     def needsSaving(p_76601_1: Boolean): Boolean = {
         isSaved
+    }
+
+    def isVoid: Boolean = {
+        val blockData = blockStorage.data
+        val airId = Block.getIdByBlock(Blocks.air)
+        for (i <- 0 until 4096) {
+            if (blockData.get(i) != airId) return false
+        }
+        true
     }
 
 
