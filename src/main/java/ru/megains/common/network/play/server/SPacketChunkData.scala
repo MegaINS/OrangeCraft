@@ -16,7 +16,7 @@ class SPacketChunkData extends Packet[INetHandlerPlayClient] {
     var blockStorage: ExtendedBlockStorage = _
     var chunkVoid: Boolean = false
 
-    def this(chunkIn: Chunk, p_i47124_2: Int) {
+    def this(chunkIn: Chunk) {
         this()
         blockStorage = chunkIn.blockStorage
         chunkVoid = chunkIn.isVoid

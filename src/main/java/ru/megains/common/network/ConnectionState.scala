@@ -90,7 +90,7 @@ object ConnectionState {
         registerPacket(PacketDirection.CLIENTBOUND, classOf[SPacketPlayerPosLook])
         registerPacket(PacketDirection.CLIENTBOUND, classOf[SPacketSpawnPosition])
         registerPacket(PacketDirection.CLIENTBOUND, classOf[SPacketUnloadChunk])
-
+        registerPacket(PacketDirection.CLIENTBOUND, classOf[SPacketMultiBlockChange])
 
 
 

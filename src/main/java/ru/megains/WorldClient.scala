@@ -27,7 +27,7 @@ class WorldClient(connection: NetHandlerPlayClient) extends World(new SaveHandle
         //  val j: Int = pos.getY
         //   val k: Int = pos.getZ
         // invalidateBlockReceiveRegion(i, j, k, i, j, k)
-        super.setBlock(pos, block, 3)
+        setBlock(pos, block, 3)
     }
 
 

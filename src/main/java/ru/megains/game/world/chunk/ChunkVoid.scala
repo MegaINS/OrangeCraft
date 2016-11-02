@@ -13,7 +13,7 @@ class ChunkVoid(world: World, position: ChunkPosition) extends Chunk(world, posi
 
     override def isAirBlockWorldCord(pos: BlockPos): Boolean = true
 
-    override def getBlockWorldCord(pos: BlockPos): AMultiBlock = MultiBlocks.air
+    override def getMultiBlockWorldCord(pos: BlockPos): AMultiBlock = MultiBlocks.air
 
     override def setBlockChunkCord(pos: BlockPos, block: Block): Boolean = false
 

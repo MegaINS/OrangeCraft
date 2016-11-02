@@ -1,7 +1,9 @@
 package ru.megains.server
 
 
-import ru.megains.common.network.play.server.{SPacketChunkData, SPacketUnloadChunk}
+import ru.megains.common.network.play.server.{SPacketBlockChange, SPacketChunkData, SPacketMultiBlockChange, SPacketUnloadChunk}
+import ru.megains.common.network.{INetHandler, Packet}
+import ru.megains.game.blockdata.BlockPos
 import ru.megains.game.position.ChunkPosition
 import ru.megains.game.world.chunk.Chunk
 import ru.megains.server.entity.EntityPlayerMP
@@ -18,8 +20,8 @@ class PlayerChunkMapEntry(playerChunkMap: PlayerChunkMap, chunkX: Int, chunkY: I
     var loading: Boolean = false
     var chunk: Chunk = _
     var changes: Int = 0
+    val changedBlocks: ArrayBuffer[BlockPos] = ArrayBuffer[BlockPos]()
 
-    var changedSectionFilter: Int = 0
 
 
     def hasPlayerMatching(function: (EntityPlayerMP) => Boolean): Boolean = {
@@ -27,10 +29,6 @@ class PlayerChunkMapEntry(playerChunkMap: PlayerChunkMap, chunkX: Int, chunkY: I
     }
 
     def updateChunkInhabitedTime() = {
-
-    }
-
-    def update() = {
 
     }
 
@@ -72,9 +70,9 @@ class PlayerChunkMapEntry(playerChunkMap: PlayerChunkMap, chunkX: Int, chunkY: I
         else if (!chunk.isPopulated) false
         else {
             changes = 0
-            changedSectionFilter = 0
+
             isSentToPlayers = true
-            val packet = new SPacketChunkData(chunk, 65535)
+            val packet = new SPacketChunkData(chunk)
             players.foreach(
                 (player) => {
                     player.connection.sendPacket(packet)
@@ -86,9 +84,67 @@ class PlayerChunkMapEntry(playerChunkMap: PlayerChunkMap, chunkX: Int, chunkY: I
         }
     }
 
+    def blockChanged(pos: BlockPos) {
+        if (isSentToPlayers) {
+            if (changes == 0) playerChunkMap.addEntry(this)
+            for (i <- changedBlocks.indices) {
+                if (changedBlocks(i) eq pos) return
+            }
+            changes += 1
+            changedBlocks += pos
+
+        }
+    }
+
+    def update() {
+        if (isSentToPlayers && chunk != null) if (changes != 0) {
+            if (changes == 1) {
+                val blockPos: BlockPos = changedBlocks(0)
+                sendPacket(new SPacketBlockChange(playerChunkMap.worldServer, blockPos))
+                //  val state: IBlockState = playerChunkMap.getWorldServer.getBlockState(blockpos)
+                //  if (state.getBlock.hasTileEntity(state)) sendBlockEntity(playerChunkMap.getWorldServer.getTileEntity(blockpos))
+            }
+            else if (changes >= 64) {
+                sendPacket(new SPacketChunkData(chunk))
+
+            }
+            else {
+                sendPacket(new SPacketMultiBlockChange(changedBlocks, chunk))
+
+                //                var l: Int = 0
+                //                while (l < changes) {
+                //                    {
+                //                        val i1: Int = (changedBlocks(l) >> 12 & 15) + pos.chunkXPos * 16
+                //                        val j1: Int = changedBlocks(l) & 255
+                //                        val k1: Int = (changedBlocks(l) >> 8 & 15) + pos.chunkZPos * 16
+                //                        val blockpos1: BlockPos = new BlockPos(i1, j1, k1)
+                //                  //      val state: IBlockState = playerChunkMap.getWorldServer.getBlockState(blockpos1)
+                //                       // if (state.getBlock.hasTileEntity(state)) sendBlockEntity(playerChunkMap.getWorldServer.getTileEntity(blockpos1))
+                //                    }
+                //                    {
+                //                        l += 1; l
+                //                    }
+                //                }
+            }
+            changes = 0
+            changedBlocks.clear()
+
+        }
+    }
+
+    def sendPacket(packetIn: Packet[_ <: INetHandler]) {
+        if (isSentToPlayers) {
+
+            for (i <- players.indices) {
+                players(i).connection.sendPacket(packetIn)
+            }
+
+        }
+    }
+
     def sendNearbySpecialEntities(player: EntityPlayerMP) {
         if (isSentToPlayers) {
-            player.connection.sendPacket(new SPacketChunkData(chunk, 65535))
+            player.connection.sendPacket(new SPacketChunkData(chunk))
             playerChunkMap.worldServer.entityTracker.sendLeashedEntitiesInChunk(player, chunk)
         }
     }

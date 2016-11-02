@@ -9,7 +9,7 @@ import ru.megains.game.item.ItemStack
 import ru.megains.game.register.Items
 import ru.megains.game.world.storage.AnvilSaveFormat
 import ru.megains.server.network.NetworkSystem
-import ru.megains.server.world.WorldServer
+import ru.megains.server.world.{ServerWorldEventHandler, WorldServer}
 import ru.megains.utils.{IThreadListener, Logger, Util}
 
 import scala.collection.mutable
@@ -160,6 +160,7 @@ class OrangeCraftServer(serverDir: Directory) extends Runnable with Logger[Orang
     def loadAllWorlds() = {
         val saveHandler = saveLoader.getSaveLoader("world")
         world = new WorldServer(this, saveHandler)
+        world.addEventListener(new ServerWorldEventHandler(this, world))
 
         initialWorldChunkLoad()
     }

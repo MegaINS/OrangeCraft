@@ -9,7 +9,7 @@ import ru.megains.game.world.World
 import ru.megains.game.world.chunk.{Chunk, ChunkVoid}
 import ru.megains.utils.Logger
 
-class RenderChunk(val chunk: Chunk, textureManager: TextureManager) extends Logger[RenderChunk] {
+class RenderChunk(var chunk: Chunk, textureManager: TextureManager) extends Logger[RenderChunk] {
 
 
     val isVoid: Boolean = chunk.isInstanceOf[ChunkVoid]
@@ -28,6 +28,7 @@ class RenderChunk(val chunk: Chunk, textureManager: TextureManager) extends Logg
         if (!isVoid) {
             if (isReRender) if (RenderChunk.rend < 2) {
                 if (!chunk.isVoid) {
+
                     blockRender = 0
                     cleanUp()
                     makeChunk(0)
@@ -54,7 +55,7 @@ class RenderChunk(val chunk: Chunk, textureManager: TextureManager) extends Logg
             blockPos = new BlockPos(x + minX, y + minY, z + minZ)
             renderPos = new BlockPos(x, y, z)
             if (!world.isAirBlock(blockPos)) {
-                block = chunk.getBlockWorldCord(blockPos)
+                block = chunk.getMultiBlockWorldCord(blockPos)
                 blockRender += block.renderBlocks(world, blockPos, renderPos)
             }
         }

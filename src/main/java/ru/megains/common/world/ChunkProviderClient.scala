@@ -13,9 +13,13 @@ class ChunkProviderClient(world: World) extends IChunkProvider {
     val chunkMapping: mutable.HashMap[Long, Chunk] = new mutable.HashMap[Long, Chunk]
 
     override def loadChunk(chunkX: Int, chunkY: Int, chunkZ: Int): Chunk = {
-        val chunk: Chunk = new Chunk(world, new ChunkPosition(chunkX, chunkY, chunkZ))
-        chunkMapping += Chunk.getIndex(chunkX, chunkY, chunkZ) -> chunk
-        chunk
+        val key = Chunk.getIndex(chunkX, chunkY, chunkZ)
+        if (chunkMapping.contains(key)) chunkMapping(key)
+        else {
+            val chunk: Chunk = new Chunk(world, new ChunkPosition(chunkX, chunkY, chunkZ))
+            chunkMapping += key -> chunk
+            chunk
+        }
     }
 
     override def provideChunk(chunkX: Int, chunkY: Int, chunkZ: Int): Chunk = {

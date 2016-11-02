@@ -27,10 +27,12 @@ class Chunk(val world: World, val position: ChunkPosition) {
     }
 
     def isAirBlockWorldCord(pos: BlockPos): Boolean = {
-        getBlockWorldCord(pos) == MultiBlocks.air
+        getMultiBlockWorldCord(pos) == MultiBlocks.air
     }
 
-    def getBlockWorldCord(pos: BlockPos): AMultiBlock = getBlockChunkCord(position.blockPosWorldToLocal(pos))
+    def getMultiBlockWorldCord(pos: BlockPos): AMultiBlock = getBlockChunkCord(position.blockPosWorldToLocal(pos))
+
+    def getBlockWorldCord(pos: BlockPos): Block = getMultiBlockWorldCord(pos).getBlock(pos.multiPos)
 
     def getBlockChunkCord(pos: BlockPos): AMultiBlock = {
         val id = blockStorage.getBlockId(pos.worldX, pos.worldY, pos.worldZ)

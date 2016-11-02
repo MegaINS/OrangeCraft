@@ -9,12 +9,15 @@ import ru.megains.game.blockdata.{BlockPos, MultiBlockPos}
 import ru.megains.game.entity.item.EntityItem
 import ru.megains.game.entity.player.EntityPlayer
 import ru.megains.game.managers.TextureManager
+import ru.megains.game.position.ChunkPosition
 import ru.megains.game.register.GameRegister
 
 import scala.collection.mutable
 
 
 class WorldRenderer(val world: WorldClient, val textureManager: TextureManager) {
+
+
     world.worldRenderer = this
 
     val renderChunks: mutable.HashMap[Long, RenderChunk] = new mutable.HashMap[Long, RenderChunk]
@@ -49,6 +52,23 @@ class WorldRenderer(val world: WorldClient, val textureManager: TextureManager) 
         getRenderChunk(x, y - 1, z).reRender()
         getRenderChunk(x, y, z + 1).reRender()
         getRenderChunk(x, y, z - 1).reRender()
+    }
+
+    def reRender(position: ChunkPosition): Unit = {
+        val x: Int = position.chunkX
+        val y: Int = position.chunkY
+        val z: Int = position.chunkZ
+        getRenderChunk(x, y, z).reRender()
+        getRenderChunk(x + 1, y, z).reRender()
+        getRenderChunk(x - 1, y, z).reRender()
+        getRenderChunk(x, y + 1, z).reRender()
+        getRenderChunk(x, y - 1, z).reRender()
+        getRenderChunk(x, y, z + 1).reRender()
+        getRenderChunk(x, y, z - 1).reRender()
+    }
+
+    def reRenderWorld(): Unit = {
+        renderChunks.values.foreach(_.reRender())
     }
 
     def getRenderChunk(x: Int, y: Int, z: Int): RenderChunk = {
@@ -181,5 +201,6 @@ class WorldRenderer(val world: WorldClient, val textureManager: TextureManager) 
             }
         )
     }
+
 
 }

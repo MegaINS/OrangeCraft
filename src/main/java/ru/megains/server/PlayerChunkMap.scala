@@ -1,6 +1,7 @@
 package ru.megains.server
 
 
+import ru.megains.game.blockdata.BlockPos
 import ru.megains.game.position.ChunkPosition
 import ru.megains.game.world.chunk.Chunk
 import ru.megains.server.entity.EntityPlayerMP
@@ -223,6 +224,14 @@ class PlayerChunkMap(val worldServer: WorldServer) {
         x >= -radius && x <= radius && y >= -radius && y <= radius && z >= -radius && z <= radius
     }
 
+    def markBlockForUpdate(pos: BlockPos) {
+        val x: Int = pos.worldX >> 4
+        val y: Int = pos.worldY >> 4
+        val z: Int = pos.worldZ >> 4
+        val playerchunkmapentry: PlayerChunkMapEntry = getEntry(x, y, z).get
+        if (playerchunkmapentry != null) playerchunkmapentry.blockChanged(pos)
+    }
+
     def removeEntry(entry: PlayerChunkMapEntry) = {
         val chunkpos: ChunkPosition = entry.pos
         val i: Long = Chunk.getIndex(chunkpos.chunkX, chunkpos.chunkY, chunkpos.chunkZ)
@@ -240,6 +249,10 @@ class PlayerChunkMap(val worldServer: WorldServer) {
     def contains(chunkX: Int, chunkY: Int, chunkZ: Int): Boolean = {
         val i: Long = Chunk.getIndex(chunkX, chunkY, chunkZ)
         playerInstances.get(i) != null
+    }
+
+    def addEntry(entry: PlayerChunkMapEntry) {
+        playerInstancesToUpdate.add(entry)
     }
 
 

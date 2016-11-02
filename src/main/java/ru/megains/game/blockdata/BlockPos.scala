@@ -26,5 +26,11 @@ class BlockPos(val worldX: Int, val worldY: Int, val worldZ: Int, val blockX: Bl
     def sum(blockPos: BlockPos) = new BlockPos(worldX + blockPos.worldX, worldY + blockPos.worldY, worldZ + blockPos.worldZ, blockX, blockY, blockZ)
 
     def sum(x: Int, y: Int, z: Int) = new BlockPos(worldX + x, worldY + y, worldZ + z, blockX, blockY, blockZ)
+
+    def eq(pos: BlockPos): Boolean = {
+
+
+        pos != null & pos.worldX == worldX && pos.worldY == worldY && pos.worldZ == worldZ && pos.multiPos == multiPos
+    }
 }
 

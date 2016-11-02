@@ -14,13 +14,7 @@ class MultiBlockPos(val x: BlockSize, val y: BlockSize, val z: BlockSize) {
         x.id << 10 | y.id << 5 | z.id
     }
 
-    def eq(pos: MultiBlockPos): Boolean = {
-        this == pos
-    }
 
-    def equals(pos: MultiBlockPos): Boolean = {
-        this == pos
-    }
 
 }
 

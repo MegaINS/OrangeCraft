@@ -37,6 +37,7 @@ abstract class World(saveHandler: ISaveHandler) extends Logger[World] {
     val width: Int = 8000000
     // The height of the world from -30000 to 30000
     val height: Int = 30000
+    val eventListeners: ArrayBuffer[IWorldEventListener] = ArrayBuffer[IWorldEventListener]()
 
     val chunks: mutable.HashMap[Long, Chunk] = new mutable.HashMap[Long, Chunk]
     val rand: Random = new Random()
@@ -72,9 +73,33 @@ abstract class World(saveHandler: ISaveHandler) extends Logger[World] {
         if (!validBlockPos(pos)) {
             return false
         }
-        getChunk(pos).setBlockWorldCord(pos, block)
+        val chunk = getChunk(pos)
+        chunk.setBlockWorldCord(pos, block)
 
+
+        markAndNotifyBlock(pos, chunk, block, flag)
         true
+    }
+
+    def markAndNotifyBlock(pos: BlockPos, chunk: Chunk, block: Block, flag: Int) {
+
+        if ((flag & 2) != 0 && (!isRemote || (flag & 4) == 0) && (chunk == null || chunk.isPopulated)) notifyBlockUpdate(pos, block, flag)
+        //                if (!isRemote && (flags & 1) != 0) {
+        //                    notifyNeighborsRespectDebug(pos, iblockstate.getBlock)
+        //                  //  if (newState.hasComparatorInputOverride) this.updateComparatorOutputLevel(pos, newState.getBlock)
+        //                }
+    }
+
+    def notifyBlockUpdate(pos: BlockPos, newState: Block, flags: Int) {
+
+        for (i <- eventListeners.indices) {
+            eventListeners(i).notifyBlockUpdate(this, pos, newState, flags)
+        }
+
+    }
+
+    def addEventListener(listener: IWorldEventListener) {
+        eventListeners += listener
     }
 
     def spawnEntityInWorld(entity: Entity): Unit = {
@@ -95,9 +120,9 @@ abstract class World(saveHandler: ISaveHandler) extends Logger[World] {
 
     def isOpaqueCube(blockPos: BlockPos): Boolean = getMultiBlock(blockPos).isOpaqueCube
 
-    def getMultiBlock(pos: BlockPos): AMultiBlock = if (!validBlockPos(pos)) MultiBlocks.air else getChunk(pos).getBlockWorldCord(pos)
+    def getMultiBlock(pos: BlockPos): AMultiBlock = if (!validBlockPos(pos)) MultiBlocks.air else getChunk(pos).getMultiBlockWorldCord(pos)
 
-    def getBlock(pos: BlockPos): Block = if (!validBlockPos(pos)) Blocks.air else getChunk(pos).getBlockWorldCord(pos).getBlock(pos.multiPos)
+    def getBlock(pos: BlockPos): Block = if (!validBlockPos(pos)) Blocks.air else getChunk(pos).getMultiBlockWorldCord(pos).getBlock(pos.multiPos)
 
     def getChunk(blockPos: BlockPos): Chunk = getChunk(blockPos.worldX >> 4, blockPos.worldY >> 4, blockPos.worldZ >> 4)
 

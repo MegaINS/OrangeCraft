@@ -54,9 +54,9 @@ class OrangeCraft(ocDataDir: String) extends Logger[OrangeCraft] with IThreadLis
     var guiManager: GuiManager = _
     var objectMouseOver: RayTraceResult = _
     var blockSelectPosition: BlockPos = _
-    private var camera: Camera = _
-    private var cameraInc: Vector3f = _
-    private var worldRenderer: WorldRenderer = _
+    var camera: Camera = _
+    var cameraInc: Vector3f = _
+    var worldRenderer: WorldRenderer = _
     var fontRender: FontRender = _
     var saveLoader: AnvilSaveFormat = _
     var renderViewEntity: Entity = _
@@ -163,9 +163,9 @@ class OrangeCraft(ocDataDir: String) extends Logger[OrangeCraft] with IThreadLis
 
 
                 runGameLoop()
-                // sync()
+                sync()
                 while (System.currentTimeMillis >= lastTime + 1000L) {
-                    log.info(s"$frames fps, $tick tick, ${RenderChunk.chunkRender / (if (frames == 0) 1 else frames)} chunkRender, ${RenderChunk.chunkUpdate} chunkUpdate")
+                    // log.info(s"$frames fps, $tick tick, ${RenderChunk.chunkRender / (if (frames == 0) 1 else frames)} chunkRender, ${RenderChunk.chunkUpdate} chunkUpdate")
 
                     RenderChunk.chunkRender = 0
                     RenderChunk.chunkUpdate = 0
@@ -173,7 +173,7 @@ class OrangeCraft(ocDataDir: String) extends Logger[OrangeCraft] with IThreadLis
                     lastFrames = frames
                     frames = 0
                     tick = 0
-                    printMemoryUsage()
+                    // printMemoryUsage()
                 }
             }
         } catch {
@@ -400,6 +400,7 @@ class OrangeCraft(ocDataDir: String) extends Logger[OrangeCraft] with IThreadLis
                 Keyboard.getEventKey match {
                     case Keyboard.KEY_E => guiManager.setGuiScreen(new GuiPlayerInventory(player))
                     case Keyboard.KEY_ESCAPE => guiManager.setGuiScreen(new GuiInGameMenu())
+                    case Keyboard.KEY_R => worldRenderer.reRenderWorld()
                     case _ =>
                 }
             }

@@ -14,4 +14,6 @@ trait INetHandlerPlayClient extends INetHandler {
     def handleChunkData(packetIn: SPacketChunkData): Unit
 
     def handleBlockChange(packetIn: SPacketBlockChange): Unit
+
+    def handleMultiBlockChange(packetIn: SPacketMultiBlockChange): Unit
 }

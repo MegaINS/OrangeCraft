@@ -8,9 +8,9 @@ import ru.megains.common.network.play.server._
 import ru.megains.game.OrangeCraft
 import ru.megains.game.entity.player.{EntityPlayer, InventoryPlayer}
 import ru.megains.game.position.ChunkPosition
-import ru.megains.utils.PacketThreadUtil
+import ru.megains.utils.{Logger, PacketThreadUtil}
 
-class NetHandlerPlayClient(gameController: OrangeCraft, previousScreen: GuiScreen, val netManager: NetworkManager) extends INetHandlerPlayClient {
+class NetHandlerPlayClient(gameController: OrangeCraft, previousScreen: GuiScreen, val netManager: NetworkManager) extends INetHandlerPlayClient with Logger[NetHandlerPlayClient] {
 
 
     var clientWorldController: WorldClient = _
@@ -82,13 +82,24 @@ class NetHandlerPlayClient(gameController: OrangeCraft, previousScreen: GuiScree
         val pos = new ChunkPosition(packetIn.chunkX, packetIn.chunkY, packetIn.chunkZ)
 
         clientWorldController.doPreChunk(pos, loadChunk = true)
-        clientWorldController.getChunk(pos).blockStorage = packetIn.blockStorage
+        val chunk = clientWorldController.getChunk(pos)
+        chunk.blockStorage = packetIn.blockStorage
+        gameController.worldRenderer.reRender(chunk.position)
+
     }
 
 
     def handleBlockChange(packetIn: SPacketBlockChange) {
         PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, gameController)
         clientWorldController.invalidateRegionAndSetBlock(packetIn.blockPosition, packetIn.block)
+
+    }
+
+    def handleMultiBlockChange(packetIn: SPacketMultiBlockChange) {
+        PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, gameController)
+        for (blockData <- packetIn.changedBlocks) {
+            clientWorldController.invalidateRegionAndSetBlock(blockData.blockPosition, blockData.block)
+        }
     }
 }
 
