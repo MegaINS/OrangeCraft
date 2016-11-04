@@ -1,7 +1,7 @@
 package ru.megains.client.renderer.gui
 
+import ru.megains.client.OrangeCraft
 import ru.megains.client.renderer.mesh.Mesh
-import ru.megains.game.OrangeCraft
 
 class GuiHotBar extends GuiInGame {
 

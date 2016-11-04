@@ -2,10 +2,9 @@ package ru.megains.client.renderer.gui
 
 import java.awt.Color
 
-import ru.megains.client.ServerData
-import ru.megains.client.network.ServerPinger
+import ru.megains.client.OrangeCraft
+import ru.megains.client.network.{ServerData, ServerPinger}
 import ru.megains.client.renderer.mesh.Mesh
-import ru.megains.game.OrangeCraft
 
 class GuiMultiplayer(guiMainMenu: GuiScreen) extends GuiScreen {
 

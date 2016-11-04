@@ -1,6 +1,6 @@
 package ru.megains.client.renderer.gui
 
-import ru.megains.game.OrangeCraft
+import ru.megains.client.OrangeCraft
 
 class GuiSelectWorld(guiMainMenu: GuiScreen) extends GuiScreen {
 

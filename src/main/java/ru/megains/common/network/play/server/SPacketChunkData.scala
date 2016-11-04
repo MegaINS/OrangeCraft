@@ -1,11 +1,11 @@
 package ru.megains.common.network.play.server
 
+import ru.megains.common.block.Block
+import ru.megains.common.block.blockdata.MultiBlockPos
+import ru.megains.common.multiblock.MultiBlock
 import ru.megains.common.network.{Packet, PacketBuffer}
-import ru.megains.game.block.Block
-import ru.megains.game.blockdata.MultiBlockPos
-import ru.megains.game.multiblock.MultiBlock
-import ru.megains.game.world.chunk.Chunk
-import ru.megains.game.world.storage.ExtendedBlockStorage
+import ru.megains.common.world.chunk.Chunk
+import ru.megains.common.world.storage.ExtendedBlockStorage
 
 class SPacketChunkData extends Packet[INetHandlerPlayClient] {
 

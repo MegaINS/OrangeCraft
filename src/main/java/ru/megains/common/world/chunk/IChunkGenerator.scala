@@ -1,7 +1,5 @@
 package ru.megains.common.world.chunk
 
-import ru.megains.game.world.chunk.Chunk
-
 trait IChunkGenerator {
 
     def provideChunk(chunkX: Int, chunkY: Int, chunkZ: Int): Chunk

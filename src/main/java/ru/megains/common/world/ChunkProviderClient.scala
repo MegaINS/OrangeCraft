@@ -1,9 +1,8 @@
 package ru.megains.common.world
 
 
-import ru.megains.game.position.ChunkPosition
-import ru.megains.game.world.World
-import ru.megains.game.world.chunk.{Chunk, ChunkVoid}
+import ru.megains.common.position.ChunkPosition
+import ru.megains.common.world.chunk.{Chunk, ChunkVoid}
 
 import scala.collection.mutable
 

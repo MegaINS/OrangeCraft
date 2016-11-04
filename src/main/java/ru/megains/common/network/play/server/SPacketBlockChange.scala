@@ -1,9 +1,9 @@
 package ru.megains.common.network.play.server
 
+import ru.megains.common.block.Block
+import ru.megains.common.block.blockdata.BlockPos
 import ru.megains.common.network.{Packet, PacketBuffer}
-import ru.megains.game.block.Block
-import ru.megains.game.blockdata.BlockPos
-import ru.megains.game.world.World
+import ru.megains.common.world.World
 
 class SPacketBlockChange() extends Packet[INetHandlerPlayClient] {
 

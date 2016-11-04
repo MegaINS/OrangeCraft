@@ -2,17 +2,17 @@ package ru.megains.common.network
 
 
 import com.sun.javafx.geom.Vec3d
+import ru.megains.common.block.blockdata.{BlockDirection, BlockPos}
+import ru.megains.common.entity.player.InventoryPlayer
+import ru.megains.common.item.ItemStack
 import ru.megains.common.network.play.INetHandlerPlayServer
 import ru.megains.common.network.play.client.CPacketPlayerDigging.Action._
 import ru.megains.common.network.play.client._
 import ru.megains.common.network.play.server.{SPacketBlockChange, SPacketPlayerPosLook}
-import ru.megains.game.blockdata.{BlockDirection, BlockPos}
-import ru.megains.game.entity.player.InventoryPlayer
-import ru.megains.game.item.ItemStack
+import ru.megains.common.utils.{Logger, PacketThreadUtil}
 import ru.megains.server.OrangeCraftServer
 import ru.megains.server.entity.EntityPlayerMP
 import ru.megains.server.world.WorldServer
-import ru.megains.utils.{Logger, PacketThreadUtil}
 
 import scala.collection.immutable.HashSet
 

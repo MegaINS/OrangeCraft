@@ -3,8 +3,8 @@ package ru.megains.client.renderer.item
 import ru.megains.client.renderer.api.ARenderItem
 import ru.megains.client.renderer.mesh.{Mesh, MeshMaker}
 import ru.megains.client.renderer.texture.TextureAtlas
-import ru.megains.game.item.Item
-import ru.megains.game.managers.TextureManager
+import ru.megains.common.item.Item
+import ru.megains.common.managers.TextureManager
 
 class RenderItemStandart(val item: Item) extends ARenderItem {
 

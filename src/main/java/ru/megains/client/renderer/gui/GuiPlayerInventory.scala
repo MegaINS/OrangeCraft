@@ -1,9 +1,9 @@
 package ru.megains.client.renderer.gui
 
 import org.lwjgl.input.Keyboard._
+import ru.megains.client.OrangeCraft
 import ru.megains.client.renderer.mesh.Mesh
-import ru.megains.game.OrangeCraft
-import ru.megains.game.entity.player.EntityPlayer
+import ru.megains.common.entity.player.EntityPlayer
 
 class GuiPlayerInventory(entityPlayer: EntityPlayer) extends GuiContainer(entityPlayer.inventoryContainer) {
 

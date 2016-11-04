@@ -1,8 +1,8 @@
 package ru.megains.server.entity
 
+import ru.megains.common.entity.player.EntityPlayer
 import ru.megains.common.network.NetHandlerPlayServer
-import ru.megains.game.entity.player.EntityPlayer
-import ru.megains.game.world.World
+import ru.megains.common.world.World
 import ru.megains.server.world.WorldServer
 import ru.megains.server.{OrangeCraftServer, PlayerInteractionManager}
 

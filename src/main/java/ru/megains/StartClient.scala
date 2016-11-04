@@ -1,6 +1,6 @@
 package ru.megains
 
-import ru.megains.game.OrangeCraft
+import ru.megains.client.OrangeCraft
 
 object StartClient extends App {
 

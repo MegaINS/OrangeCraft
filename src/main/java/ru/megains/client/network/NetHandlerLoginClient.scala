@@ -1,11 +1,11 @@
 package ru.megains.client.network
 
+import ru.megains.client.OrangeCraft
 import ru.megains.client.renderer.gui.GuiScreen
 import ru.megains.common.network.login.INetHandlerLoginClient
 import ru.megains.common.network.login.server.{SPacketDisconnect, SPacketLoginSuccess}
 import ru.megains.common.network.{ConnectionState, NetHandlerPlayClient, NetworkManager}
-import ru.megains.game.OrangeCraft
-import ru.megains.utils.PacketThreadUtil
+import ru.megains.common.utils.PacketThreadUtil
 
 class NetHandlerLoginClient(networkManager: NetworkManager, gameController: OrangeCraft, previousScreen: GuiScreen) extends INetHandlerLoginClient {
 

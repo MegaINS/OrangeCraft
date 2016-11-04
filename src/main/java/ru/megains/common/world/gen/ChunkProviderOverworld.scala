@@ -1,12 +1,11 @@
 package ru.megains.common.world.gen
 
-import ru.megains.common.world.chunk.IChunkGenerator
-import ru.megains.game.block.Block
-import ru.megains.game.position.ChunkPosition
-import ru.megains.game.register.Blocks
-import ru.megains.game.world.World
-import ru.megains.game.world.chunk.Chunk
-import ru.megains.game.world.storage.ExtendedBlockStorage
+import ru.megains.common.block.Block
+import ru.megains.common.position.ChunkPosition
+import ru.megains.common.register.Blocks
+import ru.megains.common.world.World
+import ru.megains.common.world.chunk.{Chunk, IChunkGenerator}
+import ru.megains.common.world.storage.ExtendedBlockStorage
 
 import scala.util.Random
 

@@ -1,13 +1,13 @@
 package ru.megains.client.renderer.world
 
 import ru.megains.client.renderer.mesh.{Mesh, MeshMaker}
-import ru.megains.game.blockdata.BlockPos
-import ru.megains.game.managers.TextureManager
-import ru.megains.game.multiblock.AMultiBlock
-import ru.megains.game.physics.AxisAlignedBB
-import ru.megains.game.world.World
-import ru.megains.game.world.chunk.{Chunk, ChunkVoid}
-import ru.megains.utils.Logger
+import ru.megains.common.block.blockdata.BlockPos
+import ru.megains.common.managers.TextureManager
+import ru.megains.common.multiblock.AMultiBlock
+import ru.megains.common.physics.AxisAlignedBB
+import ru.megains.common.utils.Logger
+import ru.megains.common.world.World
+import ru.megains.common.world.chunk.{Chunk, ChunkVoid}
 
 class RenderChunk(var chunk: Chunk, textureManager: TextureManager) extends Logger[RenderChunk] {
 

@@ -2,14 +2,13 @@ package ru.megains.client.network
 
 import java.net.{InetAddress, UnknownHostException}
 
-import ru.megains.client.{ServerAddress, ServerData}
+import ru.megains.client.OrangeCraft
 import ru.megains.common.network.handshake.client.CHandshake
 import ru.megains.common.network.status.INetHandlerStatusClient
 import ru.megains.common.network.status.client.{CPacketPing, CPacketServerQuery}
 import ru.megains.common.network.status.server.{SPacketPong, SPacketServerInfo}
 import ru.megains.common.network.{ConnectionState, NetworkManager}
-import ru.megains.game.OrangeCraft
-import ru.megains.utils.Logger
+import ru.megains.common.utils.Logger
 
 class ServerPinger extends Logger[ServerPinger] {
 

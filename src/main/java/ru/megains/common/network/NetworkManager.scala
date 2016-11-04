@@ -12,7 +12,7 @@ import io.netty.channel.socket.nio.NioSocketChannel
 import io.netty.util.AttributeKey
 import ru.megains.common.ITickable
 import ru.megains.common.network.PacketDirection.PacketDirection
-import ru.megains.utils.{Logger, ThreadQuickExitException}
+import ru.megains.common.utils.{Logger, ThreadQuickExitException}
 
 
 class NetworkManager(direction: PacketDirection) extends SimpleChannelInboundHandler[Packet[INetHandler]] with Logger[NetworkManager] {

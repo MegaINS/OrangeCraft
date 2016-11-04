@@ -1,11 +1,11 @@
 package ru.megains.client.entity
 
+import ru.megains.client.OrangeCraft
+import ru.megains.common.entity.player.EntityPlayer
 import ru.megains.common.network.NetHandlerPlayClient
 import ru.megains.common.network.play.client.CPacketPlayer
-import ru.megains.game.OrangeCraft
-import ru.megains.game.entity.player.EntityPlayer
-import ru.megains.game.physics.AxisAlignedBB
-import ru.megains.game.world.World
+import ru.megains.common.physics.AxisAlignedBB
+import ru.megains.common.world.World
 
 class EntityPlayerSP(oc: OrangeCraft, world: World, val connection: NetHandlerPlayClient) extends EntityPlayer(" ", world) {
 

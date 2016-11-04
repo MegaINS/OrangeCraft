@@ -3,8 +3,8 @@ package ru.megains.client.renderer.gui
 import java.awt.Color
 
 import org.lwjgl.input.Keyboard._
+import ru.megains.client.OrangeCraft
 import ru.megains.client.renderer.mesh.Mesh
-import ru.megains.game.OrangeCraft
 
 import scala.collection.mutable.ArrayBuffer
 

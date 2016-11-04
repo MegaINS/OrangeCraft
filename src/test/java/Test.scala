@@ -1,6 +1,6 @@
 import java.io.File
 
-import ru.megains.game.world.storage.AnvilSaveFormat
+import ru.megains.common.world.storage.AnvilSaveFormat
 
 import scala.reflect.io.Directory
 

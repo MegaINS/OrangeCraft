@@ -2,12 +2,11 @@ package ru.megains.server.world
 
 import com.google.common.util.concurrent.ListenableFuture
 import ru.megains.common.entity.EntityTracker
+import ru.megains.common.utils.IThreadListener
 import ru.megains.common.world.gen.ChunkProviderOverworld
-import ru.megains.common.world.{ChunkProviderServer, IChunkProvider}
-import ru.megains.game.world.World
-import ru.megains.game.world.storage.AnvilSaveHandler
+import ru.megains.common.world.storage.AnvilSaveHandler
+import ru.megains.common.world.{ChunkProviderServer, IChunkProvider, World}
 import ru.megains.server.{OrangeCraftServer, PlayerChunkMap}
-import ru.megains.utils.IThreadListener
 
 class WorldServer(server: OrangeCraftServer, saveHandler: AnvilSaveHandler) extends World(saveHandler) with IThreadListener {
 

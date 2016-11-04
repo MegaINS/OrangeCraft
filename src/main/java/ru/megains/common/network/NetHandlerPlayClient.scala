@@ -1,14 +1,14 @@
 package ru.megains.common.network
 
-import ru.megains.WorldClient
-import ru.megains.client.PlayerControllerMP
+import ru.megains.client.OrangeCraft
+import ru.megains.client.network.PlayerControllerMP
 import ru.megains.client.renderer.gui.{GuiDownloadTerrain, GuiScreen}
+import ru.megains.client.world.WorldClient
+import ru.megains.common.entity.player.{EntityPlayer, InventoryPlayer}
 import ru.megains.common.network.play.client.CPacketPlayer
 import ru.megains.common.network.play.server._
-import ru.megains.game.OrangeCraft
-import ru.megains.game.entity.player.{EntityPlayer, InventoryPlayer}
-import ru.megains.game.position.ChunkPosition
-import ru.megains.utils.{Logger, PacketThreadUtil}
+import ru.megains.common.position.ChunkPosition
+import ru.megains.common.utils.{Logger, PacketThreadUtil}
 
 class NetHandlerPlayClient(gameController: OrangeCraft, previousScreen: GuiScreen, val netManager: NetworkManager) extends INetHandlerPlayClient with Logger[NetHandlerPlayClient] {
 

@@ -6,7 +6,7 @@ import org.lwjgl.opengl.GL15._
 import org.lwjgl.opengl.GL20._
 import org.lwjgl.opengl.GL30._
 import ru.megains.client.renderer.EntityRenderer
-import ru.megains.game.managers.TextureManager
+import ru.megains.common.managers.TextureManager
 
 import scala.collection.mutable.ArrayBuffer
 

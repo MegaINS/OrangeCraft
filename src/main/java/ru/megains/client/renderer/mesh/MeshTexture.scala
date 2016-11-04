@@ -4,7 +4,7 @@ import org.lwjgl.opengl.GL11._
 import org.lwjgl.opengl.GL13._
 import org.lwjgl.opengl.GL30._
 import ru.megains.client.renderer.EntityRenderer
-import ru.megains.game.managers.TextureManager
+import ru.megains.common.managers.TextureManager
 
 class MeshTexture(makeMode: Int, val textureName: String, indices: Array[Int], positions: Array[Float], colours: Array[Float], textCoords: Array[Float])
         extends Mesh(makeMode, indices, positions, colours) {

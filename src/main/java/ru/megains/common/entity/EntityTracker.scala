@@ -1,6 +1,6 @@
 package ru.megains.common.entity
 
-import ru.megains.game.world.chunk.Chunk
+import ru.megains.common.world.chunk.Chunk
 import ru.megains.server.entity.EntityPlayerMP
 import ru.megains.server.world.WorldServer
 

@@ -1,8 +1,8 @@
 package ru.megains.client.renderer.api
 
-import ru.megains.game.block.Block
-import ru.megains.game.blockdata.{BlockPos, MultiBlockPos}
-import ru.megains.game.world.World
+import ru.megains.common.block.Block
+import ru.megains.common.block.blockdata.{BlockPos, MultiBlockPos}
+import ru.megains.common.world.World
 
 
 abstract class ARenderBlock {

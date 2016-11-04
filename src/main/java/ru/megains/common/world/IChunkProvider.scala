@@ -1,7 +1,7 @@
 package ru.megains.common.world
 
-import ru.megains.game.position.ChunkPosition
-import ru.megains.game.world.chunk.Chunk
+import ru.megains.common.position.ChunkPosition
+import ru.megains.common.world.chunk.Chunk
 
 abstract class IChunkProvider {
     def unload(chunk: Chunk): Unit

@@ -5,8 +5,8 @@ import java.nio.ByteBuffer
 
 import org.lwjgl.opengl.GL11._
 import org.lwjgl.opengl.GL30._
-import ru.megains.game.register.GameRegister
-import ru.megains.utils.Logger
+import ru.megains.common.register.GameRegister
+import ru.megains.common.utils.Logger
 
 import scala.collection.immutable.HashMap
 

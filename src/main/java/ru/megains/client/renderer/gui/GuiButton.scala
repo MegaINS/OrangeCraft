@@ -2,10 +2,10 @@ package ru.megains.client.renderer.gui
 
 import java.awt.Color
 
+import ru.megains.client.OrangeCraft
 import ru.megains.client.renderer.mesh.Mesh
-import ru.megains.game.OrangeCraft
 
-class GuiButton(val id: Int, oc: OrangeCraft, buttonText: String, positionX: Int, positionY: Int, weight: Int, height: Int) extends GuiElement(oc) {
+class GuiButton(val id: Int, oc: OrangeCraft, val buttonText: String, positionX: Int, positionY: Int, weight: Int, height: Int) extends GuiElement(oc) {
 
 
     val textMesh: Mesh = createString(buttonText, Color.WHITE)

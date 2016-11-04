@@ -3,11 +3,11 @@ package ru.megains.client.renderer
 import java.awt.Color
 
 import org.joml.Vector3f
+import ru.megains.client.OrangeCraft
 import ru.megains.client.renderer.gui.Gui
 import ru.megains.client.renderer.mesh.Mesh
-import ru.megains.game.OrangeCraft
-import ru.megains.game.item.{Item, ItemBlock, ItemStack}
-import ru.megains.game.register.GameRegister
+import ru.megains.common.item.{Item, ItemBlock, ItemStack}
+import ru.megains.common.register.GameRegister
 
 import scala.collection.mutable
 

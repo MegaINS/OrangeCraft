@@ -2,15 +2,14 @@ package ru.megains.client.renderer.gui
 
 import java.net.{InetAddress, UnknownHostException}
 
-import ru.megains.client.network.NetHandlerLoginClient
-import ru.megains.client.{ServerAddress, ServerData}
+import ru.megains.client.OrangeCraft
+import ru.megains.client.network.{NetHandlerLoginClient, ServerAddress, ServerData}
 import ru.megains.common.network.handshake.client.CHandshake
 import ru.megains.common.network.login.client.CPacketLoginStart
 import ru.megains.common.network.{ConnectionState, NetworkManager}
-import ru.megains.game.OrangeCraft
-import ru.megains.utils.Logger
+import ru.megains.common.utils.Logger
 
-import scala.util.Random
+
 
 class GuiConnecting(parent: GuiScreen, oc: OrangeCraft, serverDataIn: ServerData) extends GuiScreen with Logger[GuiConnecting] {
 
@@ -41,7 +40,7 @@ class GuiConnecting(parent: GuiScreen, oc: OrangeCraft, serverDataIn: ServerData
                     networkManager = NetworkManager.createNetworkManagerAndConnect(inetaddress, port)
                     networkManager.setNetHandler(new NetHandlerLoginClient(networkManager, oc, parent))
                     networkManager.sendPacket(new CHandshake(210, ip, port, ConnectionState.LOGIN))
-                    networkManager.sendPacket(new CPacketLoginStart(Random.nextLong().toString))
+                    networkManager.sendPacket(new CPacketLoginStart(oc.playerName))
                 }
                 catch {
                     case unknownhostexception: UnknownHostException => {

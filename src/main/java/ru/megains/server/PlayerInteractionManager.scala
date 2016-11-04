@@ -1,14 +1,13 @@
 package ru.megains.server
 
 import ru.megains.common.EnumActionResult.EnumActionResult
+import ru.megains.common.block.Block
+import ru.megains.common.block.blockdata.{BlockDirection, BlockPos}
+import ru.megains.common.entity.player.EntityPlayer
+import ru.megains.common.item.{Item, ItemStack}
 import ru.megains.common.network.play.server.SPacketBlockChange
-import ru.megains.common.world.GameType
+import ru.megains.common.world.{GameType, World}
 import ru.megains.common.{ActionResult, EnumActionResult}
-import ru.megains.game.block.Block
-import ru.megains.game.blockdata.{BlockDirection, BlockPos}
-import ru.megains.game.entity.player.EntityPlayer
-import ru.megains.game.item.{Item, ItemStack}
-import ru.megains.game.world.World
 import ru.megains.server.entity.EntityPlayerMP
 
 class PlayerInteractionManager(world: World) {

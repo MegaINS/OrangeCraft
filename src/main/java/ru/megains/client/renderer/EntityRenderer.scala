@@ -7,11 +7,11 @@ import org.lwjgl.BufferUtils
 import org.lwjgl.input.Mouse
 import org.lwjgl.opengl.Display
 import org.lwjgl.opengl.GL11._
+import ru.megains.client.OrangeCraft
 import ru.megains.client.renderer.graph.{Camera, ShaderProgram, Transformation}
 import ru.megains.client.renderer.world.{RenderChunk, WorldRenderer}
-import ru.megains.game.OrangeCraft
-import ru.megains.game.managers.TextureManager
-import ru.megains.game.util.Utils
+import ru.megains.common.managers.TextureManager
+import ru.megains.common.util.Utils
 
 
 class EntityRenderer(oc: OrangeCraft) {

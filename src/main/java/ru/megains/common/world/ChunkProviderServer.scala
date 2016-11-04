@@ -2,11 +2,10 @@ package ru.megains.common.world
 
 import java.io.IOException
 
-import ru.megains.common.world.chunk.IChunkGenerator
-import ru.megains.game.world.chunk.Chunk
-import ru.megains.game.world.storage.ChunkLoader
+import ru.megains.common.utils.Logger
+import ru.megains.common.world.chunk.{Chunk, IChunkGenerator}
+import ru.megains.common.world.storage.ChunkLoader
 import ru.megains.server.world.WorldServer
-import ru.megains.utils.Logger
 
 import scala.collection.mutable
 

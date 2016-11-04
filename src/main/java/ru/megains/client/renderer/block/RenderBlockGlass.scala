@@ -2,11 +2,11 @@ package ru.megains.client.renderer.block
 
 
 import ru.megains.client.renderer.api.ARenderBlock
-import ru.megains.game.block.Block
-import ru.megains.game.blockdata.{BlockDirection, BlockPos, MultiBlockPos}
-import ru.megains.game.multiblock.AMultiBlock
-import ru.megains.game.register.MultiBlocks
-import ru.megains.game.world.World
+import ru.megains.common.block.Block
+import ru.megains.common.block.blockdata.{BlockDirection, BlockPos, MultiBlockPos}
+import ru.megains.common.multiblock.AMultiBlock
+import ru.megains.common.register.MultiBlocks
+import ru.megains.common.world.World
 
 
 object RenderBlockGlass extends ARenderBlock {

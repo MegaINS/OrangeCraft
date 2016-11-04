@@ -4,11 +4,11 @@ import java.awt.Color
 
 import org.joml.Vector3f
 import org.lwjgl.opengl.Display
-import ru.megains.game.OrangeCraft
-import ru.megains.game.block.Block
-import ru.megains.game.blockdata.BlockPos
-import ru.megains.game.item.ItemStack
-import ru.megains.game.util.RayTraceResult
+import ru.megains.client.OrangeCraft
+import ru.megains.common.block.Block
+import ru.megains.common.block.blockdata.BlockPos
+import ru.megains.common.item.ItemStack
+import ru.megains.common.util.RayTraceResult
 
 class GuiBlockSelect extends GuiInGame with GuiText {
 

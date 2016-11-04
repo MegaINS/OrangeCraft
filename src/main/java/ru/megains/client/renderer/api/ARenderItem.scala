@@ -1,7 +1,7 @@
 package ru.megains.client.renderer.api
 
 import ru.megains.client.renderer.mesh.Mesh
-import ru.megains.game.managers.TextureManager
+import ru.megains.common.managers.TextureManager
 
 abstract class ARenderItem {
 

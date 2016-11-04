@@ -1,13 +1,13 @@
 package ru.megains.server
 
 
+import ru.megains.common.block.blockdata.BlockPos
 import ru.megains.common.network.play.server.{SPacketBlockChange, SPacketChunkData, SPacketMultiBlockChange, SPacketUnloadChunk}
 import ru.megains.common.network.{INetHandler, Packet}
-import ru.megains.game.blockdata.BlockPos
-import ru.megains.game.position.ChunkPosition
-import ru.megains.game.world.chunk.Chunk
+import ru.megains.common.position.ChunkPosition
+import ru.megains.common.utils.Logger
+import ru.megains.common.world.chunk.Chunk
 import ru.megains.server.entity.EntityPlayerMP
-import ru.megains.utils.Logger
 
 import scala.collection.mutable.ArrayBuffer
 

@@ -4,8 +4,8 @@ package ru.megains.common.network;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.ByteBufProcessor;
-import ru.megains.game.blockdata.BlockPos;
-import ru.megains.game.blockdata.BlockSize;
+import ru.megains.common.block.blockdata.BlockPos;
+import ru.megains.common.block.blockdata.BlockSize;
 
 import java.io.IOException;
 import java.io.InputStream;

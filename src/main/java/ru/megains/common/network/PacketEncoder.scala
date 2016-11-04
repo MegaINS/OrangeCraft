@@ -4,7 +4,7 @@ import io.netty.buffer.ByteBuf
 import io.netty.channel.ChannelHandlerContext
 import io.netty.handler.codec.MessageToByteEncoder
 import ru.megains.common.network.PacketDirection.PacketDirection
-import ru.megains.utils.Logger
+import ru.megains.common.utils.Logger
 
 class PacketEncoder(direction: PacketDirection) extends MessageToByteEncoder[Packet[_]] with Logger[PacketEncoder] {
 

@@ -1,16 +1,16 @@
 package ru.megains.client.renderer.world
 
-import ru.megains.WorldClient
 import ru.megains.client.renderer.graph.Transformation
 import ru.megains.client.renderer.mesh.{Mesh, MeshMaker}
 import ru.megains.client.renderer.{EntityRenderer, Frustum}
-import ru.megains.game.block.Block
-import ru.megains.game.blockdata.{BlockPos, MultiBlockPos}
-import ru.megains.game.entity.item.EntityItem
-import ru.megains.game.entity.player.EntityPlayer
-import ru.megains.game.managers.TextureManager
-import ru.megains.game.position.ChunkPosition
-import ru.megains.game.register.GameRegister
+import ru.megains.client.world.WorldClient
+import ru.megains.common.block.Block
+import ru.megains.common.block.blockdata.{BlockPos, MultiBlockPos}
+import ru.megains.common.entity.item.EntityItem
+import ru.megains.common.entity.player.EntityPlayer
+import ru.megains.common.managers.TextureManager
+import ru.megains.common.position.ChunkPosition
+import ru.megains.common.register.GameRegister
 
 import scala.collection.mutable
 

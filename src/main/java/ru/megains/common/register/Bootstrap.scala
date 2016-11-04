@@ -1,10 +1,10 @@
 package ru.megains.common.register
 
-import ru.megains.game.OrangeCraft
-import ru.megains.game.block.Block
-import ru.megains.game.item.Item
-import ru.megains.game.multiblock.MultiBlockSingle
-import ru.megains.utils.Logger
+import ru.megains.client.OrangeCraft
+import ru.megains.common.block.Block
+import ru.megains.common.item.Item
+import ru.megains.common.multiblock.MultiBlockSingle
+import ru.megains.common.utils.Logger
 
 object Bootstrap extends Logger[OrangeCraft] {
 

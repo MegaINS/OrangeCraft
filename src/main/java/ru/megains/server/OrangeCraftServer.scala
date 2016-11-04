@@ -3,14 +3,13 @@ package ru.megains.server
 import java.util.concurrent.{Callable, Executors, FutureTask}
 
 import com.google.common.util.concurrent.{Futures, ListenableFuture, ListenableFutureTask}
+import ru.megains.common.item.ItemStack
 import ru.megains.common.network.ServerStatusResponse
-import ru.megains.common.register.Bootstrap
-import ru.megains.game.item.ItemStack
-import ru.megains.game.register.Items
-import ru.megains.game.world.storage.AnvilSaveFormat
+import ru.megains.common.register.{Bootstrap, Items}
+import ru.megains.common.utils.{IThreadListener, Logger, Util}
+import ru.megains.common.world.storage.AnvilSaveFormat
 import ru.megains.server.network.NetworkSystem
 import ru.megains.server.world.{ServerWorldEventHandler, WorldServer}
-import ru.megains.utils.{IThreadListener, Logger, Util}
 
 import scala.collection.mutable
 import scala.reflect.io.Directory

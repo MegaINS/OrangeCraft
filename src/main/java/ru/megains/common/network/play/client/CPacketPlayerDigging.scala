@@ -1,10 +1,10 @@
 package ru.megains.common.network.play.client
 
+import ru.megains.common.block.blockdata.{BlockDirection, BlockPos}
 import ru.megains.common.network.play.INetHandlerPlayServer
 import ru.megains.common.network.play.client.CPacketPlayerDigging.Action
 import ru.megains.common.network.play.client.CPacketPlayerDigging.Action.Action
 import ru.megains.common.network.{Packet, PacketBuffer}
-import ru.megains.game.blockdata.{BlockDirection, BlockPos}
 
 
 class CPacketPlayerDigging() extends Packet[INetHandlerPlayServer] {

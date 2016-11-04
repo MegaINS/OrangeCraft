@@ -2,10 +2,10 @@ package ru.megains.client.renderer.gui
 
 import java.awt.Color
 
+import ru.megains.client.OrangeCraft
 import ru.megains.client.renderer.mesh.Mesh
 import ru.megains.client.renderer.{EntityRenderer, FontRender, RenderItem}
-import ru.megains.game.OrangeCraft
-import ru.megains.game.item.ItemStack
+import ru.megains.common.item.ItemStack
 
 abstract class GuiElement extends Gui {
 

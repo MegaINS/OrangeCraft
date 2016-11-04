@@ -3,10 +3,10 @@ package ru.megains.client.renderer.graph;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import ru.megains.client.renderer.gui.GuiRenderInfo;
-import ru.megains.game.blockdata.BlockPos;
-import ru.megains.game.entity.Entity;
-import ru.megains.game.physics.AxisAlignedBB;
-import ru.megains.game.position.ChunkPosition;
+import ru.megains.common.block.blockdata.BlockPos;
+import ru.megains.common.entity.Entity;
+import ru.megains.common.physics.AxisAlignedBB;
+import ru.megains.common.position.ChunkPosition;
 
 public class Transformation {
 

@@ -1,9 +1,9 @@
 package ru.megains.server
 
 
-import ru.megains.game.blockdata.BlockPos
-import ru.megains.game.position.ChunkPosition
-import ru.megains.game.world.chunk.Chunk
+import ru.megains.common.block.blockdata.BlockPos
+import ru.megains.common.position.ChunkPosition
+import ru.megains.common.world.chunk.Chunk
 import ru.megains.server.entity.EntityPlayerMP
 import ru.megains.server.world.WorldServer
 

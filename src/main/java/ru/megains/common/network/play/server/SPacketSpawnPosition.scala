@@ -1,7 +1,7 @@
 package ru.megains.common.network.play.server
 
+import ru.megains.common.block.blockdata.BlockPos
 import ru.megains.common.network.{Packet, PacketBuffer}
-import ru.megains.game.blockdata.BlockPos
 
 class SPacketSpawnPosition extends Packet[INetHandlerPlayClient] {
 

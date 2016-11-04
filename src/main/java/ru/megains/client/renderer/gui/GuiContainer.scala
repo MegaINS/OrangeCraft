@@ -2,7 +2,7 @@ package ru.megains.client.renderer.gui
 
 import java.awt.Color
 
-import ru.megains.game.inventory.{Container, Slot}
+import ru.megains.common.inventory.{Container, Slot}
 
 abstract class GuiContainer(inventorySlots: Container) extends GuiScreen {
 

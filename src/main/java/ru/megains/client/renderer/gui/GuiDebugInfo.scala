@@ -3,7 +3,7 @@ package ru.megains.client.renderer.gui
 import java.awt.Color
 
 import org.lwjgl.opengl.Display
-import ru.megains.game.OrangeCraft
+import ru.megains.client.OrangeCraft
 
 class GuiDebugInfo extends GuiInGame with GuiText {
 

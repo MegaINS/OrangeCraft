@@ -1,10 +1,10 @@
 package ru.megains.server
 
+import ru.megains.common.block.blockdata.BlockPos
+import ru.megains.common.entity.player.EntityPlayer
 import ru.megains.common.network.play.server.{SPacketHeldItemChange, SPacketJoinGame, SPacketSpawnPosition}
 import ru.megains.common.network.{NetHandlerPlayServer, NetworkManager}
-import ru.megains.game.blockdata.BlockPos
-import ru.megains.game.entity.player.EntityPlayer
-import ru.megains.game.world.World
+import ru.megains.common.world.World
 import ru.megains.server.entity.EntityPlayerMP
 import ru.megains.server.world.WorldServer
 

@@ -1,7 +1,7 @@
 package ru.megains.client.renderer;
 
 import org.lwjgl.BufferUtils;
-import ru.megains.game.physics.AxisAlignedBB;
+import ru.megains.common.physics.AxisAlignedBB;
 
 import java.nio.FloatBuffer;
 
