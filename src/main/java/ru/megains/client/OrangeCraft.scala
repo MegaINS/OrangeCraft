@@ -565,7 +565,9 @@ class OrangeCraft(ocDataDir: String) extends Logger[OrangeCraft] with IThreadLis
 
         if (world != null) world.save()
         if (renderer != null) renderer.cleanup()
+        if (guiManager ne null) guiManager.cleanup()
         if (worldRenderer != null) worldRenderer.cleanUp()
+
     }
 
     def addScheduledTask[V](callableToSchedule: Callable[V]): ListenableFuture[V] = {

@@ -8,7 +8,7 @@ import ru.megains.common.world.storage.AnvilSaveHandler
 import ru.megains.common.world.{ChunkProviderServer, IChunkProvider, World}
 import ru.megains.server.{OrangeCraftServer, PlayerChunkMap}
 
-class WorldServer(server: OrangeCraftServer, saveHandler: AnvilSaveHandler) extends World(saveHandler) with IThreadListener {
+class WorldServer(server: OrangeCraftServer, val saveHandler: AnvilSaveHandler) extends World(saveHandler) with IThreadListener {
 
 
     override var isRemote: Boolean = false

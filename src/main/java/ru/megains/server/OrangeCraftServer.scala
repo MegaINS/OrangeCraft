@@ -25,7 +25,7 @@ class OrangeCraftServer(serverDir: Directory) extends Runnable with Logger[Orang
     var world: WorldServer = _
     var serverThread: Thread = Thread.currentThread
 
-    var playerList: PlayerList = new PlayerList(this)
+    var playerList: PlayerList = _
 
     var timeOfLastWarning: Long = 0
     val futureTaskQueue: mutable.Queue[FutureTask[_]] = new mutable.Queue[FutureTask[_]]
@@ -160,6 +160,7 @@ class OrangeCraftServer(serverDir: Directory) extends Runnable with Logger[Orang
         val saveHandler = saveLoader.getSaveLoader("world")
         world = new WorldServer(this, saveHandler)
         world.addEventListener(new ServerWorldEventHandler(this, world))
+        playerList = new PlayerList(this)
 
         initialWorldChunkLoad()
     }

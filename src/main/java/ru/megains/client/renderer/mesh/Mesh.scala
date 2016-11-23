@@ -14,6 +14,7 @@ class Mesh private[mesh](val makeMode: Int, val vertexCount: Int) {
 
     val vaoId: Int = glGenVertexArrays
     val vboIdList = ArrayBuffer[Int]()
+    var clear: Boolean = false
 
     def this(makeMode: Int, indices: Array[Int], positions: Array[Float], colours: Array[Float]) {
         this(makeMode, indices.length)
@@ -68,14 +69,24 @@ class Mesh private[mesh](val makeMode: Int, val vertexCount: Int) {
     }
 
     def cleanUp() {
-        for (id <- 0 to vboIdList.size) {
-            glDisableVertexAttribArray(id)
+        if (!clear) {
+            clear = true
+            for (id <- 0 to vboIdList.size) {
+                glDisableVertexAttribArray(id)
+            }
+            glBindBuffer(GL_ARRAY_BUFFER, 0)
+            for (id <- vboIdList) {
+                glDeleteBuffers(id)
+            }
+            glBindVertexArray(0)
+            glDeleteVertexArrays(vaoId)
+
         }
-        glBindBuffer(GL_ARRAY_BUFFER, 0)
-        for (id <- vboIdList) {
-            glDeleteBuffers(id)
-        }
-        glBindVertexArray(0)
-        glDeleteVertexArrays(vaoId)
+    }
+
+    override def finalize(): Unit = {
+        cleanUp()
+        super.finalize()
     }
 }
+

@@ -5,6 +5,7 @@ import org.joml.Vector3d
 import ru.megains.common.physics.AxisAlignedBB
 import ru.megains.common.util.{MathHelper, RayTraceResult}
 import ru.megains.common.world.World
+import ru.megains.nbt.tag.NBTCompound
 
 import scala.collection.mutable
 
@@ -42,8 +43,8 @@ abstract class Entity(var world: World, val height: Float, val wight: Float, val
         body.set(x - i toFloat, y toFloat, z - i toFloat, x + i toFloat, y + height toFloat, z + i toFloat)
     }
 
-    def setWorld(world: World) {
-        this.world = world
+    def setWorld(worldIn: World) {
+        world = worldIn
     }
 
     def update()
@@ -182,7 +183,82 @@ abstract class Entity(var world: World, val height: Float, val wight: Float, val
     }
 
     protected def setRotation(yaw: Float, pitch: Float) {
-        this.rotationYaw = yaw % 360.0F
-        this.rotationPitch = pitch % 360.0F
+        rotationYaw = yaw % 360.0F
+        rotationPitch = pitch % 360.0F
+    }
+
+    def readFromNBT(compound: NBTCompound) {
+        //        try{
+
+        //   val nbttaglist: NBTTagList = compound.getTagList("Pos", 6)
+        //   val nbttaglist2: NBTTagList = compound.getTagList("Motion", 6)
+        //    val nbttaglist3: NBTTagList = compound.getTagList("Rotation", 5)
+        //   motionX = nbttaglist2.getDoubleAt(0)
+        //   motionY = nbttaglist2.getDoubleAt(1)
+        //    motionZ = nbttaglist2.getDoubleAt(2)
+        if (Math.abs(motionX) > 10.0D) motionX = 0.0D
+        if (Math.abs(motionY) > 10.0D) motionY = 0.0D
+        if (Math.abs(motionZ) > 10.0D) motionZ = 0.0D
+        //posX = nbttaglist.getDoubleAt(0)
+        //  posY = nbttaglist.getDoubleAt(1)
+        //  posZ = nbttaglist.getDoubleAt(2)
+        //    lastTickPosX = posX
+        //   lastTickPosY = posY
+        //   lastTickPosZ = posZ
+        prevPosX = posX
+        prevPosY = posY
+        prevPosZ = posZ
+        //  rotationYaw = nbttaglist3.getFloatAt(0)
+        //     rotationPitch = nbttaglist3.getFloatAt(1)
+        prevRotationYaw = rotationYaw
+        prevRotationPitch = rotationPitch
+        //    setRotationYawHead(rotationYaw)
+        //   setRenderYawOffset(rotationYaw)
+        //   fallDistance = compound.getFloat("FallDistance")
+        //    fire = compound.getShort("Fire")
+        //   setAir(compound.getShort("Air"))
+        onGround = compound.getBoolean("OnGround")
+        //      if (compound.hasKey("Dimension")) dimension = compound.getInteger("Dimension")
+        //      invulnerable = compound.getBoolean("Invulnerable")
+        //     timeUntilPortal = compound.getInteger("PortalCooldown")
+        //            if (compound.hasUniqueId("UUID")) {
+        //                entityUniqueID = compound.getUniqueId("UUID")
+        //                cachedUniqueIdString = entityUniqueID.toString
+        //            }
+        setPosition(posX, posY, posZ)
+        setRotation(rotationYaw, rotationPitch)
+        //   if (compound.hasKey("CustomName", 8)) setCustomNameTag(compound.getString("CustomName"))
+        //            setAlwaysRenderNameTag(compound.getBoolean("CustomNameVisible"))
+        //            cmdResultStats.readStatsFromNBT(compound)
+        //            setSilent(compound.getBoolean("Silent"))
+        //            func_189654_d(compound.getBoolean("NoGravity"))
+        //            setGlowing(compound.getBoolean("Glowing"))
+        //            if (compound.hasKey("ForgeData")) customEntityData = compound.getCompoundTag("ForgeData")
+        //            if (capabilities != null && compound.hasKey("ForgeCaps")) capabilities.deserializeNBT(compound.getCompoundTag("ForgeCaps"))
+        //            if (compound.hasKey("Tags", 9)) {
+        //                tags.clear()
+        //                val nbttaglist1: NBTTagList = compound.getTagList("Tags", 8)
+        //                val i: Int = Math.min(nbttaglist1.tagCount, 1024)
+        //                var j: Int = 0
+        //                while (j < i) {
+        //                    {
+        //                        tags.add(nbttaglist1.getStringTagAt(j))
+        //                    }
+        //                    {
+        //                        j += 1;
+        //                        j
+        //                    }
+        //                }
+        //            }
+        //            readEntityFromNBT(compound)
+        //            if (shouldSetPosAfterLoading) setPosition(posX, posY, posZ)
+        //        } catch {
+        //            case throwable: Throwable => {
+        //                val crashreport: CrashReport = CrashReport.makeCrashReport(throwable, "Loading entity NBT")
+        //                val crashreportcategory: CrashReportCategory = crashreport.makeCategory("Entity being loaded")
+        //                addEntityCrashInfo(crashreportcategory)
+        //                throw new ReportedException(crashreport)
+        //            }
+        //        }
     }
 }

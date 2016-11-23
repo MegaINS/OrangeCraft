@@ -134,23 +134,6 @@ abstract class World(saveHandler: ISaveHandler) extends Logger[World] {
         chunkProvider.provideChunk(x, y, z)
 
 
-        //
-        //        try {
-        //            val index = Chunk.getIndex(x, y, z)
-        //            if (chunks.contains(index)) {
-        //                chunks(index)
-        //            } else {
-        //                chunkLoader.loadChunk(this, x, y, z)
-        //                val chunk = new ChunkVoid(this, new ChunkPosition(x, y, z))
-        //                addChunk(index, chunk)
-        //                chunk
-        //            }
-        //        } catch {
-        //            case e: NoSuchElementException =>
-        //                println(x + " " + y + " " + z)
-        //                null
-        //        }
-
     }
 
     def validBlockPos(pos: BlockPos): Boolean = !(pos.worldZ < -width || pos.worldY < -height || pos.worldX < -length) && !(pos.worldZ > width - 1 || pos.worldY > height - 1 || pos.worldX > length - 1)
@@ -195,7 +178,7 @@ abstract class World(saveHandler: ISaveHandler) extends Logger[World] {
 
     def save(): Unit = {
         log.info("World saved...")
-        chunks.values.foreach(chunkLoader.save)
+        chunks.values.foreach(chunkLoader.saveChunk)
         log.info("World saved completed")
     }
 

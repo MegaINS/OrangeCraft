@@ -25,8 +25,10 @@ class ChunkProviderServer(world: WorldServer, chunkLoader: ChunkLoader, chunkGen
     override def loadChunk(chunkX: Int, chunkY: Int, chunkZ: Int): Chunk = {
         var chunk: Chunk = getLoadedChunk(chunkX, chunkY, chunkZ)
         if (chunk == null) {
-            chunk = world.chunkLoader.load(world, chunkX, chunkY, chunkZ)
-            chunkMap += Chunk.getIndex(chunkX, chunkY, chunkZ) -> chunk
+            chunk = chunkLoader.loadChunk(world, chunkX, chunkY, chunkZ)
+            if (chunk != null) {
+                chunkMap += Chunk.getIndex(chunkX, chunkY, chunkZ) -> chunk
+            }
         }
         chunk
     }
@@ -61,6 +63,7 @@ class ChunkProviderServer(world: WorldServer, chunkLoader: ChunkLoader, chunkGen
                 }
             }
         )
+        chunkLoader.regionLoader.close()
         true
     }
 
@@ -77,7 +80,7 @@ class ChunkProviderServer(world: WorldServer, chunkLoader: ChunkLoader, chunkGen
     private def saveChunkData(chunkIn: Chunk) {
         try
             //  chunkIn.setLastSaveTime(this.worldObj.getTotalWorldTime)
-            chunkLoader.save(chunkIn)
+            chunkLoader.saveChunk(chunkIn)
 
         catch {
             case ioexception: IOException => {

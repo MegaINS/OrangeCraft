@@ -8,8 +8,9 @@ object StartServer extends App {
 
     Thread.currentThread.setName("Server thread")
 
-    val server = new OrangeCraftServer(Path("C:/OrangeCraft/server").toDirectory)
+    val server = new OrangeCraftServer(Path("Z:/OrangeCraft/server").toDirectory)
     val serverCommand = new ServerCommand(server)
+    serverCommand.setName("serverControl")
     serverCommand.setDaemon(true)
     serverCommand.start()
 

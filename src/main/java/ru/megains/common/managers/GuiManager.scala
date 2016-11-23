@@ -10,6 +10,7 @@ import scala.collection.mutable
 class GuiManager(val orangeCraft: OrangeCraft) {
 
 
+
     private val guiInGame: mutable.HashMap[String, GuiInGame] = mutable.HashMap[String, GuiInGame]()
     private var guiScreen: GuiScreen = _
 
@@ -88,5 +89,10 @@ class GuiManager(val orangeCraft: OrangeCraft) {
 
 
         }
+    }
+
+    def cleanup() = {
+        if (guiScreen ne null) guiScreen.cleanup()
+        guiInGame.values.filter(_ ne null).foreach(_.cleanup())
     }
 }

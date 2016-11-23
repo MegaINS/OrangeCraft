@@ -20,7 +20,7 @@ class PacketEncoder(direction: PacketDirection) extends MessageToByteEncoder[Pac
         val size = out.readableBytes()
         val name = ConnectionState.getFromPacket(msg).name
         val packetName = msg.getClass.getSimpleName
-        log.info(s"Encoder $name, packet $packetName, id $id, size $size")
+        //  log.info(s"Encoder $name, packet $packetName, id $id, size $size")
     }
 
 }

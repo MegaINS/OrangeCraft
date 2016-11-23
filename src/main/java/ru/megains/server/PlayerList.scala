@@ -5,6 +5,8 @@ import ru.megains.common.entity.player.EntityPlayer
 import ru.megains.common.network.play.server.{SPacketHeldItemChange, SPacketJoinGame, SPacketSpawnPosition}
 import ru.megains.common.network.{NetHandlerPlayServer, NetworkManager}
 import ru.megains.common.world.World
+import ru.megains.common.world.storage.AnvilSaveHandler
+import ru.megains.nbt.tag.NBTCompound
 import ru.megains.server.entity.EntityPlayerMP
 import ru.megains.server.world.WorldServer
 
@@ -12,8 +14,7 @@ import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
 
 class PlayerList(server: OrangeCraftServer) {
-
-
+    var playerNBTManager: AnvilSaveHandler = server.world.saveHandler
     val playerEntityList: ArrayBuffer[EntityPlayerMP] = new ArrayBuffer[EntityPlayerMP]()
 
 
@@ -61,7 +62,7 @@ class PlayerList(server: OrangeCraftServer) {
         //  val s: String = if (gameprofile1 == null) gameprofile.getName
         //  else gameprofile1.getName
         //   playerprofilecache.addEntry(gameprofile)
-        //  val nbttagcompound: NBTTagCompound = this.readPlayerDataFromFile(playerIn)
+        val nbttagcompound: NBTCompound = readPlayerDataFromFile(playerIn)
         //  playerIn.setWorld(this.mcServer.worldServerForDimension(playerIn.dimension))
         //        var playerWorld: World = this.mcServer.worldServerForDimension(playerIn.dimension)
         //        if (playerWorld == null) {
@@ -141,6 +142,20 @@ class PlayerList(server: OrangeCraftServer) {
         //            if (entity1 != null) playerIn.startRiding(entity1, true)
         //        }
         // playerIn.addSelfToInternalCraftingInventory()
+    }
+
+    def readPlayerDataFromFile(playerIn: EntityPlayerMP): NBTCompound = {
+        //  val nbttagcompound: NBTCompound = mcServer.worldServers(0).getWorldInfo.getPlayerNBTTagCompound
+        var nbttagcompound1: NBTCompound = null
+        //        if (playerIn.getName == this.mcServer.getServerOwner && nbttagcompound != null) {
+        //            nbttagcompound1 = this.mcServer.getDataFixer.process(FixTypes.PLAYER, nbttagcompound)
+        //            playerIn.readFromNBT(nbttagcompound1)
+        //            log.debug("loading single player")
+        //            net.minecraftforge.event.ForgeEventFactory.firePlayerLoadingEvent(playerIn, this.playerNBTManagerObj, playerIn.getUniqueID.toString)
+        //        }
+        //        else
+        nbttagcompound1 = playerNBTManager.readPlayerData(playerIn)
+        nbttagcompound1
     }
 
     def playerLoggedIn(playerIn: EntityPlayerMP) {

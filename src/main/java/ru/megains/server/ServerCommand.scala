@@ -31,6 +31,7 @@ class ServerCommand(server: OrangeCraftServer) extends Thread {
             commands.keySet.foreach(println)
         })
         commands += "players" -> (() => server.playerList.nameToPlayerMap.keySet.foreach(println))
+        commands += "save" -> (() => server.saveAllWorlds(false))
     }
 
 
