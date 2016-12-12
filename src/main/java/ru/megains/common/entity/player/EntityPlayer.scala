@@ -1,27 +1,22 @@
 package ru.megains.common.entity.player
 
 
-import ru.megains.common.block.Block
 import ru.megains.common.entity.EntityLivingBase
 import ru.megains.common.inventory.{Container, ContainerPlayerInventory}
 import ru.megains.common.item.ItemStack
-import ru.megains.common.register.Items
 import ru.megains.common.world.World
 
 
 class EntityPlayer(val name: String, world: World) extends EntityLivingBase(world, 1.8f, 0.6f, 1.6f) {
 
 
+    var openContainer: Container = _
 
     val inventory = new InventoryPlayer(this)
     val inventoryContainer: Container = new ContainerPlayerInventory(inventory)
+    openContainer = inventoryContainer
 
 
-    inventory.addItemStackToInventory(new ItemStack(Items.stick, 10))
-
-    for (id <- 2 to 13) {
-        inventory.addItemStackToInventory(new ItemStack(Block.getBlockById(id), id))
-    }
 
 
 

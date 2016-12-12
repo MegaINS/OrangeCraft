@@ -73,7 +73,7 @@ class GuiManager(val orangeCraft: OrangeCraft) {
             if (button == -1) {
                 guiScreen.mouseClickMove(x, y)
             } else if (buttonState) {
-                guiScreen.mouseClicked(x, y, button)
+                guiScreen.mouseClicked(x, y, button, orangeCraft.player)
             } else {
                 guiScreen.mouseReleased(x, y, button)
             }

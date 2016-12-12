@@ -19,11 +19,11 @@ class Region(regionFile: File) extends Logger[Region] {
 
     def initRegion(): Unit = {
         val offsetLength = Region.OFFSET_LENGTH / Region.SEGMENT_LENGTH
-        for (i <- 0 until offsetLength) {
+        for (_ <- 0 until offsetLength) {
             emptySegments += false
         }
         if (file.length() < Region.OFFSET_LENGTH) {
-            for (i <- 0 until offsetLength) {
+            for (_ <- 0 until offsetLength) {
                 file.write(Region.VOID_SEGMENT)
             }
         } else {

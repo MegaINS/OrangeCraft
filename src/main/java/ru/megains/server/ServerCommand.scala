@@ -23,7 +23,7 @@ class ServerCommand(server: OrangeCraftServer) extends Thread {
         commands.getOrElse(command, () => println(s"Command [$command] not found"))()
     }
 
-    def initCommand() = {
+    def initCommand(): Unit = {
         commands += "" -> (() => {})
         commands += "stop" -> (() => server.serverRunning = false)
         commands += "help" -> (() => {

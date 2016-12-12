@@ -141,7 +141,7 @@ class PlayerList(server: OrangeCraftServer) {
         //            val entity1: Entity = AnvilChunkLoader.readWorldEntity(nbttagcompound.getCompoundTag("Riding"), worldserver, true)
         //            if (entity1 != null) playerIn.startRiding(entity1, true)
         //        }
-        // playerIn.addSelfToInternalCraftingInventory()
+        playerIn.addSelfToInternalCraftingInventory()
     }
 
     def readPlayerDataFromFile(playerIn: EntityPlayerMP): NBTCompound = {
@@ -188,11 +188,16 @@ class PlayerList(server: OrangeCraftServer) {
         worldserver.chunkProvider.provideChunk(playerIn.posX.toInt >> 4, playerIn.posY.toInt >> 4, playerIn.posZ.toInt >> 4)
     }
 
+    def writePlayerData(playerIn: EntityPlayerMP): Unit = {
+        if (playerIn.connection == null) return
+        playerNBTManager.writePlayerData(playerIn)
+    }
+
     def playerLoggedOut(playerIn: EntityPlayerMP) {
 
         val worldserver: WorldServer = playerIn.getWorldServer
         //   playerIn.addStat(StatList.LEAVE_GAME)
-        //  this.writePlayerData(playerIn)
+        writePlayerData(playerIn)
         //        if (playerIn.isRiding) {
         //            val entity: Entity = playerIn.getLowestRidingEntity
         //            if (entity.getRecursivePassengersByType(classOf[EntityPlayerMP]).size == 1) {

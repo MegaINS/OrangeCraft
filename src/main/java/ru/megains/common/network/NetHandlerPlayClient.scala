@@ -101,6 +101,23 @@ class NetHandlerPlayClient(gameController: OrangeCraft, previousScreen: GuiScree
             clientWorldController.invalidateRegionAndSetBlock(blockData.blockPosition, blockData.block)
         }
     }
+
+    override def handleSetSlot(packetIn: SPacketSetSlot): Unit = {
+        if (packetIn.slot == -1) {
+            gameController.player.inventory.itemStack = packetIn.item
+        } else {
+            gameController.player.openContainer.putStackInSlot(packetIn.slot, packetIn.item)
+        }
+
+    }
+
+    override def handleWindowItems(packetIn: SPacketWindowItems): Unit = {
+        val openContainer = gameController.player.openContainer
+
+        for (i <- packetIn.itemStacks.indices) {
+            openContainer.putStackInSlot(i, packetIn.itemStacks(i))
+        }
+    }
 }
 
 

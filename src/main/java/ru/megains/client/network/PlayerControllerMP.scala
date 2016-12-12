@@ -10,7 +10,7 @@ import ru.megains.common.block.blockdata.{BlockDirection, BlockPos}
 import ru.megains.common.entity.player.EntityPlayer
 import ru.megains.common.item.{Item, ItemBlock, ItemStack}
 import ru.megains.common.network.NetHandlerPlayClient
-import ru.megains.common.network.play.client.{CPacketHeldItemChange, CPacketPlayerDigging, CPacketPlayerTryUseItem, CPacketPlayerTryUseItemOnBlock}
+import ru.megains.common.network.play.client._
 import ru.megains.common.register.Blocks
 import ru.megains.common.world.{GameType, World}
 import ru.megains.common.{ActionResult, EnumActionResult}
@@ -248,5 +248,10 @@ class PlayerControllerMP(oc: OrangeCraft, val connection: NetHandlerPlayClient) 
             currentPlayerItem = i
             connection.sendPacket(new CPacketHeldItemChange(currentPlayerItem))
         }
+    }
+
+    def windowClick(x: Int, y: Int, button: Int, player: EntityPlayer): Unit = {
+        player.openContainer.mouseClicked(x, y, button, player)
+        connection.sendPacket(new CPacketClickWindow(x, y, button))
     }
 }

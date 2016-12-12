@@ -15,7 +15,7 @@ class WorldServer(server: OrangeCraftServer, val saveHandler: AnvilSaveHandler) 
     val playerManager: PlayerChunkMap = new PlayerChunkMap(this)
     val entityTracker: EntityTracker = new EntityTracker(this)
     override val chunkProvider: IChunkProvider = new ChunkProviderServer(this, chunkLoader, new ChunkProviderOverworld(this, 342342, false, ""))
-    val chunkProviderServer = chunkProvider.asInstanceOf[ChunkProviderServer]
+    val chunkProviderServer: ChunkProviderServer = chunkProvider.asInstanceOf[ChunkProviderServer]
     var disableLevelSaving: Boolean = false
 
     override def update(): Unit = {

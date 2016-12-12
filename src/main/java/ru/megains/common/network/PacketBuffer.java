@@ -6,6 +6,8 @@ import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.ByteBufProcessor;
 import ru.megains.common.block.blockdata.BlockPos;
 import ru.megains.common.block.blockdata.BlockSize;
+import ru.megains.common.item.Item;
+import ru.megains.common.item.ItemStack;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,10 +26,6 @@ public class PacketBuffer extends ByteBuf {
         this.field_150794_a = p_i45154_1_;
     }
 
-    /**
-     * Calculates the number of bytes required to fit the supplied int (0-5) if it were to be read/written using
-     * readVarIntFromBuffer or writeVarIntToBuffer
-     */
 
 
     public void writeBlockPos(BlockPos pos) {
@@ -56,10 +54,7 @@ public class PacketBuffer extends ByteBuf {
         return (p_150790_0_ & -128) == 0 ? 1 : ((p_150790_0_ & -16384) == 0 ? 2 : ((p_150790_0_ & -2097152) == 0 ? 3 : ((p_150790_0_ & -268435456) == 0 ? 4 : 5)));
     }
 
-    /**
-     * Reads a compressed int from the buffer. To do so it maximally reads 5 byte-sized chunks whose most significant
-     * bit dictates whether another byte should be read.
-     */
+
     public int readVarIntFromBuffer() {
         int var1 = 0;
         int var2 = 0;
@@ -78,12 +73,7 @@ public class PacketBuffer extends ByteBuf {
         return var1;
     }
 
-    /**
-     * Writes a compressed int to the buffer. The smallest number of bytes to fit the passed int will be written. Of
-     * each such byte only 7 bits will be used to describe the actual value since its most significant bit dictates
-     * whether the next byte is part of that same int. Micro-optimization for int values that are expected to have
-     * values below 128.
-     */
+
     public void writeVarIntToBuffer(int p_150787_1_) {
         while ((p_150787_1_ & -128) != 0) {
             this.writeByte(p_150787_1_ & 127 | 128);
@@ -153,10 +143,37 @@ public class PacketBuffer extends ByteBuf {
 //            this.writeNBTTagCompoundToBuffer(var2);
 //        }
 //    }
+    public void writeItemStackToBuffer(ItemStack itemStack) throws IOException {
+        if (itemStack == null) {
+            writeInt(-1);
+        } else {
+            writeInt(Item.getIdFromItem(itemStack.item()));
+            writeByte(itemStack.stackSize());
+            //  writeShort(itemStack.getItemDamage());
+            //   NBTTagCompound var2 = null;
 
-    /**
-     * Reads an ItemStack from this buffer
-     */
+//            if (itemStack.getItem().isDamageable() || itemStack.getItem().getShareTag())
+//            {
+//                var2 = itemStack.stackTagCompound;
+//            }
+
+            // this.writeNBTTagCompoundToBuffer(var2);
+        }
+    }
+
+    public ItemStack readItemStackFromBuffer() throws IOException {
+        ItemStack var1 = null;
+        int var2 = readInt();
+
+        if (var2 >= 0) {
+            byte var3 = this.readByte();
+            // short var4 = this.readShort();
+            var1 = new ItemStack(Item.getItemById(var2), var3);
+            //  var1.stackTagCompound = this.readNBTTagCompoundFromBuffer();
+        }
+
+        return var1;
+    }
 //    public ItemStack readItemStackFromBuffer() throws IOException
 //    {
 //        ItemStack var1 = null;
@@ -173,10 +190,7 @@ public class PacketBuffer extends ByteBuf {
 //        return var1;
 //    }
 
-    /**
-     * Reads a string from this buffer. Expected parameter is maximum allowed string length. Will throw IOException if
-     * string length exceeds this value!
-     */
+
     public String readStringFromBuffer(int p_150789_1_) throws IOException {
         int var2 = this.readVarIntFromBuffer();
 
@@ -195,9 +209,7 @@ public class PacketBuffer extends ByteBuf {
         }
     }
 
-    /**
-     * Writes a (UTF-8 encoded) String to this buffer. Will throw IOException if String length exceeds 32767 bytes
-     */
+
     public void writeStringToBuffer(String p_150785_1_) throws IOException {
         byte[] var2 = p_150785_1_.getBytes();
 

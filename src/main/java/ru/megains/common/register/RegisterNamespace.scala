@@ -11,13 +11,13 @@ class RegisterNamespace[T] {
     private val nameObject: mutable.HashMap[String, T] = new mutable.HashMap[String, T]
 
 
-    def registerObject(id: Int, name: String, Object: T) = {
+    def registerObject(id: Int, name: String, Object: T): Unit = {
         idObject += id -> Object
         objectId += Object -> id
         nameObject += name -> Object
     }
 
-    def getObjects = idObject.values
+    def getObjects: Iterable[T] = idObject.values
 
     def getObject(id: Int): T = idObject(id)
 

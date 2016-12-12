@@ -5,7 +5,8 @@ import org.joml.Vector3d
 import ru.megains.common.physics.AxisAlignedBB
 import ru.megains.common.util.{MathHelper, RayTraceResult}
 import ru.megains.common.world.World
-import ru.megains.nbt.tag.NBTCompound
+import ru.megains.nbt.NBTType
+import ru.megains.nbt.tag.{NBTCompound, NBTList}
 
 import scala.collection.mutable
 
@@ -188,36 +189,41 @@ abstract class Entity(var world: World, val height: Float, val wight: Float, val
     }
 
     def readFromNBT(compound: NBTCompound) {
-        //        try{
 
-        //   val nbttaglist: NBTTagList = compound.getTagList("Pos", 6)
-        //   val nbttaglist2: NBTTagList = compound.getTagList("Motion", 6)
-        //    val nbttaglist3: NBTTagList = compound.getTagList("Rotation", 5)
-        //   motionX = nbttaglist2.getDoubleAt(0)
-        //   motionY = nbttaglist2.getDoubleAt(1)
-        //    motionZ = nbttaglist2.getDoubleAt(2)
+        val listPos: NBTList = compound.getList("Pos")
+        val listMotion: NBTList = compound.getList("Motion")
+        val listRotation: NBTList = compound.getList("Rotation")
+        motionX = listMotion.getDouble(0)
+        motionY = listMotion.getDouble(1)
+        motionZ = listMotion.getDouble(2)
         if (Math.abs(motionX) > 10.0D) motionX = 0.0D
         if (Math.abs(motionY) > 10.0D) motionY = 0.0D
         if (Math.abs(motionZ) > 10.0D) motionZ = 0.0D
-        //posX = nbttaglist.getDoubleAt(0)
-        //  posY = nbttaglist.getDoubleAt(1)
-        //  posZ = nbttaglist.getDoubleAt(2)
-        //    lastTickPosX = posX
-        //   lastTickPosY = posY
-        //   lastTickPosZ = posZ
+        posX = listPos.getDouble(0)
+        posY = listPos.getDouble(1)
+        posZ = listPos.getDouble(2)
+
         prevPosX = posX
         prevPosY = posY
         prevPosZ = posZ
-        //  rotationYaw = nbttaglist3.getFloatAt(0)
-        //     rotationPitch = nbttaglist3.getFloatAt(1)
+        rotationYaw = listRotation.getFloat(0)
+        rotationPitch = listRotation.getFloat(1)
         prevRotationYaw = rotationYaw
         prevRotationPitch = rotationPitch
-        //    setRotationYawHead(rotationYaw)
+
+        onGround = compound.getBoolean("OnGround")
+
+        setPosition(posX, posY, posZ)
+        setRotation(rotationYaw, rotationPitch)
+
+        //    lastTickPosX = posX
+        //   lastTickPosY = posY
+        //   lastTickPosZ = posZ
+        //  setRotationYawHead(rotationYaw)
         //   setRenderYawOffset(rotationYaw)
         //   fallDistance = compound.getFloat("FallDistance")
         //    fire = compound.getShort("Fire")
         //   setAir(compound.getShort("Air"))
-        onGround = compound.getBoolean("OnGround")
         //      if (compound.hasKey("Dimension")) dimension = compound.getInteger("Dimension")
         //      invulnerable = compound.getBoolean("Invulnerable")
         //     timeUntilPortal = compound.getInteger("PortalCooldown")
@@ -225,8 +231,6 @@ abstract class Entity(var world: World, val height: Float, val wight: Float, val
         //                entityUniqueID = compound.getUniqueId("UUID")
         //                cachedUniqueIdString = entityUniqueID.toString
         //            }
-        setPosition(posX, posY, posZ)
-        setRotation(rotationYaw, rotationPitch)
         //   if (compound.hasKey("CustomName", 8)) setCustomNameTag(compound.getString("CustomName"))
         //            setAlwaysRenderNameTag(compound.getBoolean("CustomNameVisible"))
         //            cmdResultStats.readStatsFromNBT(compound)
@@ -259,6 +263,60 @@ abstract class Entity(var world: World, val height: Float, val wight: Float, val
         //                addEntityCrashInfo(crashreportcategory)
         //                throw new ReportedException(crashreport)
         //            }
+        //        }
+    }
+
+    def writeToNBT(compound: NBTCompound): Unit = {
+
+        val listPos: NBTList = compound.createList("Pos", NBTType.EnumNBTDouble)
+        listPos.setValue(posX)
+        listPos.setValue(posY)
+        listPos.setValue(posZ)
+
+        val listMotion: NBTList = compound.createList("Motion", NBTType.EnumNBTDouble)
+        listMotion.setValue(motionX)
+        listMotion.setValue(motionY)
+        listMotion.setValue(motionZ)
+
+        val listRotation: NBTList = compound.createList("Rotation", NBTType.EnumNBTFloat)
+        listRotation.setValue(rotationYaw)
+        listRotation.setValue(rotationPitch)
+
+        compound.setValue("OnGround", onGround)
+
+        //   compound.setFloat("FallDistance", this.fallDistance)
+        //   compound.setShort("Fire", this.fire.toShort)
+        // compound.setShort("Air", this.getAir.toShort)
+
+        //   compound.setInteger("Dimension", this.dimension)
+        //  compound.setBoolean("Invulnerable", this.invulnerable)
+        //  compound.setInteger("PortalCooldown", this.timeUntilPortal)
+        //   compound.setUniqueId("UUID", this.getUniqueID)
+        //  if (this.getCustomNameTag != null && !this.getCustomNameTag.isEmpty) p_189511_1_.setString("CustomName", this.getCustomNameTag)
+        //  if (this.getAlwaysRenderNameTag) p_189511_1_.setBoolean("CustomNameVisible", this.getAlwaysRenderNameTag)
+        //   this.cmdResultStats.writeStatsToNBT(p_189511_1_)
+        //  if (this.isSilent) p_189511_1_.setBoolean("Silent", this.isSilent)
+        //  if (this.func_189652_ae) p_189511_1_.setBoolean("NoGravity", this.func_189652_ae)
+        // if (this.glowing) p_189511_1_.setBoolean("Glowing", this.glowing)
+        //        if (this.tags.size > 0) {
+        //            val nbttaglist = new NBTTagList
+        //            import scala.collection.JavaConversions._
+        //            for (s <- this.tags) {
+        //                nbttaglist.appendTag(new NBTTagString(s))
+        //            }
+        //            p_189511_1_.setTag("Tags", nbttaglist)
+        //        }
+        //  if (customEntityData != null) p_189511_1_.setTag("ForgeData", customEntityData)
+        // if (this.capabilities != null) p_189511_1_.setTag("ForgeCaps", this.capabilities.serializeNBT)
+        //writeEntityToNBT(p_189511_1_)
+        //        if (this.isBeingRidden) {
+        //            val nbttaglist1 = new NBTTagList
+        //            import scala.collection.JavaConversions._
+        //            for (entity <- this.getPassengers) {
+        //                val nbttagcompound = new NBTTagCompound
+        //                if (entity.writeToNBTAtomically(nbttagcompound)) nbttaglist1.appendTag(nbttagcompound)
+        //            }
+        //            if (!nbttaglist1.hasNoTags) p_189511_1_.setTag("Passengers", nbttaglist1)
         //        }
     }
 }

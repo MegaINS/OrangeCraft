@@ -4,10 +4,13 @@ import ru.megains.common.entity.player.EntityPlayer
 import ru.megains.common.utils.Logger
 import ru.megains.nbt.NBTData
 import ru.megains.nbt.tag.NBTCompound
+import ru.megains.server.entity.EntityPlayerMP
 
 import scala.reflect.io.{Directory, Path}
 
 class AnvilSaveHandler(savesDirectory: Directory, worldName: String) extends ISaveHandler with Logger[AnvilSaveHandler] {
+
+
     def flush(): Unit = {}
 
 
@@ -21,17 +24,23 @@ class AnvilSaveHandler(savesDirectory: Directory, worldName: String) extends ISa
 
 
     def readPlayerData(player: EntityPlayer): NBTCompound = {
-        var nbttagcompound: NBTCompound = null
+        var compound: NBTCompound = null
         try {
-            nbttagcompound = NBTData.readOfFile(playersDirectory, player.name).getCompound
+            compound = NBTData.readOfFile(playersDirectory, player.name).getCompound
         } catch {
-            case var4: Exception => {
+            case _: Exception =>
                 log.warn("Failed to load player data for {}", Array[AnyRef](player.name))
-            }
         }
-        if (nbttagcompound != null) player.readFromNBT(nbttagcompound)
+        if (compound != null) player.readFromNBT(compound)
 
-        nbttagcompound
+        compound
+    }
+
+    def writePlayerData(playerIn: EntityPlayerMP): Unit = {
+        val compound: NBTCompound = NBTData.createCompound()
+        playerIn.writeToNBT(compound)
+        NBTData.writeToFile(compound, playersDirectory, playerIn.name)
+
     }
 
 

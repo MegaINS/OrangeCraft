@@ -1,7 +1,5 @@
 package ru.megains.common.network
 
-import java.util.function.Consumer
-
 import com.google.common.collect.{BiMap, HashBiMap}
 import ru.megains.common.network.PacketDirection.PacketDirection
 import ru.megains.common.network.handshake.client.CHandshake
@@ -91,7 +89,8 @@ object ConnectionState {
         registerPacket(PacketDirection.CLIENTBOUND, classOf[SPacketSpawnPosition])
         registerPacket(PacketDirection.CLIENTBOUND, classOf[SPacketUnloadChunk])
         registerPacket(PacketDirection.CLIENTBOUND, classOf[SPacketMultiBlockChange])
-
+        registerPacket(PacketDirection.CLIENTBOUND, classOf[SPacketSetSlot])
+        registerPacket(PacketDirection.CLIENTBOUND, classOf[SPacketWindowItems])
 
 
         registerPacket(PacketDirection.SERVERBOUND, classOf[CPacketHeldItemChange])
@@ -102,6 +101,8 @@ object ConnectionState {
         registerPacket(PacketDirection.SERVERBOUND, classOf[CPacketPlayerDigging])
         registerPacket(PacketDirection.SERVERBOUND, classOf[CPacketPlayerTryUseItem])
         registerPacket(PacketDirection.SERVERBOUND, classOf[CPacketPlayerTryUseItemOnBlock])
+        registerPacket(PacketDirection.SERVERBOUND, classOf[CPacketClickWindow])
+
 
 
     }
@@ -116,10 +117,8 @@ object ConnectionState {
     def addClass(state: ConnectionState): Unit = {
         state.directionMap.values.foreach(
             _.values().forEach(
-                new Consumer[Class[_ <: Packet[_]]] {
-                    override def accept(packet: Class[_ <: Packet[_]]): Unit = {
-                        STATES_BY_CLASS += packet -> state
-                    }
+                (packet: Class[_ <: Packet[_]]) => {
+                    STATES_BY_CLASS += packet -> state
                 }
             )
         )

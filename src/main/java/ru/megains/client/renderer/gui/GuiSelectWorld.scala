@@ -1,6 +1,7 @@
 package ru.megains.client.renderer.gui
 
 import ru.megains.client.OrangeCraft
+import ru.megains.common.entity.player.EntityPlayer
 
 class GuiSelectWorld(guiMainMenu: GuiScreen) extends GuiScreen {
 
@@ -61,8 +62,8 @@ class GuiSelectWorld(guiMainMenu: GuiScreen) extends GuiScreen {
         worldsSlot.foreach(_.draw(mouseX, mouseY))
     }
 
-    override def mouseClicked(x: Int, y: Int, button: Int): Unit = {
-        super.mouseClicked(x, y, button)
+    override def mouseClicked(x: Int, y: Int, button: Int, player: EntityPlayer): Unit = {
+        super.mouseClicked(x, y, button, player)
         if (button == 0) {
             var isSelect = false
             worldsSlot.foreach(

@@ -75,14 +75,14 @@ object GameRegister {
     }
 
 
-    def getBlockFromItem(item: Item) = blockData.getObject(itemData.getIdByObject(item))
+    def getBlockFromItem(item: Item): Block = blockData.getObject(itemData.getIdByObject(item))
 
 
     def getItemFromBlock(block: Block): Item = itemData.getObject(blockData.getIdByObject(block))
 
-    def getBlocks = blockData.getObjects
+    def getBlocks: Iterable[Block] = blockData.getObjects
 
-    def getItems = itemData.getObjects
+    def getItems: Iterable[Item] = itemData.getObjects
 
     def getBlockById(id: Int): Block = blockData.getObject(id)
 
@@ -131,7 +131,7 @@ object GameRegister {
         }
     }
 
-    def getMultiBlockId(block: Block) = {
+    def getMultiBlockId(block: Block): Int = {
         val id = getIdByBlock(block)
         if (multiBlockData.contains(id)) {
             id

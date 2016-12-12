@@ -36,6 +36,11 @@ object Item {
 
     def getItemFromBlock(block: Block): Item = GameRegister.getItemFromBlock(block)
 
+    def getIdFromItem(item: Item): Int = {
+        GameRegister.getIdByItem(item)
+    }
+
+
     def initItems(): Unit = {
         GameRegister.registerItem(1000, new Item("stick"))
     }

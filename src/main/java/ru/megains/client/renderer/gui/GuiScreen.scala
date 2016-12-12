@@ -5,6 +5,7 @@ import java.awt.Color
 import org.lwjgl.input.Keyboard._
 import ru.megains.client.OrangeCraft
 import ru.megains.client.renderer.mesh.Mesh
+import ru.megains.common.entity.player.EntityPlayer
 
 import scala.collection.mutable.ArrayBuffer
 
@@ -25,7 +26,7 @@ abstract class GuiScreen extends GuiElement {
 
     def mouseReleased(x: Int, y: Int, button: Int): Unit = {}
 
-    def mouseClicked(x: Int, y: Int, button: Int): Unit = {
+    def mouseClicked(x: Int, y: Int, button: Int, player: EntityPlayer): Unit = {
         if (button == 0) {
             buttonList.foreach(
                 guiButton => {

@@ -9,7 +9,7 @@ class RegionLoader(worldDirectory: Directory) {
 
     val regionByIndex = new mutable.HashMap[Long, Region]()
     val FILE_EXTENSION: String = ".oc"
-    val regionDirectory = worldDirectory / Path("region").toDirectory
+    val regionDirectory: Directory = worldDirectory / Path("region").toDirectory
     if (!regionDirectory.exists) regionDirectory.createDirectory()
 
     def getRegion(chunkX: Int, chunkY: Int, chunkZ: Int): Region = {

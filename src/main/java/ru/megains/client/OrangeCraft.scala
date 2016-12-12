@@ -200,7 +200,7 @@ class OrangeCraft(ocDataDir: String) extends Logger[OrangeCraft] with IThreadLis
 
             if (player eq null) {
                 player = playerController.createClientPlayer(newWorld)
-                playerController.flipPlayer(player)
+                // playerController.flipPlayer(player)
             }
             renderViewEntity = player
             newWorld.spawnEntityInWorld(player)
@@ -525,26 +525,29 @@ class OrangeCraft(ocDataDir: String) extends Logger[OrangeCraft] with IThreadLis
         if (!playerController.isHittingBlock) {
             rightClickDelayTimer = 4
             val itemstack: ItemStack = player.getHeldItem
-            if (blockSelectPosition == null) log.warn("Null returned as \'hitResult\', this shouldn\'t happen!")
-            else objectMouseOver.typeOfHit match {
-                case RayTraceResult.Type.ENTITY =>
-                //                        if (playerController.interactWithEntity(player, objectMouseOver.entityHit, objectMouseOver, player.getHeldItem(enumhand), enumhand) eq EnumActionResult.SUCCESS) return
-                //                        if (playerController.interactWithEntity(player, objectMouseOver.entityHit, player.getHeldItem(enumhand), enumhand) eq EnumActionResult.SUCCESS) return
+            if (blockSelectPosition == null) {
+                // log.warn("Null returned as \'hitResult\', this shouldn\'t happen!")
+            } else {
+                objectMouseOver.typeOfHit match {
+                    case RayTraceResult.Type.ENTITY =>
+                    //                        if (playerController.interactWithEntity(player, objectMouseOver.entityHit, objectMouseOver, player.getHeldItem(enumhand), enumhand) eq EnumActionResult.SUCCESS) return
+                    //                        if (playerController.interactWithEntity(player, objectMouseOver.entityHit, player.getHeldItem(enumhand), enumhand) eq EnumActionResult.SUCCESS) return
 
-                case RayTraceResult.Type.BLOCK =>
-                    val blockpos: BlockPos = objectMouseOver.blockPos
-                    if (!world.isAirBlock(blockpos)) {
-                        val i: Int = if (itemstack != null) itemstack.stackSize
-                        else 0
-                        val enumactionresult: EnumActionResult = playerController.processRightClickBlock(player, world, itemstack, blockpos, objectMouseOver.sideHit, objectMouseOver.hitVec)
-                        if (enumactionresult eq EnumActionResult.SUCCESS) {
-                            //   player.swingArm()
-                            if (itemstack != null) if (itemstack.stackSize == 0) player.setHeldItem(null)
-                            //    else if (itemstack.stackSize != i || playerController.isInCreativeMode) entityRenderer.itemRenderer.resetEquippedProgress()
-                            return
+                    case RayTraceResult.Type.BLOCK =>
+                        val blockpos: BlockPos = objectMouseOver.blockPos
+                        if (!world.isAirBlock(blockpos)) {
+                            val i: Int = if (itemstack != null) itemstack.stackSize
+                            else 0
+                            val enumactionresult: EnumActionResult = playerController.processRightClickBlock(player, world, itemstack, blockpos, objectMouseOver.sideHit, objectMouseOver.hitVec)
+                            if (enumactionresult eq EnumActionResult.SUCCESS) {
+                                //   player.swingArm()
+                                if (itemstack != null) if (itemstack.stackSize == 0) player.setHeldItem(null)
+                                //    else if (itemstack.stackSize != i || playerController.isInCreativeMode) entityRenderer.itemRenderer.resetEquippedProgress()
+                                return
+                            }
                         }
-                    }
-                case _ =>
+                    case _ =>
+                }
             }
             val itemstack1: ItemStack = player.getHeldItem
             if (itemstack1 != null && (playerController.processRightClick(player, world, itemstack1) eq EnumActionResult.SUCCESS)) {

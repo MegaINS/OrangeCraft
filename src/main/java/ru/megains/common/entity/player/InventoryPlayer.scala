@@ -5,9 +5,10 @@ import ru.megains.common.item.ItemStack
 
 class InventoryPlayer(val entityPlayer: EntityPlayer) extends AInventory {
 
+
     val mainInventory: Array[ItemStack] = new Array[ItemStack](40)
     var stackSelect: Int = 0
-
+    var itemStack: ItemStack = _
 
     def changeStackSelect(value: Int): Unit = {
         var offset: Int = 0

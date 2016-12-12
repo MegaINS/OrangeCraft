@@ -1,0 +1,53 @@
+package ru.megains.common.network.play.server
+
+
+import ru.megains.common.item.ItemStack
+import ru.megains.common.network.{Packet, PacketBuffer}
+
+class SPacketWindowItems extends Packet[INetHandlerPlayClient] {
+
+
+    var windowId: Int = 0
+    var itemStacks: Array[ItemStack] = _
+
+
+    def this(windowIdIn: Int, stacks: Array[ItemStack]) {
+        this()
+        windowId = windowIdIn
+        itemStacks = stacks
+        // this.itemStacks = new Array[ItemStack](stacks.size)
+        // var i: Int = 0
+        //        while (i < this.itemStacks.length) {
+        //            {
+        //                val itemstack: ItemStack = stacks.get(i).asInstanceOf[Nothing]
+        //                this.itemStacks(i) = if (itemstack == null) null
+        //                else itemstack.copy
+        //            }
+        //            {
+        //                i += 1; i
+        //            }
+        //        }
+    }
+
+
+    def readPacketData(buf: PacketBuffer) {
+        windowId = buf.readUnsignedByte
+        itemStacks = new Array[ItemStack](buf.readShort)
+        for (i <- itemStacks.indices) {
+            itemStacks(i) = buf.readItemStackFromBuffer
+        }
+    }
+
+
+    def writePacketData(buf: PacketBuffer) {
+        buf.writeByte(windowId)
+        buf.writeShort(itemStacks.length)
+        for (itemStack <- itemStacks) {
+            buf.writeItemStackToBuffer(itemStack)
+        }
+    }
+
+    def processPacket(handler: INetHandlerPlayClient) {
+        handler.handleWindowItems(this)
+    }
+}

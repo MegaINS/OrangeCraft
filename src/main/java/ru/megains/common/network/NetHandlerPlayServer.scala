@@ -284,4 +284,9 @@ class NetHandlerPlayServer(server: OrangeCraftServer, val networkManager: Networ
         }
     }
 
+    override def processClickWindow(packetIn: CPacketClickWindow): Unit = {
+        PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, playerEntity.getWorldServer)
+        playerEntity.openContainer.mouseClicked(packetIn.mouseX, packetIn.mouseY, packetIn.button, playerEntity)
+        playerEntity.updateHeldItem()
+    }
 }
