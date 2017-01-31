@@ -42,6 +42,9 @@ object GameRegister {
                     println("Name \"" + block.name + "\" not single")
                 } else {
                     blockData.registerObject(id, block.name, block)
+                    if (block.isFullBlock) {
+                        registerMultiBlockSingle(new MultiBlockSingle(block))
+                    }
                     return true
                 }
             }

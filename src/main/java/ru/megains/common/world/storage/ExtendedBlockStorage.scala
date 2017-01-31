@@ -10,20 +10,36 @@ import scala.collection.mutable
 class ExtendedBlockStorage {
 
 
-    val data: BitArray = new BitArray(4096, 16)
+    var blocksId: Array[Short] = new Array[Short](4096)
+    var blocksHp: Array[Int] = new Array[Int](4096)
     val multiBlockStorage: mutable.HashMap[Int, MultiBlock] = new mutable.HashMap[Int, MultiBlock]
 
-    def getBlockId(x: Int, y: Int, z: Int) = data.get(getIndex(x, y, z))
+    def getBlockId(x: Int, y: Int, z: Int) = blocksId(getIndex(x, y, z))
 
-    def getBlock(x: Int, y: Int, z: Int) = Block.getBlockById(data.get(getIndex(x, y, z)))
+    def getBlock(x: Int, y: Int, z: Int) = Block.getBlockById(blocksId(getIndex(x, y, z)))
 
     def getIndex(x: Int, y: Int, z: Int): Int = x << 8 | y << 4 | z
 
-    def setBlockId(x: Int, y: Int, z: Int, value: Int) = data.set(getIndex(x, y, z), value)
+    def setBlock(x: Int, y: Int, z: Int, value: Block): Unit = {
+        val index = getIndex(x, y, z)
+        blocksId(index) = Block.getIdByBlock(value).toShort
+        blocksHp(index) = value.maxHp
+    }
+
+    def setMultiBlock(x: Int, y: Int, z: Int): Unit = {
+        val index = getIndex(x, y, z)
+        blocksId(index) = MultiBlock.id.toShort
+        blocksHp(index) = -1
+
+    }
 
     def setMultiBlock(x: Int, y: Int, z: Int, value: MultiBlock): Unit = {
         multiBlockStorage += getIndex(x, y, z) -> value
 
+    }
+
+    def isMultiBlock(x: Int, y: Int, z: Int): Boolean = {
+        blocksId(getIndex(x, y, z)) == MultiBlock.id
     }
 
     def removeMultiBlock(x: Int, y: Int, z: Int): Unit = {
@@ -37,5 +53,9 @@ class ExtendedBlockStorage {
             MultiBlocks.air
         }
     )
+
+    def getBlockHp(x: Int, y: Int, z: Int) = {
+        blocksHp(getIndex(x, y, z))
+    }
 
 }

@@ -1,11 +1,14 @@
 package ru.megains.common.world.storage
 
+import scala.collection.immutable.IndexedSeq
+
 
 class BitArray(arraySize: Int, bitLength: Int) {
 
-    val size = 64 / bitLength
+
+    val size: Int = 64 / bitLength
     val array = new Array[Long](arraySize / size)
-    val mask = for (i <- 1 to size) yield Long.MaxValue - (1l << (if (bitLength * i == 64) 63 else bitLength * i)) + (1l << bitLength * (i - 1))
+    val mask: IndexedSeq[Long] = for (i <- 1 to size) yield Long.MaxValue - (1l << (if (bitLength * i == 64) 63 else bitLength * i)) + (1l << bitLength * (i - 1))
 
     def set(index: Int, value: Long): Unit = {
 

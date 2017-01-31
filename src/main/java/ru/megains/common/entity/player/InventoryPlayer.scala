@@ -1,9 +1,12 @@
 package ru.megains.common.entity.player
 
 import ru.megains.common.inventory.AInventory
-import ru.megains.common.item.ItemStack
+import ru.megains.common.item.{Item, ItemStack}
+import ru.megains.nbt.NBTType._
+import ru.megains.nbt.tag.NBTCompound
 
 class InventoryPlayer(val entityPlayer: EntityPlayer) extends AInventory {
+
 
 
     val mainInventory: Array[ItemStack] = new Array[ItemStack](40)
@@ -68,6 +71,33 @@ class InventoryPlayer(val entityPlayer: EntityPlayer) extends AInventory {
             }
         }
         newStack
+    }
+
+    def writeToNBT(data: NBTCompound): Unit = {
+        val inventory = data.createList("mainInventory", EnumNBTCompound)
+        for (i <- mainInventory.indices) {
+            val compound = inventory.createCompound()
+            val itemStack = mainInventory(i)
+
+            if (itemStack != null) {
+                compound.setValue("id", Item.getIdFromItem(itemStack.item))
+                compound.setValue("stackSize", itemStack.stackSize)
+            } else {
+                compound.setValue("id", -1)
+            }
+        }
+    }
+
+    def readFromNBT(data: NBTCompound): Unit = {
+        val inventory = data.getList("mainInventory")
+        for (i <- mainInventory.indices) {
+            val compound = inventory.getCompound(i)
+            val id: Int = compound.getInt("id")
+            if (id != -1) {
+                val itemStack = new ItemStack(Item.getItemById(id), compound.getInt("stackSize"))
+                mainInventory(i) = itemStack
+            }
+        }
     }
 }
 

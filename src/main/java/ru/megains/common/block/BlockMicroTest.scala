@@ -7,6 +7,7 @@ import ru.megains.common.physics.BlockAxisAlignedBB
 class BlockMicroTest(name: String, val size: Int) extends Block(name) {
 
 
+    override val maxHp: Int = size * 50
     val boundingBox = Array(new BlockAxisAlignedBB(BlockSize.Zero, BlockSize.Zero, BlockSize.Zero,
         BlockSize.FourSixteenth, BlockSize.FourSixteenth, BlockSize.FourSixteenth),
         new BlockAxisAlignedBB(BlockSize.Zero, BlockSize.Zero, BlockSize.Zero,

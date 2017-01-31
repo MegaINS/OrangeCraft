@@ -19,7 +19,7 @@ class RegisterNamespace[T] {
 
     def getObjects: Iterable[T] = idObject.values
 
-    def getObject(id: Int): T = idObject(id)
+    def getObject(id: Int): T = idObject.getOrElse(id, null.asInstanceOf)
 
     def getObject(name: String): T = nameObject(name)
 

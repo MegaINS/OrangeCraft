@@ -18,6 +18,7 @@ import scala.util.Random
 
 class Block(val name: String) {
 
+    val maxHp: Int = 100
 
     var aTexture: TextureAtlas = _
 

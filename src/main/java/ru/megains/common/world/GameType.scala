@@ -36,7 +36,24 @@ sealed abstract class GameType private(val id: Int, val name: String, val shortN
 object GameType {
 
 
-    case object NOT_SET extends GameType(-1, "", "")
+    def apply(shortName: String): GameType = {
+        shortName match {
+            case "c" => CREATIVE
+            case "s" => SURVIVAL
+            case _ => NOT_SET
+        }
+    }
+
+    def apply(id: Int): GameType = {
+        id match {
+            case 1 => CREATIVE
+            case 0 => SURVIVAL
+            case _ => NOT_SET
+        }
+    }
+
+
+    case object NOT_SET extends GameType(-1, "not_set", "")
 
     case object SURVIVAL extends GameType(0, "survival", "s")
 

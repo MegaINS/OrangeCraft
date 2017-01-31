@@ -16,21 +16,21 @@ class ChunkProviderOverworld(world: World, seed: Long, mapFeaturesEnabledIn: Boo
 
     override def provideChunk(chunkX: Int, chunkY: Int, chunkZ: Int): Chunk = {
         val blockStorage: ExtendedBlockStorage = new ExtendedBlockStorage
-        val blockData = blockStorage.data
+        val blockData = blockStorage.blocksId
 
         if (chunkY < 0) {
             for (i <- 0 until 4096) {
-                blockData.set(i, Block.getIdByBlock(Blocks.stone))
+                blockData(i) = Block.getIdByBlock(Blocks.stone).toShort
             }
         } else {
             val array = world.heightMap.generateHeightMap(chunkX, chunkZ)
             for (x1 <- 0 to 15; y1 <- 0 to 15; z1 <- 0 to 15) {
                 if (array(x1)(z1) > y1 + (chunkY * Chunk.CHUNK_SIZE)) {
-                    blockStorage.setBlockId(x1, y1, z1, Block.getIdByBlock(Blocks.stone))
+                    blockStorage.setBlock(x1, y1, z1, Blocks.stone)
                 } else if (array(x1)(z1) == y1 + (chunkY * Chunk.CHUNK_SIZE)) {
-                    blockStorage.setBlockId(x1, y1, z1, Block.getIdByBlock(Blocks.grass))
+                    blockStorage.setBlock(x1, y1, z1, Blocks.grass)
                 } else {
-                    blockStorage.setBlockId(x1, y1, z1, Block.getIdByBlock(Blocks.air))
+                    blockStorage.setBlock(x1, y1, z1, Blocks.air)
                 }
             }
         }

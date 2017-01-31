@@ -9,6 +9,7 @@ import scala.util.Random
 
 class BlockGrass(name: String) extends Block(name) {
 
+    override val maxHp: Int = 45
     var aTextureUp: TextureAtlas = _
     var aTextureDown: TextureAtlas = _
 

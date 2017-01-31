@@ -3,7 +3,7 @@ package ru.megains.server
 import ru.megains.common.block.blockdata.BlockPos
 import ru.megains.common.entity.player.EntityPlayer
 import ru.megains.common.network.play.server.{SPacketHeldItemChange, SPacketJoinGame, SPacketSpawnPosition}
-import ru.megains.common.network.{NetHandlerPlayServer, NetworkManager}
+import ru.megains.common.network.{INetHandler, NetHandlerPlayServer, NetworkManager, Packet}
 import ru.megains.common.world.World
 import ru.megains.common.world.storage.AnvilSaveHandler
 import ru.megains.nbt.tag.NBTCompound
@@ -233,6 +233,9 @@ class PlayerList(server: OrangeCraftServer) {
         player.getWorldServer.playerManager.updateMountedMovingPlayer(player)
     }
 
+    def sendPacketToAllPlayers(packetIn: Packet[_ <: INetHandler]) {
+        playerEntityList.foreach(_.connection.sendPacket(packetIn))
+    }
 
     def getPlayerByID(playerID: Int): EntityPlayer = idToPlayerMap.getOrElse(playerID, null)
 

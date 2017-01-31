@@ -10,6 +10,7 @@ class MultiBlockPos(val x: BlockSize, val y: BlockSize, val z: BlockSize) {
 
     def ==(pos: MultiBlockPos): Boolean = if (pos.x == x && pos.y == y && pos.z == z) true else false
 
+    def eg(pos: MultiBlockPos): Boolean = if (pos.x == x && pos.y == y && pos.z == z) true else false
     def getIndex = {
         x.id << 10 | y.id << 5 | z.id
     }

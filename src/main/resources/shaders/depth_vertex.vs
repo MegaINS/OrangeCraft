@@ -8,6 +8,6 @@ uniform mat4 modelViewProjection;
 
 void main(void)
 {
-	// переводим координаты вершины в однородные
+	// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 	gl_Position = modelViewProjection * vec4(position, 1.0);
 }

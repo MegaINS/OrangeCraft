@@ -164,7 +164,7 @@ class OrangeCraft(ocDataDir: String) extends Logger[OrangeCraft] with IThreadLis
 
 
                 runGameLoop()
-                sync()
+                //  sync()
                 while (System.currentTimeMillis >= lastTime + 1000L) {
                     // log.info(s"$frames fps, $tick tick, ${RenderChunk.chunkRender / (if (frames == 0) 1 else frames)} chunkRender, ${RenderChunk.chunkUpdate} chunkUpdate")
 

@@ -18,11 +18,12 @@ class GuiBlockSelect extends GuiInGame with GuiText {
     override def initGui(orangeCraft: OrangeCraft): Unit = {
 
 
-        addText("BlockWorldPos", createString("", Color.WHITE))
-        addText("BlockWorldPos.side", createString("", Color.WHITE))
-        addText("BlockWorldPos.x", createString("", Color.WHITE))
-        addText("BlockWorldPos.y", createString("", Color.WHITE))
-        addText("BlockWorldPos.z", createString("", Color.WHITE))
+        addText("Block.name", createString("", Color.WHITE))
+        addText("Block.side", createString("", Color.WHITE))
+        addText("Block.x", createString("", Color.WHITE))
+        addText("Block.y", createString("", Color.WHITE))
+        addText("Block.z", createString("", Color.WHITE))
+        addText("Block.hp", createString("", Color.WHITE))
     }
 
     override def tick(): Unit = {
@@ -31,12 +32,14 @@ class GuiBlockSelect extends GuiInGame with GuiText {
             if (ray ne null) {
                 val posB: BlockPos = ray.getBlockWorldPos
                 val vec: Vector3f = ray.hitVec
+                val hp = oc.world.getBlockHp(posB).toString
                 blockSelect = ray.block
-                addText("BlockWorldPos", createString(ray.block.name, Color.WHITE))
-                addText("BlockWorldPos.x", createString("x: " + posB.worldX + "  " + vec.x, Color.WHITE))
-                addText("BlockWorldPos.y", createString("y: " + posB.worldY + "  " + vec.y, Color.WHITE))
-                addText("BlockWorldPos.z", createString("z: " + posB.worldZ + "  " + vec.z, Color.WHITE))
-                addText("BlockWorldPos.side", createString("side: " + ray.sideHit.name, Color.WHITE))
+                addText("Block.name", createString(ray.block.name, Color.WHITE))
+                addText("Block.x", createString("x: " + posB.worldX + "  " + vec.x, Color.WHITE))
+                addText("Block.y", createString("y: " + posB.worldY + "  " + vec.y, Color.WHITE))
+                addText("Block.z", createString("z: " + posB.worldZ + "  " + vec.z, Color.WHITE))
+                addText("Block.side", createString("side: " + ray.sideHit.name, Color.WHITE))
+                addText("Block.hp", createString("HP: " + hp, Color.WHITE))
             }
         }
     }
@@ -44,11 +47,13 @@ class GuiBlockSelect extends GuiInGame with GuiText {
     override def drawScreen(mouseX: Int, mouseY: Int): Unit = {
         if (ray ne null) {
             val weight = Display.getWidth / 2 - 100
-            drawObject(weight, Display.getHeight - 20, 2, text("BlockWorldPos"))
-            drawObject(weight, Display.getHeight - 40, 2, text("BlockWorldPos.x"))
-            drawObject(weight, Display.getHeight - 60, 2, text("BlockWorldPos.y"))
-            drawObject(weight, Display.getHeight - 80, 2, text("BlockWorldPos.z"))
-            drawObject(weight, Display.getHeight - 100, 2, text("BlockWorldPos.side"))
+            drawObject(weight, Display.getHeight - 20, 2, text("Block.name"))
+            drawObject(weight, Display.getHeight - 40, 2, text("Block.x"))
+            drawObject(weight, Display.getHeight - 60, 2, text("Block.y"))
+            drawObject(weight, Display.getHeight - 80, 2, text("Block.z"))
+            drawObject(weight, Display.getHeight - 100, 2, text("Block.side"))
+            drawObject(weight, Display.getHeight - 100, 2, text("Block.side"))
+            drawObject(weight, Display.getHeight - 120, 2, text("Block.hp"))
             drawItemStack(new ItemStack(blockSelect), Display.getWidth / 2 - 150, Display.getHeight - 50)
         }
 

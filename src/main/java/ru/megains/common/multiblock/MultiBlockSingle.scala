@@ -4,7 +4,7 @@ import org.joml.Vector3d
 import ru.megains.common.block.Block
 import ru.megains.common.block.blockdata.{BlockPos, BlockSize, MultiBlockPos}
 import ru.megains.common.physics.AxisAlignedBB
-import ru.megains.common.register.{Blocks, GameRegister}
+import ru.megains.common.register.GameRegister
 import ru.megains.common.util.RayTraceResult
 import ru.megains.common.world.World
 
@@ -13,7 +13,7 @@ import scala.collection.mutable.ArrayBuffer
 
 class MultiBlockSingle(val block: Block) extends AMultiBlock {
 
-
+    override def getBlockHp(pos: MultiBlockPos): Int = -100
     override def isFullBlock: Boolean = true
 
     override def isOpaqueCube: Boolean = block.isOpaqueCube
@@ -49,10 +49,10 @@ class MultiBlockSingle(val block: Block) extends AMultiBlock {
 object MultiBlockSingle {
 
     def initMultiBlockSingle(): Unit = {
-        GameRegister.registerMultiBlockSingle(new MultiBlockSingle(Blocks.air))
-        GameRegister.registerMultiBlockSingle(new MultiBlockSingle(Blocks.stone))
-        GameRegister.registerMultiBlockSingle(new MultiBlockSingle(Blocks.dirt))
-        GameRegister.registerMultiBlockSingle(new MultiBlockSingle(Blocks.grass))
-        GameRegister.registerMultiBlockSingle(new MultiBlockSingle(Blocks.glass))
+        //  GameRegister.registerMultiBlockSingle(new MultiBlockSingle(Blocks.air))
+        //  GameRegister.registerMultiBlockSingle(new MultiBlockSingle(Blocks.stone))
+        //  GameRegister.registerMultiBlockSingle(new MultiBlockSingle(Blocks.dirt))
+        //  GameRegister.registerMultiBlockSingle(new MultiBlockSingle(Blocks.grass))
+        //  GameRegister.registerMultiBlockSingle(new MultiBlockSingle(Blocks.glass))
     }
 }

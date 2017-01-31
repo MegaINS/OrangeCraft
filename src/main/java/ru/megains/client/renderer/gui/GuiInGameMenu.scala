@@ -6,9 +6,9 @@ class GuiInGameMenu extends GuiScreen {
 
 
     override def initGui(orangeCraft: OrangeCraft): Unit = {
-        buttonList += new GuiButton(0, orangeCraft, "Main menu", 250, 450, 300, 50)
+        buttonList += new GuiButton(0, orangeCraft, "Main menu", 250, 310, 300, 50)
         buttonList += new GuiButton(1, orangeCraft, "Option", 250, 380, 300, 50)
-        buttonList += new GuiButton(2, orangeCraft, "Return to game", 250, 310, 300, 50)
+        buttonList += new GuiButton(2, orangeCraft, "Return to game", 250, 450, 300, 50)
 
     }
 

@@ -15,6 +15,7 @@ import scala.util.Random
 class Chunk(val world: World, val position: ChunkPosition) {
 
 
+
     var isSaved = true
     var isPopulated: Boolean = true
     var blockStorage: ExtendedBlockStorage = new ExtendedBlockStorage
@@ -60,31 +61,30 @@ class Chunk(val world: World, val position: ChunkPosition) {
 
     def setBlockChunkCord(pos: BlockPos, block: Block): Boolean = {
 
-
         isSaved = true
-        val id = MultiBlock.getId(block)
         val x = pos.worldX
         val y = pos.worldY
         val z = pos.worldZ
 
-
         if (block == Blocks.air) {
-            val targetId = blockStorage.getBlockId(x, y, z)
-            if (targetId == MultiBlock.id) {
+            if (blockStorage.isMultiBlock(x, y, z)) {
                 val multi = blockStorage.getMultiBlock(x, y, z)
                 multi.putBlock(pos.multiPos, block)
                 if (multi.isEmpty) {
-                    blockStorage.setBlockId(x, y, z, id)
+                    blockStorage.setBlock(x, y, z, block)
                     blockStorage.removeMultiBlock(x, y, z)
                 }
             } else {
-                blockStorage.setBlockId(x, y, z, id)
+                blockStorage.setBlock(x, y, z, block)
             }
             true
         } else {
-            if (id == MultiBlock.id) {
+            if (block.isFullBlock) {
+                blockStorage.setBlock(x, y, z, block)
+                true
+            } else {
                 if (isAirBlockChunkCord(pos)) {
-                    blockStorage.setBlockId(x, y, z, id)
+                    blockStorage.setMultiBlock(x, y, z)
                     blockStorage.setMultiBlock(x, y, z, new MultiBlock(block, pos.multiPos))
                     true
                 } else {
@@ -93,12 +93,7 @@ class Chunk(val world: World, val position: ChunkPosition) {
                         multi.putBlock(pos.multiPos, block)
                         true
                     } else false
-
-
                 }
-            } else {
-                blockStorage.setBlockId(x, y, z, id)
-                true
             }
         }
     }
@@ -112,12 +107,21 @@ class Chunk(val world: World, val position: ChunkPosition) {
     }
 
     def isVoid: Boolean = {
-        val blockData = blockStorage.data
+        val blockData = blockStorage.blocksId
         val airId = Block.getIdByBlock(Blocks.air)
         for (i <- 0 until 4096) {
-            if (blockData.get(i) != airId) return false
+            if (blockData(i) != airId) return false
         }
         true
+    }
+
+    def getBlockHp(pos: BlockPos) = {
+        val posL = position.blockPosWorldToLocal(pos)
+        if (blockStorage.isMultiBlock(posL.worldX, posL.worldY, posL.worldZ)) {
+            blockStorage.getMultiBlock(posL.worldX, posL.worldY, posL.worldZ).getBlockHp(posL.multiPos)
+        } else {
+            blockStorage.getBlockHp(posL.worldX, posL.worldY, posL.worldZ)
+        }
     }
 
 

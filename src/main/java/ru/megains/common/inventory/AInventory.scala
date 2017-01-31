@@ -1,6 +1,7 @@
 package ru.megains.common.inventory
 
 import ru.megains.common.item.ItemStack
+import ru.megains.nbt.tag.NBTCompound
 
 abstract class AInventory {
 
@@ -11,6 +12,10 @@ abstract class AInventory {
 
 
     def decrStackSize(index: Int, size: Int): ItemStack
+
+    def writeToNBT(data: NBTCompound): Unit
+
+    def readFromNBT(data: NBTCompound): Unit
 
 
 

@@ -47,26 +47,28 @@ class SPacketChunkData extends Packet[INetHandlerPlayClient] {
 
     def readChunk(buf: PacketBuffer): ExtendedBlockStorage = {
         val blockStorage: ExtendedBlockStorage = new ExtendedBlockStorage
-        val data = blockStorage.data
+        val blocksId = blockStorage.blocksId
+        val blocksHp = blockStorage.blocksHp
         val multiBlockStorage = blockStorage.multiBlockStorage
         for (i <- 0 until 4096) {
-            // data.set(i, readIntOfTwoByte(buf))
-            data.set(i, buf.readInt())
+            blocksId(i) = buf.readShort()
+            blocksHp(i) = buf.readInt()
         }
-        //  val sizeMultiBlock = readIntOfTwoByte(buf)
+
         val sizeMultiBlock = buf.readInt()
-        for (i <- 0 until sizeMultiBlock) {
-            //  val posMultiBlock = readIntOfTwoByte(buf)
+        for (_ <- 0 until sizeMultiBlock) {
+
             val posMultiBlock = buf.readInt()
             val multiBlock = new MultiBlock()
-            // val sizeBlock = readIntOfTwoByte(buf)
+            val blockData = multiBlock.blockData
+
             val sizeBlock = buf.readInt()
-            for (j <- 0 until sizeBlock) {
-                //  val posBlock = readIntOfTwoByte(buf)
-                //  val blockId = readIntOfTwoByte(buf)
+            for (_ <- 0 until sizeBlock) {
+
                 val posBlock = buf.readInt()
                 val blockId = buf.readInt()
-                multiBlock.putBlock(MultiBlockPos.getForIndex(posBlock), Block.getBlockById(blockId))
+                val blockHp = buf.readInt()
+                blockData += MultiBlockPos.getForIndex(posBlock) -> (Block.getBlockById(blockId), blockHp)
             }
             multiBlockStorage.put(posMultiBlock, multiBlock)
         }
@@ -74,52 +76,43 @@ class SPacketChunkData extends Packet[INetHandlerPlayClient] {
     }
 
     def writeChunk(buf: PacketBuffer): Unit = {
-        //  val chunkData = ArrayBuffer[Byte]()
-        val blockData = blockStorage.data
 
+        val blocksId = blockStorage.blocksId
+        val blockHp = blockStorage.blocksHp
         for (i <- 0 until 4096) {
-            buf.writeInt(blockData.get(i))
-            //  addTwoByteOfInt(blockData.get(i), chunkData)
+            buf.writeShort(blocksId(i))
+            buf.writeInt(blockHp(i))
         }
 
-        //  buf.writeBytes(chunkData.toArray)
 
         val multiBlockStorage = blockStorage.multiBlockStorage
 
         //Колличество мультиБлоков
         buf.writeInt(multiBlockStorage.size)
-        //  addTwoByteOfInt(multiBlockStorage.size, chunkData)
+
 
         multiBlockStorage.foreach(
             (data: (Int, MultiBlock)) => {
                 //Координаты мультиБлока
                 buf.writeInt(data._1)
-                // addTwoByteOfInt(data._1, chunkData)
+
                 val blockData = data._2.blockData
                 //Колличество блоков в мультиБлоке
                 buf.writeInt(blockData.size)
-                //  addTwoByteOfInt(blockData.size, chunkData)
+
                 blockData.foreach(
-                    (data2: (MultiBlockPos, Block)) => {
+                    (data2: (MultiBlockPos, (Block, Int))) => {
                         //Координаты блока
                         buf.writeInt(data2._1.getIndex)
-                        //  addTwoByteOfInt(data2._1.getIndex, chunkData)
                         //Id блока
-                        buf.writeInt(Block.getIdByBlock(data2._2))
-                        // addTwoByteOfInt(Block.getIdByBlock(data2._2), chunkData)
+                        buf.writeInt(Block.getIdByBlock(data2._2._1))
+                        //Hp блока
+                        buf.writeInt(data2._2._2)
                     }
                 )
             }
         )
-        // chunkData
+
     }
 
-    //    def addTwoByteOfInt(int: Int, buffer: ArrayBuffer[Byte]): Unit = {
-    //        buffer += (int >> 8).toByte
-    //        buffer += int.toByte
-    //    }
-
-    //    def readIntOfTwoByte(buf: PacketBuffer): Int = {
-    //        buf.readByte() << 8 | buf.readByte()
-    //    }
 }

@@ -4,6 +4,10 @@ import ru.megains.common.network.INetHandler
 
 
 trait INetHandlerPlayClient extends INetHandler {
+    def handleChangeGameState(packetIn: SPacketChangeGameState): Unit
+
+    def handlePlayerListItem(packetIn: SPacketPlayerListItem): Unit
+
     def handleWindowItems(items: SPacketWindowItems): Unit
 
     def handleSetSlot(slot: SPacketSetSlot): Unit

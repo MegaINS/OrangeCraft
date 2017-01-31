@@ -11,7 +11,7 @@ import scala.collection.mutable.ArrayBuffer
 
 
 abstract class AMultiBlock {
-
+    def getBlockHp(pos: MultiBlockPos): Int
 
     def getBlock(multiPos: MultiBlockPos): Block
 

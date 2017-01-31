@@ -51,13 +51,11 @@ class ChunkLoader(worldDirectory: Directory) {
     def readChunk(compound: NBTCompound): ExtendedBlockStorage = {
 
         val blockStorage: ExtendedBlockStorage = new ExtendedBlockStorage
-        val data = blockStorage.data
         val multiBlockStorage = blockStorage.multiBlockStorage
-        val blockArray = compound.getArrayShort("blockArray")
 
-        for (i <- 0 until 4096) {
-            data.set(i, blockArray(i))
-        }
+        blockStorage.blocksId = compound.getArrayShort("blocksId")
+        blockStorage.blocksHp = compound.getArrayInt("blocksHp")
+
         val posList = compound.getList("multiBlockPosition")
         val multiBlockList = compound.getList("multiBlockData")
 
@@ -78,15 +76,11 @@ class ChunkLoader(worldDirectory: Directory) {
 
     def writeChunk(compound: NBTCompound, blockStorage: ExtendedBlockStorage): Unit = {
 
-        val blockData = blockStorage.data
+
         val multiBlockStorage = blockStorage.multiBlockStorage
-        val blockArray = new Array[Short](4096)
 
-        for (i <- 0 until 4096) {
-            blockArray(i) = blockData.get(i).toShort
-        }
-
-        compound.setValue("blockArray", blockArray)
+        compound.setValue("blocksId", blockStorage.blocksId)
+        compound.setValue("blocksHp", blockStorage.blocksHp)
         val posList = compound.createList("multiBlockPosition", EnumNBTInt)
         val multiBlockList = compound.createList("multiBlockData", EnumNBTList)
 
@@ -98,9 +92,10 @@ class ChunkLoader(worldDirectory: Directory) {
                 val blockIdList = blockList.createList(EnumNBTInt)
 
                 data._2.blockData.foreach(
-                    (data2: (MultiBlockPos, Block)) => {
+                    (data2: (MultiBlockPos, (Block, Int))) => {
                         indexList.setValue(data2._1.getIndex)
-                        blockIdList.setValue(Block.getIdByBlock(data2._2))
+                        blockIdList.setValue(Block.getIdByBlock(data2._2._1))
+                        blockIdList.setValue(data2._2._2)
                     }
                 )
             }

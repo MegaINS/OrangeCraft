@@ -188,6 +188,8 @@ abstract class Entity(var world: World, val height: Float, val wight: Float, val
         rotationPitch = pitch % 360.0F
     }
 
+    def readEntityFromNBT(compound: NBTCompound): Unit = {}
+
     def readFromNBT(compound: NBTCompound) {
 
         val listPos: NBTList = compound.getList("Pos")
@@ -212,7 +214,7 @@ abstract class Entity(var world: World, val height: Float, val wight: Float, val
         prevRotationPitch = rotationPitch
 
         onGround = compound.getBoolean("OnGround")
-
+        readEntityFromNBT(compound)
         setPosition(posX, posY, posZ)
         setRotation(rotationYaw, rotationPitch)
 
@@ -254,7 +256,7 @@ abstract class Entity(var world: World, val height: Float, val wight: Float, val
         //                    }
         //                }
         //            }
-        //            readEntityFromNBT(compound)
+
         //            if (shouldSetPosAfterLoading) setPosition(posX, posY, posZ)
         //        } catch {
         //            case throwable: Throwable => {
@@ -265,6 +267,8 @@ abstract class Entity(var world: World, val height: Float, val wight: Float, val
         //            }
         //        }
     }
+
+    def writeEntityToNBT(compound: NBTCompound): Unit = {}
 
     def writeToNBT(compound: NBTCompound): Unit = {
 
@@ -283,7 +287,7 @@ abstract class Entity(var world: World, val height: Float, val wight: Float, val
         listRotation.setValue(rotationPitch)
 
         compound.setValue("OnGround", onGround)
-
+        writeEntityToNBT(compound)
         //   compound.setFloat("FallDistance", this.fallDistance)
         //   compound.setShort("Fire", this.fire.toShort)
         // compound.setShort("Air", this.getAir.toShort)
@@ -308,7 +312,7 @@ abstract class Entity(var world: World, val height: Float, val wight: Float, val
         //        }
         //  if (customEntityData != null) p_189511_1_.setTag("ForgeData", customEntityData)
         // if (this.capabilities != null) p_189511_1_.setTag("ForgeCaps", this.capabilities.serializeNBT)
-        //writeEntityToNBT(p_189511_1_)
+
         //        if (this.isBeingRidden) {
         //            val nbttaglist1 = new NBTTagList
         //            import scala.collection.JavaConversions._

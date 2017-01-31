@@ -1,12 +1,16 @@
 package ru.megains.common.world.storage
 
+import ru.megains.common.block.Block
 import ru.megains.common.entity.player.EntityPlayer
+import ru.megains.common.item.ItemStack
+import ru.megains.common.register.Items
 import ru.megains.common.utils.Logger
 import ru.megains.nbt.NBTData
 import ru.megains.nbt.tag.NBTCompound
 import ru.megains.server.entity.EntityPlayerMP
 
 import scala.reflect.io.{Directory, Path}
+import scala.util.Random
 
 class AnvilSaveHandler(savesDirectory: Directory, worldName: String) extends ISaveHandler with Logger[AnvilSaveHandler] {
 
@@ -31,7 +35,18 @@ class AnvilSaveHandler(savesDirectory: Directory, worldName: String) extends ISa
             case _: Exception =>
                 log.warn("Failed to load player data for {}", Array[AnyRef](player.name))
         }
-        if (compound != null) player.readFromNBT(compound)
+        if (compound != null) {
+            player.readFromNBT(compound)
+        }
+        else {
+            val inventory = player.inventory
+            inventory.addItemStackToInventory(new ItemStack(Items.stick, 10))
+
+            val rand: Int = Random.nextInt(15) + 1
+            for (id <- 1 to rand) {
+                inventory.addItemStackToInventory(new ItemStack(Block.getBlockById(2 + Random.nextInt(10)), id))
+            }
+        }
 
         compound
     }

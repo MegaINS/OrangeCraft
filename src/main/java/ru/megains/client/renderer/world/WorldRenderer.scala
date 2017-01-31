@@ -23,7 +23,7 @@ class WorldRenderer(val world: WorldClient, val textureManager: TextureManager) 
     val renderChunks: mutable.HashMap[Long, RenderChunk] = new mutable.HashMap[Long, RenderChunk]
     var blockMouseOver: Mesh = _
     var blockSelect: Mesh = _
-    val range = 3
+    val range = 6
 
 
     def getRenderChunks(entityPlayer: EntityPlayer, frustum: Frustum): IndexedSeq[RenderChunk] = {

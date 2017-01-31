@@ -14,29 +14,28 @@ import scala.collection.mutable.ArrayBuffer
 
 class MultiBlock() extends AMultiBlock {
 
-    val blockData: mutable.HashMap[MultiBlockPos, Block] = new mutable.HashMap[MultiBlockPos, Block]
+    val blockData: mutable.HashMap[MultiBlockPos, (Block, Int)] = new mutable.HashMap[MultiBlockPos, (Block, Int)]
 
     def this(block: Block, blockPos: MultiBlockPos) {
         this()
         putBlock(blockPos, block)
     }
 
-    override def putBlock(pos: MultiBlockPos, block: Block) = {
+    override def putBlock(pos: MultiBlockPos, block: Block): Unit = {
 
         if (block == Blocks.air) {
             var key: MultiBlockPos = null
-            blockData.foreach((bd: (MultiBlockPos, Block)) => {
+            blockData.foreach((bd: (MultiBlockPos, (Block, Int))) => {
                 if (bd._1 == pos) key = bd._1
             })
             if (key != null) {
                 blockData.remove(key)
             }
         } else {
-            blockData += pos -> block
+            blockData += pos -> (block, block.maxHp)
         }
-
-
     }
+
 
     override def isFullBlock: Boolean = false
 
@@ -47,8 +46,8 @@ class MultiBlock() extends AMultiBlock {
         var rayTraceResult: RayTraceResult = null
 
 
-        blockData.foreach((bd: (MultiBlockPos, Block)) => {
-            rayTraceResult = bd._2.collisionRayTrace(world, blockPos, start, stop, bd._1)
+        blockData.foreach((bd: (MultiBlockPos, (Block, Int))) => {
+            rayTraceResult = bd._2._1.collisionRayTrace(world, blockPos, start, stop, bd._1)
             if (rayTraceResult != null) return rayTraceResult
         })
         null
@@ -58,9 +57,10 @@ class MultiBlock() extends AMultiBlock {
         var renders = 0
 
         blockData.foreach(
-            (bd: (MultiBlockPos, Block)) => {
-                if (!bd._2.isAir) {
-                    GameRegister.getBlockRender(bd._2).render(bd._2, world, blockPos, renderPos, bd._1)
+            (bd: (MultiBlockPos, (Block, Int))) => {
+                val block = bd._2._1
+                if (!block.isAir) {
+                    GameRegister.getBlockRender(block).render(block, world, blockPos, renderPos, bd._1)
                     renders += 1
                 }
             }
@@ -70,8 +70,8 @@ class MultiBlock() extends AMultiBlock {
 
     override def addCollisionList(blockPos: BlockPos, aabbs: ArrayBuffer[AxisAlignedBB]): Unit = {
 
-        blockData.foreach((bd: (MultiBlockPos, Block)) => {
-            aabbs += bd._2.getBoundingBox(blockPos, bd._1)
+        blockData.foreach((bd: (MultiBlockPos, (Block, Int))) => {
+            aabbs += bd._2._1.getBoundingBox(blockPos, bd._1)
         })
 
     }
@@ -79,8 +79,8 @@ class MultiBlock() extends AMultiBlock {
     override def isCanPut(pos: BlockPos, block: Block): Boolean = {
         val aabb = block.getPhysicsBody.getCopy.move(pos.blockX.value, pos.blockY.value, pos.blockZ.value)
 
-        blockData.forall((bd: (MultiBlockPos, Block)) => {
-            !aabb.checkCollision(bd._2.getPhysicsBody.getCopy.move(bd._1.floatX, bd._1.floatY, bd._1.floatZ))
+        blockData.forall((bd: (MultiBlockPos, (Block, Int))) => {
+            !aabb.checkCollision(bd._2._1.getPhysicsBody.getCopy.move(bd._1.floatX, bd._1.floatY, bd._1.floatZ))
         })
 
     }
@@ -88,13 +88,24 @@ class MultiBlock() extends AMultiBlock {
     override def isEmpty: Boolean = blockData.isEmpty
 
     override def getBlock(multiPos: MultiBlockPos): Block = {
-        val bd = blockData.find((bd: (MultiBlockPos, Block)) => {
+        val bd = blockData.find((bd: (MultiBlockPos, (Block, Int))) => {
             bd._1 == multiPos
         })
         if (bd.isEmpty) {
             Blocks.air
         } else {
-            bd.get._2
+            bd.get._2._1
+        }
+    }
+
+    def getBlockHp(pos: MultiBlockPos): Int = {
+        val bd = blockData.find((bd: (MultiBlockPos, (Block, Int))) => {
+            bd._1 == pos
+        })
+        if (bd.isEmpty) {
+            -1
+        } else {
+            bd.get._2._2
         }
     }
 }

@@ -16,6 +16,10 @@ import ru.megains.common.world.{GameType, World}
 import ru.megains.common.{ActionResult, EnumActionResult}
 
 class PlayerControllerMP(oc: OrangeCraft, val connection: NetHandlerPlayClient) {
+    def setGameType(gameType: GameType) = {
+        currentGameType = gameType
+        //currentGameType.configurePlayerCapabilities(this.mc.thePlayer.capabilities)
+    }
 
 
     var isHittingBlock: Boolean = false

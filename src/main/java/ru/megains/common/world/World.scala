@@ -280,6 +280,10 @@ abstract class World(saveHandler: ISaveHandler) extends Logger[World] {
 
     }
 
+    def getBlockHp(pos: BlockPos): Int = {
+        if (!validBlockPos(pos)) -1 else getChunk(pos).getBlockHp(pos)
+    }
+
     def addChunk(index: Long, chunk: Chunk): Unit = {
         chunks += index -> chunk
     }

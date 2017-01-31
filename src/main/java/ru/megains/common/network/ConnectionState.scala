@@ -91,6 +91,7 @@ object ConnectionState {
         registerPacket(PacketDirection.CLIENTBOUND, classOf[SPacketMultiBlockChange])
         registerPacket(PacketDirection.CLIENTBOUND, classOf[SPacketSetSlot])
         registerPacket(PacketDirection.CLIENTBOUND, classOf[SPacketWindowItems])
+        registerPacket(PacketDirection.CLIENTBOUND, classOf[SPacketChangeGameState])
 
 
         registerPacket(PacketDirection.SERVERBOUND, classOf[CPacketHeldItemChange])

@@ -9,6 +9,7 @@ import ru.megains.common.world.{ChunkProviderClient, IChunkProvider, World}
 
 class WorldClient(connection: NetHandlerPlayClient) extends World(new SaveHandlerMP) {
 
+
     override var isRemote: Boolean = true
     var worldRenderer: WorldRenderer = _
 

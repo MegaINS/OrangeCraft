@@ -5,13 +5,13 @@ import ru.megains.common.entity.EntityLivingBase
 import ru.megains.common.inventory.{Container, ContainerPlayerInventory}
 import ru.megains.common.item.ItemStack
 import ru.megains.common.world.World
+import ru.megains.nbt.tag.NBTCompound
 
 
 class EntityPlayer(val name: String, world: World) extends EntityLivingBase(world, 1.8f, 0.6f, 1.6f) {
 
 
     var openContainer: Container = _
-
     val inventory = new InventoryPlayer(this)
     val inventoryContainer: Container = new ContainerPlayerInventory(inventory)
     openContainer = inventoryContainer
@@ -80,6 +80,14 @@ class EntityPlayer(val name: String, world: World) extends EntityLivingBase(worl
         inventory.mainInventory(inventory.stackSelect) = stack
 
 
+    }
+
+    override def readEntityFromNBT(compound: NBTCompound): Unit = {
+        inventory.readFromNBT(compound)
+    }
+
+    override def writeEntityToNBT(compound: NBTCompound): Unit = {
+        inventory.writeToNBT(compound)
     }
 
 }

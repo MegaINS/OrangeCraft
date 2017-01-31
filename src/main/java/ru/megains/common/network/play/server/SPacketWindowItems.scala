@@ -15,18 +15,6 @@ class SPacketWindowItems extends Packet[INetHandlerPlayClient] {
         this()
         windowId = windowIdIn
         itemStacks = stacks
-        // this.itemStacks = new Array[ItemStack](stacks.size)
-        // var i: Int = 0
-        //        while (i < this.itemStacks.length) {
-        //            {
-        //                val itemstack: ItemStack = stacks.get(i).asInstanceOf[Nothing]
-        //                this.itemStacks(i) = if (itemstack == null) null
-        //                else itemstack.copy
-        //            }
-        //            {
-        //                i += 1; i
-        //            }
-        //        }
     }
 
 

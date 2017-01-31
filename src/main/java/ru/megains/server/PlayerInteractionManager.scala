@@ -17,6 +17,18 @@ class PlayerInteractionManager(world: World) {
     var gameType: GameType = GameType.CREATIVE
     var isDestroyingBlock: Boolean = false
 
+    def setGameType(gameTypeIn: GameType): Unit = {
+        gameType = gameTypeIn
+        // gameTypeIn.configurePlayerCapabilities(this.thisPlayerMP.capabilities)
+        //  thisPlayerMP.sendPlayerAbilities()
+        //  thisPlayerMP.ocServer.playerList.sendPacketToAllPlayers(new SPacketPlayerListItem(SPacketPlayerListItem.Action.UPDATE_GAME_MODE, thisPlayerMP))
+        //theWorld.updateAllPlayersSleepingFlag()
+    }
+
+
+
+
+
 
     def isCreative: Boolean = gameType.isCreative
 
@@ -205,7 +217,7 @@ class PlayerInteractionManager(world: World) {
         else item.onItemUseFirst(stack, player, worldIn, posMouseOver, facing, hitX, hitY, hitZ)
         if (ret ne EnumActionResult.PASS) return ret
         val bypass: Boolean = true
-        ///   for (s <- Array[ItemStack](player.getHeldItemMainhand, player.getHeldItemOffhand)) //TODO: Expand to more hands? player.inv.getHands()?
+        ///   for (s <- Array[ItemStack](player.getHeldItemMainhand, player.getHeldItemOffhand))
         //    bypass = bypass && (s == null || s.item.doesSneakBypassUse(s, worldIn, pos, player))
         var result: EnumActionResult = EnumActionResult.PASS
         if (!player.isSneaking || bypass) {
@@ -228,8 +240,7 @@ class PlayerInteractionManager(world: World) {
                 stack.stackSize = i
                 enumactionresult
 
-            }
-            else stack.onItemUse(player, worldIn, posBlockSet, facing, hitX, hitY, hitZ)
+            } else stack.onItemUse(player, worldIn, posBlockSet, facing, hitX, hitY, hitZ)
 
         }
         // }

@@ -9,6 +9,7 @@ import ru.megains.common.network.play.client.CPacketPlayer
 import ru.megains.common.network.play.server._
 import ru.megains.common.position.ChunkPosition
 import ru.megains.common.utils.{Logger, PacketThreadUtil}
+import ru.megains.common.world.GameType
 
 class NetHandlerPlayClient(gameController: OrangeCraft, previousScreen: GuiScreen, val netManager: NetworkManager) extends INetHandlerPlayClient with Logger[NetHandlerPlayClient] {
 
@@ -116,6 +117,18 @@ class NetHandlerPlayClient(gameController: OrangeCraft, previousScreen: GuiScree
 
         for (i <- packetIn.itemStacks.indices) {
             openContainer.putStackInSlot(i, packetIn.itemStacks(i))
+        }
+    }
+
+    override def handlePlayerListItem(packetIn: SPacketPlayerListItem): Unit = {
+        PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, gameController)
+
+    }
+
+    override def handleChangeGameState(packetIn: SPacketChangeGameState): Unit = {
+        packetIn.state match {
+            case 3 => gameController.playerController.setGameType(GameType(packetIn.value))
+            case _ =>
         }
     }
 }

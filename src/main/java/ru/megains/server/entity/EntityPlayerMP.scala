@@ -1,22 +1,18 @@
 package ru.megains.server.entity
 
-import ru.megains.common.block.Block
 import ru.megains.common.entity.player.EntityPlayer
 import ru.megains.common.inventory.Container
 import ru.megains.common.item.ItemStack
 import ru.megains.common.network.NetHandlerPlayServer
-import ru.megains.common.network.play.server.{SPacketSetSlot, SPacketWindowItems}
-import ru.megains.common.register.Items
-import ru.megains.common.world.World
+import ru.megains.common.network.play.server.{SPacketChangeGameState, SPacketSetSlot, SPacketWindowItems}
+import ru.megains.common.world.{GameType, World}
 import ru.megains.server.world.WorldServer
 import ru.megains.server.{OrangeCraftServer, PlayerInteractionManager}
-
-import scala.util.Random
 
 class EntityPlayerMP(name: String, world: World, val interactionManager: PlayerInteractionManager) extends EntityPlayer(name: String, world) {
 
 
-
+    val ocServer = getWorldServer.server
     interactionManager.thisPlayerMP = this
     var connection: NetHandlerPlayServer = _
     var managedPosZ: Double = .0
@@ -25,17 +21,15 @@ class EntityPlayerMP(name: String, world: World, val interactionManager: PlayerI
 
     var playerLastActiveTime: Long = 0
 
-    inventory.addItemStackToInventory(new ItemStack(Items.stick, 10))
-
-    val rand: Int = Random.nextInt(15)
-    for (id <- 0 to rand) {
-        inventory.addItemStackToInventory(new ItemStack(Block.getBlockById(2 + Random.nextInt(10)), id))
+    def setGameType(gameType: GameType) {
+        interactionManager.setGameType(gameType)
+        this.connection.sendPacket(new SPacketChangeGameState(3, gameType.id))
+        //    if (gameType eq GameType.SPECTATOR) this.dismountRidingEntity()
+        //  else this.setSpectatingEntity(this)
+        //  this.sendPlayerAbilities()
+        //  this.markPotionsDirty()
     }
 
-    //
-    //    for (id <- 2 to 13) {
-    //        inventory.addItemStackToInventory(new ItemStack(Block.getBlockById(id), id))
-    //    }
 
     def getWorldServer: WorldServer = world.asInstanceOf[WorldServer]
 
