@@ -1,9 +1,10 @@
 package ru.megains.common.physics;
 
 
-import org.joml.Vector3f;
+
 import ru.megains.common.block.blockdata.BlockDirection;
 import ru.megains.common.util.RayTraceResult;
+import ru.megains.common.util.Vec3f;
 
 
 public class AxisAlignedBB {
@@ -178,10 +179,10 @@ public class AxisAlignedBB {
         return z;
     }
 
-    public RayTraceResult calculateIntercept(Vector3f vecA, Vector3f vecB) {
-        Vector3f vec3d = this.func_186671_a(this.minX, vecA, vecB);
+    public RayTraceResult calculateIntercept(Vec3f vecA, Vec3f vecB) {
+        Vec3f vec3d = this.func_186671_a(this.minX, vecA, vecB);
         BlockDirection enumfacing = BlockDirection.WEST$.MODULE$;
-        Vector3f vec3d1 = this.func_186671_a(this.maxX, vecA, vecB);
+        Vec3f vec3d1 = this.func_186671_a(this.maxX, vecA, vecB);
 
         if (vec3d1 != null && this.func_186661_a(vecA, vec3d, vec3d1)) {
             vec3d = vec3d1;
@@ -221,34 +222,34 @@ public class AxisAlignedBB {
         return vec3d == null ? null : new RayTraceResult(vec3d, enumfacing);
     }
 
-    boolean func_186661_a(Vector3f p_186661_1_, Vector3f p_186661_2_, Vector3f p_186661_3_) {
+    boolean func_186661_a(Vec3f p_186661_1_, Vec3f p_186661_2_, Vec3f p_186661_3_) {
         return p_186661_2_ == null || p_186661_1_.distanceSquared(p_186661_3_) < p_186661_1_.distanceSquared(p_186661_2_);
     }
 
-    Vector3f func_186671_a(float p_186671_1_, Vector3f p_186671_3_, Vector3f p_186671_4_) {
-        Vector3f vec3d = p_186671_3_.getIntermediateWithXValue(p_186671_4_, p_186671_1_);
+    Vec3f func_186671_a(float p_186671_1_, Vec3f p_186671_3_, Vec3f p_186671_4_) {
+        Vec3f vec3d = p_186671_3_.getIntermediateWithXValue(p_186671_4_, p_186671_1_);
         return vec3d != null && this.intersectsWithYZ(vec3d) ? vec3d : null;
     }
 
-    Vector3f func_186663_b(float p_186663_1_, Vector3f p_186663_3_, Vector3f p_186663_4_) {
-        Vector3f vec3d = p_186663_3_.getIntermediateWithYValue(p_186663_4_, p_186663_1_);
+    Vec3f func_186663_b(float p_186663_1_, Vec3f p_186663_3_, Vec3f p_186663_4_) {
+        Vec3f vec3d = p_186663_3_.getIntermediateWithYValue(p_186663_4_, p_186663_1_);
         return vec3d != null && this.intersectsWithXZ(vec3d) ? vec3d : null;
     }
 
-    Vector3f func_186665_c(float p_186665_1_, Vector3f p_186665_3_, Vector3f p_186665_4_) {
-        Vector3f vec3d = p_186665_3_.getIntermediateWithZValue(p_186665_4_, p_186665_1_);
+    Vec3f func_186665_c(float p_186665_1_, Vec3f p_186665_3_, Vec3f p_186665_4_) {
+        Vec3f vec3d = p_186665_3_.getIntermediateWithZValue(p_186665_4_, p_186665_1_);
         return vec3d != null && this.intersectsWithXY(vec3d) ? vec3d : null;
     }
 
-    public boolean intersectsWithYZ(Vector3f vec) {
+    public boolean intersectsWithYZ(Vec3f vec) {
         return vec.y >= this.minY && vec.y <= this.maxY && vec.z >= this.minZ && vec.z <= this.maxZ;
     }
 
-    public boolean intersectsWithXZ(Vector3f vec) {
+    public boolean intersectsWithXZ(Vec3f vec) {
         return vec.x >= this.minX && vec.x <= this.maxX && vec.z >= this.minZ && vec.z <= this.maxZ;
     }
 
-    public boolean intersectsWithXY(Vector3f vec) {
+    public boolean intersectsWithXY(Vec3f vec) {
         return vec.x >= this.minX && vec.x <= this.maxX && vec.y >= this.minY && vec.y <= this.maxY;
     }
 

@@ -2,9 +2,10 @@ package ru.megains.client.renderer.gui
 
 import java.awt.Color
 
-import org.joml.Vector3f
 import ru.megains.client.renderer.EntityRenderer
 import ru.megains.client.renderer.mesh.{Mesh, MeshMaker}
+import ru.megains.common.util.Vec3f
+
 
 trait Gui {
 
@@ -62,7 +63,7 @@ trait Gui {
     def drawObject(xPos: Int, yPos: Int, scale: Float, mesh: Mesh, renderer: EntityRenderer): Unit = {
         if (mesh ne null) {
             EntityRenderer.currentShaderProgram.setUniform("modelMatrix", renderer.transformation.buildOrtoProjModelMatrix(xPos, yPos, scale))
-            EntityRenderer.currentShaderProgram.setUniform("colour", new Vector3f(1f, 1f, 1f))
+            EntityRenderer.currentShaderProgram.setUniform("colour", new Vec3f(1f, 1f, 1f))
             mesh.render(renderer.textureManager)
         }
     }

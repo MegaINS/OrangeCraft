@@ -2,9 +2,9 @@ package ru.megains.client.renderer.graph;
 
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
-import org.joml.Vector3f;
 import org.joml.Vector4f;
 import org.lwjgl.BufferUtils;
+import ru.megains.common.util.Vec3f;
 
 import java.nio.FloatBuffer;
 import java.util.HashMap;
@@ -59,7 +59,7 @@ public class ShaderProgram {
         }
         // Dump the matrix into a float buffer
         value.get(fb);
-        glUniformMatrix4(uniformData.getUniformLocation(), false, fb);
+        glUniformMatrix4fv(uniformData.getUniformLocation(), false, fb);
     }
 
     public void setUniform(String uniformName, Matrix3f value) {
@@ -75,7 +75,7 @@ public class ShaderProgram {
         }
         // Dump the matrix into a float buffer
         value.get(fb);
-        glUniformMatrix3(uniformData.getUniformLocation(), false, fb);
+        glUniformMatrix3fv(uniformData.getUniformLocation(), false, fb);
     }
 
 
@@ -111,7 +111,7 @@ public class ShaderProgram {
         glUniform1f(uniformData.getUniformLocation(), value);
     }
 
-    public void setUniform(String uniformName, Vector3f value) {
+    public void setUniform(String uniformName, Vec3f value) {
         UniformData uniformData = uniforms.get(uniformName);
         if (uniformData == null) {
             throw new RuntimeException("Uniform [" + uniformName + "] has nor been created");

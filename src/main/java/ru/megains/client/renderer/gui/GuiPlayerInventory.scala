@@ -1,6 +1,6 @@
 package ru.megains.client.renderer.gui
 
-import org.lwjgl.input.Keyboard._
+import org.lwjgl.glfw.GLFW._
 import ru.megains.client.OrangeCraft
 import ru.megains.client.renderer.mesh.Mesh
 import ru.megains.common.entity.player.EntityPlayer
@@ -17,7 +17,7 @@ class GuiPlayerInventory(entityPlayer: EntityPlayer) extends GuiContainer(entity
 
     override def keyTyped(typedChar: Char, keyCode: Int): Unit = {
         keyCode match {
-            case KEY_E | KEY_ESCAPE => oc.guiManager.setGuiScreen(null)
+            case GLFW_KEY_E | GLFW_KEY_ESCAPE => oc.guiManager.setGuiScreen(null)
             case _ =>
         }
 

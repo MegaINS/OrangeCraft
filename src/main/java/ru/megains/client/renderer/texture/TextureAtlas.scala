@@ -2,10 +2,12 @@ package ru.megains.client.renderer.texture
 
 import java.nio.ByteBuffer
 
+import de.matthiasmann.twl.utils.PNGDecoder
+import de.matthiasmann.twl.utils.PNGDecoder.Format
 import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL11._
 import org.lwjgl.opengl.GL12._
-import org.newdawn.slick.opengl.PNGDecoder
+
 
 
 class TextureAtlas(val name: String) {
@@ -33,7 +35,7 @@ class TextureAtlas(val name: String) {
         width = png.getWidth
         height = png.getHeight
         byteByf = ByteBuffer.allocateDirect(width * height * 4)
-        png.decode(byteByf, width * 4, PNGDecoder.RGBA)
+        png.decode(byteByf, width * 4, Format.RGBA)
         byteByf.flip()
     }
 

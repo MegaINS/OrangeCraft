@@ -2,9 +2,11 @@ package ru.megains.client.renderer.texture
 
 import java.nio.ByteBuffer
 
+import de.matthiasmann.twl.utils.PNGDecoder
+import de.matthiasmann.twl.utils.PNGDecoder.Format
 import org.lwjgl.opengl.GL11._
 import org.lwjgl.opengl.GL30._
-import org.newdawn.slick.opengl.PNGDecoder
+
 
 class SimpleTexture(val name: String) extends ATexture {
 
@@ -17,7 +19,7 @@ class SimpleTexture(val name: String) extends ATexture {
             val width = png.getWidth
             val height = png.getHeight
             val byteByf = ByteBuffer.allocateDirect(width * height * 4)
-            png.decode(byteByf, width * 4, PNGDecoder.RGBA)
+            png.decode(byteByf, width * 4, Format.RGBA)
             byteByf.flip()
 
             glBindTexture(GL_TEXTURE_2D, getGlTextureId)

@@ -2,12 +2,12 @@ package ru.megains.client.renderer
 
 import java.awt.Color
 
-import org.joml.Vector3f
 import ru.megains.client.OrangeCraft
 import ru.megains.client.renderer.gui.Gui
 import ru.megains.client.renderer.mesh.Mesh
 import ru.megains.common.item.{Item, ItemBlock, ItemStack}
 import ru.megains.common.register.GameRegister
+import ru.megains.common.util.Vec3f
 
 import scala.collection.mutable
 
@@ -41,14 +41,14 @@ class RenderItem(orangeCraft: OrangeCraft) extends Gui {
     def renderItemBlockToGui(xPos: Int, yPos: Int, itemBlock: ItemBlock): Unit = {
         val shaderProgram = renderer.hudShaderProgram
         shaderProgram.setUniform("modelMatrix", renderer.transformation.buildOrtoProjModelMatrix(xPos + 20, yPos + 20, 0, -25, 45, 0, 25))
-        shaderProgram.setUniform("colour", new Vector3f(1f, 1f, 1f))
+        shaderProgram.setUniform("colour", new Vec3f(1f, 1f, 1f))
         GameRegister.getItemRender(itemBlock).renderInInventory(renderer.textureManager)
     }
 
     def renderItemToGui(xPos: Int, yPos: Int, item: Item): Unit = {
         val shaderProgram = renderer.hudShaderProgram
         shaderProgram.setUniform("modelMatrix", renderer.transformation.buildOrtoProjModelMatrix(xPos + 4, yPos + 4, 1))
-        shaderProgram.setUniform("colour", new Vector3f(1f, 1f, 1f))
+        shaderProgram.setUniform("colour", new Vec3f(1f, 1f, 1f))
         GameRegister.getItemRender(item).renderInInventory(renderer.textureManager)
     }
 

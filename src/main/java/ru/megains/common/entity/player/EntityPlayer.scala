@@ -23,9 +23,9 @@ class EntityPlayer(val name: String, world: World) extends EntityLivingBase(worl
     setPosition(0, 35, 0)
 
 
-    def turn(xo: Float, yo: Float) {
-        rotationYaw += xo * 0.15f
-        rotationPitch -= yo * 0.15f
+    def turn(xo: Double, yo: Double) {
+        rotationYaw += xo.toFloat * 0.15f
+        rotationPitch -= yo.toFloat * 0.15f
         if (rotationPitch < -90.0F) {
             rotationPitch = -90.0F
         }
@@ -34,11 +34,11 @@ class EntityPlayer(val name: String, world: World) extends EntityLivingBase(worl
         }
         if (rotationYaw > 360.0F) {
             rotationYaw -= 360.0F
-            //ydRot -= 360.0F
+
         }
         if (rotationYaw < 0.0F) {
             rotationYaw += 360.0F
-            //  ydRot += 360.0F
+
         }
     }
 

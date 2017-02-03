@@ -2,8 +2,6 @@ package ru.megains.client.renderer;
 
 import org.joml.Matrix4f;
 import org.lwjgl.BufferUtils;
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.Display;
 import ru.megains.client.OrangeCraft;
 import ru.megains.client.renderer.graph.Camera;
 import ru.megains.client.renderer.graph.ShaderProgram;
@@ -122,7 +120,7 @@ public class Renderer {
         renderGui();
 
 
-        Display.update();
+
 
     }
 

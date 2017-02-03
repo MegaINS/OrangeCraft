@@ -1,12 +1,12 @@
 package ru.megains.client.renderer.graph;
 
 import org.joml.Matrix4f;
-import org.joml.Vector3f;
 import ru.megains.client.renderer.gui.GuiRenderInfo;
 import ru.megains.common.block.blockdata.BlockPos;
 import ru.megains.common.entity.Entity;
 import ru.megains.common.physics.AxisAlignedBB;
 import ru.megains.common.position.ChunkPosition;
+import ru.megains.common.util.Vec3f;
 
 public class Transformation {
 
@@ -96,15 +96,15 @@ public class Transformation {
         this.lightViewMatrix.set(lightViewMatrix);
     }
 
-    public Matrix4f updateLightViewMatrix(Vector3f position, Vector3f rotation) {
+    public Matrix4f updateLightViewMatrix(Vec3f position, Vec3f rotation) {
         return updateGenericViewMatrix(position, rotation, lightViewMatrix);
     }
 
-    private Matrix4f updateGenericViewMatrix(Vector3f position, Vector3f rotation, Matrix4f matrix) {
+    private Matrix4f updateGenericViewMatrix(Vec3f position, Vec3f rotation, Matrix4f matrix) {
         matrix.identity();
         // First do the rotation so camera rotates over its position
-        matrix.rotate((float) Math.toRadians(rotation.x), new Vector3f(1, 0, 0))
-                .rotate((float) Math.toRadians(rotation.y), new Vector3f(0, 1, 0));
+        matrix.rotate((float) Math.toRadians(rotation.x), new Vec3f(1, 0, 0))
+                .rotate((float) Math.toRadians(rotation.y), new Vec3f(0, 1, 0));
         // Then do the translation
         matrix.translate(-position.x, -position.y, -position.z);
         return matrix;
@@ -182,11 +182,11 @@ public class Transformation {
     }
 
     public Matrix4f buildOrtoProjModelMatrix(GuiRenderInfo item) {
-        Vector3f rotation = item.rotation();
+        Vec3f rotation = item.rotation();
         modelMatrix.identity().translate(item.position()).
-                rotateX((float) Math.toRadians(-rotation.x)).
-                rotateY((float) Math.toRadians(-rotation.y)).
-                rotateZ((float) Math.toRadians(-rotation.z)).
+                rotateX((float) Math.toRadians(-rotation.x())).
+                rotateY((float) Math.toRadians(-rotation.y())).
+                rotateZ((float) Math.toRadians(-rotation.z())).
                 scale(item.scale());
         return modelMatrix;
     }

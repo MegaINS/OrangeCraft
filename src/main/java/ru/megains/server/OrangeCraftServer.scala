@@ -1,12 +1,10 @@
 package ru.megains.server
 
-import java.util.concurrent.{Callable, Executors, FutureTask}
 
-import com.google.common.util.concurrent.{Futures, ListenableFuture, ListenableFutureTask}
 import ru.megains.common.item.ItemStack
 import ru.megains.common.network.ServerStatusResponse
 import ru.megains.common.register.{Bootstrap, Items}
-import ru.megains.common.utils.{IThreadListener, Logger, Util}
+import ru.megains.common.utils.{IThreadListener, Logger}
 import ru.megains.common.world.storage.AnvilSaveFormat
 import ru.megains.server.network.NetworkSystem
 import ru.megains.server.world.{ServerWorldEventHandler, WorldServer}
@@ -28,7 +26,7 @@ class OrangeCraftServer(serverDir: Directory) extends Runnable with Logger[Orang
     var playerList: PlayerList = _
 
     var timeOfLastWarning: Long = 0
-    val futureTaskQueue: mutable.Queue[FutureTask[_]] = new mutable.Queue[FutureTask[_]]
+    val futureTaskQueue: mutable.Queue[() => Unit] = new mutable.Queue[() => Unit]
 
     def startServer(): Boolean = {
         log.info("Starting OrangeCraft server  version 0.1.2")
@@ -146,7 +144,7 @@ class OrangeCraftServer(serverDir: Directory) extends Runnable with Logger[Orang
 
     def tick(): Unit = {
         futureTaskQueue synchronized {
-            while (futureTaskQueue.nonEmpty) Util.runTask(futureTaskQueue.dequeue(), log)
+            while (futureTaskQueue.nonEmpty) futureTaskQueue.dequeue()()
         }
 
 
@@ -173,27 +171,28 @@ class OrangeCraftServer(serverDir: Directory) extends Runnable with Logger[Orang
 
     def getServerStatusResponse: ServerStatusResponse = statusResponse
 
-    def callFromMainThread[V](callable: Callable[V]): ListenableFuture[V] = {
+    def callFromMainThread[V](callable: () => Unit): Unit = {
 
         if (!isCallingFromMinecraftThread && serverRunning) {
-            val listenablefuturetask: ListenableFutureTask[V] = ListenableFutureTask.create[V](callable)
+
             futureTaskQueue synchronized {
-                futureTaskQueue += listenablefuturetask
-                return listenablefuturetask
+                futureTaskQueue += callable
+
             }
         }
         else try
-            Futures.immediateFuture[V](callable.call)
+            callable()
 
         catch {
             case exception: Exception => {
-                Futures.immediateFailedCheckedFuture(exception)
+                println("addScheduledTask")
+                exception.printStackTrace()
             }
         }
     }
 
 
-    override def addScheduledTask(runnableToSchedule: Runnable): ListenableFuture[AnyRef] = callFromMainThread[AnyRef](Executors.callable(runnableToSchedule))
+    override def addScheduledTask(runnableToSchedule: () => Unit): Unit = callFromMainThread[AnyRef](runnableToSchedule)
 
     override def isCallingFromMinecraftThread: Boolean = Thread.currentThread eq serverThread
 }

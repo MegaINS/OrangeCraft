@@ -1,7 +1,7 @@
 package ru.megains.common.block
 
 
-import org.joml.{Vector3d, Vector3f}
+import org.joml.Vector3d
 import ru.megains.client.renderer.block.RenderBlockGlass
 import ru.megains.client.renderer.texture.{TTextureRegister, TextureAtlas}
 import ru.megains.common.block.blockdata.{BlockDirection, BlockPos, BlockSize, MultiBlockPos}
@@ -10,7 +10,7 @@ import ru.megains.common.entity.player.EntityPlayer
 import ru.megains.common.item.{Item, ItemStack}
 import ru.megains.common.physics.{AxisAlignedBB, BlockAxisAlignedBB}
 import ru.megains.common.register.{Blocks, GameRegister}
-import ru.megains.common.util.RayTraceResult
+import ru.megains.common.util.{RayTraceResult, Vec3f}
 import ru.megains.common.world.World
 
 import scala.util.Random
@@ -58,8 +58,8 @@ class Block(val name: String) {
     def collisionRayTrace(world: World, pos: BlockPos, start: Vector3d, end: Vector3d, offset: MultiBlockPos): RayTraceResult = {
 
 
-        val vec3d = new Vector3f(start.x toFloat, start.y toFloat, start.z toFloat).sub(pos.worldX, pos.worldY, pos.worldZ)
-        val vec3d1 = new Vector3f(end.x toFloat, end.y toFloat, end.z toFloat).sub(pos.worldX, pos.worldY, pos.worldZ)
+        val vec3d: Vec3f = new Vec3f(start.x toFloat, start.y toFloat, start.z toFloat).sub(pos.worldX, pos.worldY, pos.worldZ)
+        val vec3d1: Vec3f = new Vec3f(end.x toFloat, end.y toFloat, end.z toFloat).sub(pos.worldX, pos.worldY, pos.worldZ)
         val rayTraceResult = getSelectedBoundingBox(pos, offset).calculateIntercept(vec3d, vec3d1)
         if (rayTraceResult == null) {
             null

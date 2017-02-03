@@ -1,6 +1,5 @@
 package ru.megains.client.network
 
-import org.joml.Vector3f
 import ru.megains.client.OrangeCraft
 import ru.megains.client.entity.EntityPlayerSP
 import ru.megains.client.world.WorldClient
@@ -12,6 +11,7 @@ import ru.megains.common.item.{Item, ItemBlock, ItemStack}
 import ru.megains.common.network.NetHandlerPlayClient
 import ru.megains.common.network.play.client._
 import ru.megains.common.register.Blocks
+import ru.megains.common.util.Vec3f
 import ru.megains.common.world.{GameType, World}
 import ru.megains.common.{ActionResult, EnumActionResult}
 
@@ -173,7 +173,7 @@ class PlayerControllerMP(oc: OrangeCraft, val connection: NetHandlerPlayClient) 
         else clickBlock(posBlock, directionFacing)
     }
 
-    def processRightClickBlock(player: EntityPlayerSP, worldIn: WorldClient, stack: ItemStack, pos: BlockPos, facing: BlockDirection, vec: Vector3f): EnumActionResult = {
+    def processRightClickBlock(player: EntityPlayerSP, worldIn: WorldClient, stack: ItemStack, pos: BlockPos, facing: BlockDirection, vec: Vec3f): EnumActionResult = {
         syncCurrentPlayItem()
         val f: Float = (vec.x - pos.worldX.toDouble).toFloat
         val f1: Float = (vec.y - pos.worldY.toDouble).toFloat

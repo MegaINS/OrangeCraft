@@ -8,10 +8,8 @@ object PacketThreadUtil {
     def checkThreadAndEnqueue[T <: INetHandler](packetIn: Packet[T], processor: T, scheduler: IThreadListener) {
 
         if (!scheduler.isCallingFromMinecraftThread) {
-            scheduler.addScheduledTask(new Runnable() {
-                def run() {
-                    packetIn.processPacket(processor)
-                }
+            scheduler.addScheduledTask(() => {
+                packetIn.processPacket(processor)
             })
             throw ThreadQuickExitException.INSTANCE
         }

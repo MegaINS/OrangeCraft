@@ -1,7 +1,6 @@
 package ru.megains.common.util;
 
 
-import org.joml.Vector3f;
 import ru.megains.common.block.Block;
 import ru.megains.common.block.blockdata.BlockDirection;
 import ru.megains.common.block.blockdata.BlockPos;
@@ -24,7 +23,7 @@ public class RayTraceResult {
     /**
      * The vector position of the hit
      */
-    public Vector3f hitVec;
+    public Vec3f hitVec;
     public Block block;
     public BlockPos blockPos;
 
@@ -32,11 +31,11 @@ public class RayTraceResult {
      * The hit entity
      */
     // public Entity entityHit;
-    public RayTraceResult(Vector3f hitVecIn, BlockDirection sideHitIn, BlockPos blockPosIn, Block block) {
+    public RayTraceResult(Vec3f hitVecIn, BlockDirection sideHitIn, BlockPos blockPosIn, Block block) {
         this(RayTraceResult.Type.BLOCK, hitVecIn, sideHitIn, blockPosIn, block);
     }
 
-    public RayTraceResult(Vector3f hitVecIn, BlockDirection sideHitIn) {
+    public RayTraceResult(Vec3f hitVecIn, BlockDirection sideHitIn) {
         this.sideHit = sideHitIn;
         this.hitVec = hitVecIn;
         //   this(RayTraceResult.Type.BLOCK, hitVecIn, sideHitIn, null,null);
@@ -47,11 +46,11 @@ public class RayTraceResult {
 //        this(entityIn, new Vec3d(entityIn.posX, entityIn.posY, entityIn.posZ));
 //    }
 
-    public RayTraceResult(RayTraceResult.Type typeIn, Vector3f hitVecIn, BlockDirection sideHitIn, BlockPos blockPosIn, Block block) {
+    public RayTraceResult(RayTraceResult.Type typeIn, Vec3f hitVecIn, BlockDirection sideHitIn, BlockPos blockPosIn, Block block) {
         this.typeOfHit = typeIn;
         this.blockPos = blockPosIn;
         this.sideHit = sideHitIn;
-        this.hitVec = new Vector3f(Math.abs((hitVecIn.x % 1 + 1f) % 1), Math.abs((hitVecIn.y % 1 + 1f) % 1), Math.abs((hitVecIn.z % 1 + 1f) % 1));
+        this.hitVec = new Vec3f(Math.abs((hitVecIn.x % 1 + 1f) % 1), Math.abs((hitVecIn.y % 1 + 1f) % 1), Math.abs((hitVecIn.z % 1 + 1f) % 1));
 
         if (sideHit == BlockDirection.UP$.MODULE$ && hitVec.y == 0.0) {
             hitVec.add(0, 1, 0);

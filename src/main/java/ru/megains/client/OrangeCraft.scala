@@ -1,18 +1,14 @@
 package ru.megains.client
 
-import java.util.concurrent.{Callable, Executors, FutureTask}
 
-import com.google.common.util.concurrent.{Futures, ListenableFuture, ListenableFutureTask}
-import org.joml.Vector3f
-import org.lwjgl.input.{Keyboard, Mouse}
-import org.lwjgl.opengl.{Display, DisplayMode, GL11, PixelFormat}
-import org.lwjgl.{LWJGLException, Sys}
+import org.lwjgl.glfw.GLFW._
+import org.lwjgl.opengl.GL11
 import ru.megains.client.entity.EntityPlayerSP
 import ru.megains.client.network.PlayerControllerMP
+import ru.megains.client.renderer._
 import ru.megains.client.renderer.graph.Camera
 import ru.megains.client.renderer.gui.{GuiInGameMenu, GuiPlayerInventory, GuiPlayerSelect}
 import ru.megains.client.renderer.world.{RenderChunk, WorldRenderer}
-import ru.megains.client.renderer.{EntityRenderer, FontRender, RenderItem}
 import ru.megains.client.world.WorldClient
 import ru.megains.common.EnumActionResult
 import ru.megains.common.EnumActionResult.EnumActionResult
@@ -21,10 +17,9 @@ import ru.megains.common.block.blockdata.{BlockDirection, BlockPos, BlockSize}
 import ru.megains.common.entity.Entity
 import ru.megains.common.item.{ItemBlock, ItemStack}
 import ru.megains.common.managers.{GuiManager, TextureManager}
-import ru.megains.common.network.play.server.SPacketPlayerPosLook
 import ru.megains.common.register.Bootstrap
-import ru.megains.common.util.{RayTraceResult, Timer}
-import ru.megains.common.utils.{IThreadListener, Logger, Util}
+import ru.megains.common.util.{RayTraceResult, Timer, Vec3f}
+import ru.megains.common.utils.{IThreadListener, Logger}
 import ru.megains.common.world.storage.AnvilSaveFormat
 
 import scala.collection.mutable
@@ -43,7 +38,7 @@ class OrangeCraft(ocDataDir: String) extends Logger[OrangeCraft] with IThreadLis
     var tick: Int = 0
     var running: Boolean = true
     val ocThread: Thread = Thread.currentThread
-    val scheduledTasks: mutable.Queue[FutureTask[_]] = new mutable.Queue[FutureTask[_]]
+    val scheduledTasks: mutable.Queue[() => Unit] = new mutable.Queue[() => Unit]
     var playerController: PlayerControllerMP = _
     val orangeCraft: OrangeCraft = this
     var world: WorldClient = _
@@ -55,29 +50,32 @@ class OrangeCraft(ocDataDir: String) extends Logger[OrangeCraft] with IThreadLis
     var objectMouseOver: RayTraceResult = _
     var blockSelectPosition: BlockPos = _
     var camera: Camera = _
-    var cameraInc: Vector3f = _
+    var cameraInc: Vec3f = _
     var worldRenderer: WorldRenderer = _
     var fontRender: FontRender = _
     var saveLoader: AnvilSaveFormat = _
     var renderViewEntity: Entity = _
     var rightClickDelayTimer = 0
     var playerName: String = "Null"
+    val window: Window = new Window()
 
 
     def startGame(): Unit = {
 
-        log.info(SPacketPlayerPosLook.EnumFlags.Z.id)
 
         log.info("Start Game")
         log.info("OrangeCraft v0.1.2")
         try {
             log.info("Display creating...")
-            Display.setDisplayMode(new DisplayMode(800, 600))
-            Display.create((new PixelFormat).withDepthBits(24))
+            // Display.setDisplayMode(new DisplayMode(800, 600))
+            //  Display.create((new PixelFormat).withDepthBits(24))
+            window.create()
+            Mouse.init(window, this)
+            Keyboard.init(window, this)
             GL11.glClearColor(0.5f, 0.6f, 0.7f, 0.0F)
             log.info("Display create successful")
         } catch {
-            case e: LWJGLException =>
+            case e: RuntimeException =>
                 e.printStackTrace()
                 System.exit(-1000)
         }
@@ -93,7 +91,7 @@ class OrangeCraft(ocDataDir: String) extends Logger[OrangeCraft] with IThreadLis
         fontRender = new FontRender
         log.info("Camera creating...")
         camera = new Camera
-        cameraInc = new Vector3f()
+        cameraInc = new Vec3f()
         log.info("GuiManager creating...")
         guiManager = new GuiManager(this)
 
@@ -122,16 +120,16 @@ class OrangeCraft(ocDataDir: String) extends Logger[OrangeCraft] with IThreadLis
 
     def runGameLoop(): Unit = {
 
-        if (Display.isCloseRequested && Display.isCreated) running = false
+        //  if (Display.isCloseRequested && Display.isCreated) running = false
 
-
+        if (window.isClose) running = false
 
 
         timer.update()
 
 
         scheduledTasks synchronized {
-            while (scheduledTasks.nonEmpty) Util.runTask(scheduledTasks.dequeue(), log)
+            while (scheduledTasks.nonEmpty) scheduledTasks.dequeue()()
         }
 
 
@@ -143,6 +141,8 @@ class OrangeCraft(ocDataDir: String) extends Logger[OrangeCraft] with IThreadLis
 
         render()
         frames += 1
+
+        window.update()
 
     }
 
@@ -227,7 +227,7 @@ class OrangeCraft(ocDataDir: String) extends Logger[OrangeCraft] with IThreadLis
     }
 
     def ungrabMouseCursor(): Unit = {
-        Mouse.setCursorPosition(Display.getWidth / 2, Display.getHeight / 2)
+        //TODO  Mouse.setCursorPosition(Display.getWidth / 2, Display.getHeight / 2)
         Mouse.setGrabbed(false)
     }
 
@@ -244,26 +244,26 @@ class OrangeCraft(ocDataDir: String) extends Logger[OrangeCraft] with IThreadLis
     }
 
     private def update(): Unit = {
-
+        Mouse.update(window)
 
         if (rightClickDelayTimer > 0) rightClickDelayTimer -= 1
 
 
         cameraInc.set(0, 0, 0)
 
-        if (Keyboard.isKeyDown(Keyboard.KEY_W)) cameraInc.z = -1
-        if (Keyboard.isKeyDown(Keyboard.KEY_S)) cameraInc.z = 1
-        if (Keyboard.isKeyDown(Keyboard.KEY_A)) cameraInc.x = -1
-        if (Keyboard.isKeyDown(Keyboard.KEY_D)) cameraInc.x = 1
-        if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) cameraInc.y = -1
-        if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) cameraInc.y = 1
+        if (glfwGetKey(window.id, GLFW_KEY_W) == GLFW_PRESS) cameraInc.z = -1
+        if (glfwGetKey(window.id, GLFW_KEY_S) == GLFW_PRESS) cameraInc.z = 1
+        if (glfwGetKey(window.id, GLFW_KEY_A) == GLFW_PRESS) cameraInc.x = -1
+        if (glfwGetKey(window.id, GLFW_KEY_D) == GLFW_PRESS) cameraInc.x = 1
+        if (glfwGetKey(window.id, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) cameraInc.y = -1
+        if (glfwGetKey(window.id, GLFW_KEY_SPACE) == GLFW_PRESS) cameraInc.y = 1
 
 
-        if (guiManager.isGuiScreen) guiManager.handleInput()
-        else {
-            runTickKeyboard()
-            runTickMouse()
-        }
+        //   if (guiManager.isGuiScreen) guiManager.handleInput()
+        //  else {
+        //       runTickKeyboard()
+        //       runTickMouse()
+        //   }
         guiManager.tick()
 
 
@@ -310,6 +310,7 @@ class OrangeCraft(ocDataDir: String) extends Logger[OrangeCraft] with IThreadLis
 
         log.debug("RENDER START")
         renderer.render(camera)
+
         log.debug("RENDER STOP")
     }
 
@@ -370,12 +371,12 @@ class OrangeCraft(ocDataDir: String) extends Logger[OrangeCraft] with IThreadLis
     }
 
 
+    def runTickMouse(button: Int, buttonState: Boolean): Unit = {
 
 
-    private def runTickMouse(): Unit = {
-        while (Mouse.next) {
-            val button: Int = Mouse.getEventButton
-            val buttonState: Boolean = Mouse.getEventButtonState
+        //  while (Mouse.next) {
+        //  val button: Int = Mouse.getEventButton
+        // val buttonState: Boolean = Mouse.getEventButtonState
 
             if (button == 1 && buttonState) {
                 rightClickMouse()
@@ -392,20 +393,33 @@ class OrangeCraft(ocDataDir: String) extends Logger[OrangeCraft] with IThreadLis
                 playerController.clickBlock(objectMouseOver.blockPos, BlockDirection.DOWN)
                 // if (stack == null || !stack.item.isInstanceOf[ItemBlock]) world.setAirBlock(blockAndPos.pos)
             }
+        // }
+    }
+
+    def runTickKeyboard(key: Int, action: Int, mods: Int): Unit = {
+        if (action == GLFW_PRESS) {
+            key match {
+                case GLFW_KEY_E => guiManager.setGuiScreen(new GuiPlayerInventory(player))
+                case GLFW_KEY_ESCAPE => guiManager.setGuiScreen(new GuiInGameMenu())
+                case GLFW_KEY_R => worldRenderer.reRenderWorld()
+                case _ =>
+            }
         }
     }
 
     def runTickKeyboard(): Unit = {
-        while (Keyboard.next) {
-            if (Keyboard.getEventKeyState) {
-                Keyboard.getEventKey match {
-                    case Keyboard.KEY_E => guiManager.setGuiScreen(new GuiPlayerInventory(player))
-                    case Keyboard.KEY_ESCAPE => guiManager.setGuiScreen(new GuiInGameMenu())
-                    case Keyboard.KEY_R => worldRenderer.reRenderWorld()
-                    case _ =>
-                }
-            }
-        }
+        //TODO ++++
+
+        //        while (Keyboard.next) {
+        //            if (Keyboard.getEventKeyState) {
+        //                Keyboard.getEventKey match {
+        //                    case Keyboard.KEY_E => guiManager.setGuiScreen(new GuiPlayerInventory(player))
+        //                    case Keyboard.KEY_ESCAPE => guiManager.setGuiScreen(new GuiInGameMenu())
+        //                    case Keyboard.KEY_R => worldRenderer.reRenderWorld()
+        //                    case _ =>
+        //                }
+        //            }
+        //        }
     }
 
 
@@ -565,7 +579,7 @@ class OrangeCraft(ocDataDir: String) extends Logger[OrangeCraft] with IThreadLis
     private def cleanup(): Unit = {
         log.info("Game stopped...")
         running = false
-
+        window.destroy()
         if (world != null) world.save()
         if (renderer != null) renderer.cleanup()
         if (guiManager ne null) guiManager.cleanup()
@@ -573,27 +587,23 @@ class OrangeCraft(ocDataDir: String) extends Logger[OrangeCraft] with IThreadLis
 
     }
 
-    def addScheduledTask[V](callableToSchedule: Callable[V]): ListenableFuture[V] = {
+    override def addScheduledTask(callableToSchedule: () => Unit): Unit = {
         if (isCallingFromMinecraftThread) try
-            Futures.immediateFuture[V](callableToSchedule.call)
+            callableToSchedule()
 
         catch {
             case exception: Exception => {
-                Futures.immediateFailedCheckedFuture(exception)
+                println("addScheduledTask")
+                exception.printStackTrace()
             }
         }
         else {
-            val listenablefuturetask: ListenableFutureTask[V] = ListenableFutureTask.create[V](callableToSchedule)
+
             scheduledTasks synchronized {
-                scheduledTasks += listenablefuturetask
-                return listenablefuturetask
+                scheduledTasks += callableToSchedule
+
             }
         }
-    }
-
-
-    override def addScheduledTask(runnableToSchedule: Runnable): ListenableFuture[AnyRef] = {
-        addScheduledTask[AnyRef](Executors.callable(runnableToSchedule))
     }
 
     override def isCallingFromMinecraftThread: Boolean = Thread.currentThread eq ocThread
@@ -602,5 +612,6 @@ class OrangeCraft(ocDataDir: String) extends Logger[OrangeCraft] with IThreadLis
 }
 
 object OrangeCraft {
-    def getSystemTime(): Long = Sys.getTime * 1000L / Sys.getTimerResolution
+
+    def getSystemTime(): Long = System.currentTimeMillis()
 }

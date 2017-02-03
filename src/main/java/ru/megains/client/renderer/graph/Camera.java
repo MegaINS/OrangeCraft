@@ -1,28 +1,29 @@
 package ru.megains.client.renderer.graph;
 
-import org.joml.Vector3f;
+import ru.megains.common.util.Vec3f;
+
 
 public class Camera {
 
-    private final Vector3f position;
+    private final Vec3f position;
 
-    private final Vector3f rotation;
+    private final Vec3f rotation;
 
     public Camera() {
-        position = new Vector3f(0, 0, 0);
-        rotation = new Vector3f(0, 0, 0);
+        position = new Vec3f(0, 0, 0);
+        rotation = new Vec3f(0, 0, 0);
     }
 
-    public Camera(Vector3f position, Vector3f rotation) {
+    public Camera(Vec3f position, Vec3f rotation) {
         this.position = position;
         this.rotation = rotation;
     }
 
-    public Vector3f getPosition() {
+    public Vec3f getPosition() {
         return position;
     }
 
-    public void setPosition(Vector3f position) {
+    public void setPosition(Vec3f position) {
         this.position.set(position);
     }
 
@@ -44,11 +45,11 @@ public class Camera {
         position.y += offsetY;
     }
 
-    public Vector3f getRotation() {
+    public Vec3f getRotation() {
         return rotation;
     }
 
-    public void setRotation(Vector3f rotation) {
+    public void setRotation(Vec3f rotation) {
         this.rotation.set(rotation);
     }
 

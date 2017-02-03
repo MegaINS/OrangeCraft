@@ -1,6 +1,6 @@
 package ru.megains.server.world
 
-import com.google.common.util.concurrent.ListenableFuture
+
 import ru.megains.common.entity.EntityTracker
 import ru.megains.common.utils.IThreadListener
 import ru.megains.common.world.gen.ChunkProviderOverworld
@@ -62,7 +62,7 @@ class WorldServer(val server: OrangeCraftServer, val saveHandler: AnvilSaveHandl
         //        this.perWorldStorage.saveAllData()
     }
 
-    override def addScheduledTask(runnableToSchedule: Runnable): ListenableFuture[AnyRef] = server.addScheduledTask(runnableToSchedule)
+    override def addScheduledTask(runnableToSchedule: () => Unit): Unit = server.addScheduledTask(runnableToSchedule)
 
     override def isCallingFromMinecraftThread: Boolean = server.isCallingFromMinecraftThread
 

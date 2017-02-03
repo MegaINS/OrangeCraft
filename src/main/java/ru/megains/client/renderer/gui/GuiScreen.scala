@@ -2,7 +2,7 @@ package ru.megains.client.renderer.gui
 
 import java.awt.Color
 
-import org.lwjgl.input.Keyboard._
+import org.lwjgl.glfw.GLFW._
 import ru.megains.client.OrangeCraft
 import ru.megains.client.renderer.mesh.Mesh
 import ru.megains.common.entity.player.EntityPlayer
@@ -46,7 +46,7 @@ abstract class GuiScreen extends GuiElement {
 
     def keyTyped(typedChar: Char, keyCode: Int) {
         keyCode match {
-            case KEY_ESCAPE => oc.guiManager.setGuiScreen(null)
+            case GLFW_KEY_ESCAPE => oc.guiManager.setGuiScreen(null)
             case _ =>
         }
     }

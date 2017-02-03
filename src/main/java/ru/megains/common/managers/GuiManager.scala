@@ -1,7 +1,9 @@
 package ru.megains.common.managers
 
-import org.lwjgl.input.{Keyboard, Mouse}
+
+import org.lwjgl.glfw.GLFW.GLFW_PRESS
 import ru.megains.client.OrangeCraft
+import ru.megains.client.renderer.Mouse
 import ru.megains.client.renderer.gui._
 
 import scala.collection.mutable
@@ -64,12 +66,42 @@ class GuiManager(val orangeCraft: OrangeCraft) {
     }
 
     def handleInput(): Unit = {
-        while (Mouse.next()) {
+        //Todo
+        //        while (Mouse.next()) {
+        //
+        //            val x = Mouse.getX
+        //            val y = Mouse.getY
+        //            val button = Mouse.getEventButton
+        //            val buttonState = Mouse.getEventButtonState
+        //            if (button == -1) {
+        //                guiScreen.mouseClickMove(x, y)
+        //            } else if (buttonState) {
+        //                guiScreen.mouseClicked(x, y, button, orangeCraft.player)
+        //            } else {
+        //                guiScreen.mouseReleased(x, y, button)
+        //            }
+        //        }
 
+        //
+        //
+        //        while (Keyboard.next()) {
+        //            if (Keyboard.getEventKeyState) {
+        //                guiScreen.keyTyped(Keyboard.getEventCharacter, Keyboard.getEventKey)
+        //            }
+        //
+        //
+        //        }
+    }
+
+    def runTickKeyboard(key: Int, action: Int, mods: Int) = {
+        if (action == GLFW_PRESS) {
+            guiScreen.keyTyped(key.toChar, key)
+        }
+    }
+
+    def runTickMouse(button: Int, buttonState: Boolean): Unit = {
             val x = Mouse.getX
             val y = Mouse.getY
-            val button = Mouse.getEventButton
-            val buttonState = Mouse.getEventButtonState
             if (button == -1) {
                 guiScreen.mouseClickMove(x, y)
             } else if (buttonState) {
@@ -78,17 +110,6 @@ class GuiManager(val orangeCraft: OrangeCraft) {
                 guiScreen.mouseReleased(x, y, button)
             }
 
-
-        }
-
-
-        while (Keyboard.next()) {
-            if (Keyboard.getEventKeyState) {
-                guiScreen.keyTyped(Keyboard.getEventCharacter, Keyboard.getEventKey)
-            }
-
-
-        }
     }
 
     def cleanup() = {

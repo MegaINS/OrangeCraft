@@ -4,8 +4,6 @@ import java.nio.FloatBuffer
 
 import org.joml.Matrix4f
 import org.lwjgl.BufferUtils
-import org.lwjgl.input.Mouse
-import org.lwjgl.opengl.Display
 import org.lwjgl.opengl.GL11._
 import ru.megains.client.OrangeCraft
 import ru.megains.client.renderer.graph.{Camera, ShaderProgram, Transformation}
@@ -81,7 +79,6 @@ class EntityRenderer(oc: OrangeCraft) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
         if (oc.world != null) renderScene()
         renderGui()
-        Display.update()
     }
 
     private def renderScene() {
