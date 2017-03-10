@@ -3,6 +3,7 @@ package ru.megains.client.renderer
 import java.awt.Color
 
 import ru.megains.client.OrangeCraft
+import ru.megains.client.renderer.font.Fonts
 import ru.megains.client.renderer.gui.Gui
 import ru.megains.client.renderer.mesh.Mesh
 import ru.megains.common.item.{Item, ItemBlock, ItemStack}
@@ -54,7 +55,7 @@ class RenderItem(orangeCraft: OrangeCraft) extends Gui {
 
     def getNumberMesh(number: Int): Mesh = {
         numberMeshMap.getOrElse(number, default = {
-            val mesh = fontRender.createStringGui(number.toString, Color.black)
+            val mesh = fontRender.createStringGui(number.toString, Color.black, Fonts.timesNewRomanR)
             numberMeshMap += number -> mesh
             mesh
         })

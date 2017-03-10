@@ -1,0 +1,37 @@
+package ru.megains.client.renderer.font
+
+import java.io.IOException
+
+import org.lwjgl.BufferUtils
+import org.lwjgl.opengl.GL11._
+import org.lwjgl.stb.STBTTBakedChar.Buffer
+import org.lwjgl.stb.{STBTTBakedChar, STBTruetype}
+import ru.megains.client.renderer.texture.ATexture
+import ru.megains.common.utils.IOUtil
+
+class Font(val name: String) extends ATexture {
+
+
+    val height = 24
+    val BITMAP_W = 512
+    val BITMAP_H = 512
+    val cdata: Buffer = STBTTBakedChar.malloc(2000)
+
+    override def loadTexture(): Boolean = {
+        val texID = getGlTextureId
+        try {
+            val ttf = IOUtil.ioResourceToByteBuffer(s"fonts/$name.ttf", 160 * 1024)
+            val bitmap = BufferUtils.createByteBuffer(BITMAP_W * BITMAP_H)
+            STBTruetype.stbtt_BakeFontBitmap(ttf, 24, bitmap, BITMAP_W, BITMAP_H, 32, cdata)
+            glBindTexture(GL_TEXTURE_2D, texID)
+            glPixelStorei(GL_UNPACK_ALIGNMENT, 1)
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, BITMAP_W, BITMAP_H, 0, GL_ALPHA, GL_UNSIGNED_BYTE, bitmap)
+        } catch {
+            case e: IOException =>
+                throw new RuntimeException(e)
+        }
+        true
+    }
+}

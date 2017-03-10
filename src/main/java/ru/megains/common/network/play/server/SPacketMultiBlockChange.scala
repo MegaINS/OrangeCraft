@@ -3,6 +3,7 @@ package ru.megains.common.network.play.server
 import ru.megains.common.block.Block
 import ru.megains.common.block.blockdata.BlockPos
 import ru.megains.common.network.{Packet, PacketBuffer}
+import ru.megains.common.register.Blocks
 import ru.megains.common.world.chunk.Chunk
 
 import scala.collection.mutable.ArrayBuffer
@@ -27,7 +28,7 @@ class SPacketMultiBlockChange() extends Packet[INetHandlerPlayClient] {
 
         changedBlocks = new Array[BlockUpdateData](buf.readVarIntFromBuffer)
         for (i <- changedBlocks.indices) {
-            changedBlocks(i) = new BlockUpdateData(buf.readBlockPos(), Block.getBlockById(buf.readVarIntFromBuffer))
+            changedBlocks(i) = new BlockUpdateData(buf.readBlockPos(), Blocks.getBlockById(buf.readVarIntFromBuffer))
         }
     }
 
@@ -37,7 +38,7 @@ class SPacketMultiBlockChange() extends Packet[INetHandlerPlayClient] {
         buf.writeVarIntToBuffer(changedBlocks.length)
         for (blockData <- changedBlocks) {
             buf.writeBlockPos(blockData.blockPosition)
-            buf.writeVarIntToBuffer(Block.getIdByBlock(blockData.block))
+            buf.writeVarIntToBuffer(Blocks.getIdByBlock(blockData.block))
         }
     }
 

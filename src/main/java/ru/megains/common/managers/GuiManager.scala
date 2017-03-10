@@ -66,7 +66,6 @@ class GuiManager(val orangeCraft: OrangeCraft) {
     }
 
     def handleInput(): Unit = {
-        //Todo
         //        while (Mouse.next()) {
         //
         //            val x = Mouse.getX
@@ -93,7 +92,7 @@ class GuiManager(val orangeCraft: OrangeCraft) {
         //        }
     }
 
-    def runTickKeyboard(key: Int, action: Int, mods: Int) = {
+    def runTickKeyboard(key: Int, action: Int, mods: Int): Unit = {
         if (action == GLFW_PRESS) {
             guiScreen.keyTyped(key.toChar, key)
         }
@@ -112,7 +111,7 @@ class GuiManager(val orangeCraft: OrangeCraft) {
 
     }
 
-    def cleanup() = {
+    def cleanup(): Unit = {
         if (guiScreen ne null) guiScreen.cleanup()
         guiInGame.values.filter(_ ne null).foreach(_.cleanup())
     }

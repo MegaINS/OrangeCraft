@@ -13,11 +13,11 @@ import ru.megains.client.world.WorldClient
 import ru.megains.common.EnumActionResult
 import ru.megains.common.EnumActionResult.EnumActionResult
 import ru.megains.common.block.Block
-import ru.megains.common.block.blockdata.{BlockDirection, BlockPos, BlockSize}
+import ru.megains.common.block.blockdata.{BlockDirection, BlockPos}
 import ru.megains.common.entity.Entity
 import ru.megains.common.item.{ItemBlock, ItemStack}
 import ru.megains.common.managers.{GuiManager, TextureManager}
-import ru.megains.common.register.Bootstrap
+import ru.megains.common.register.{Blocks, Bootstrap}
 import ru.megains.common.util.{RayTraceResult, Timer, Vec3f}
 import ru.megains.common.utils.{IThreadListener, Logger}
 import ru.megains.common.world.storage.AnvilSaveFormat
@@ -40,7 +40,6 @@ class OrangeCraft(ocDataDir: String) extends Logger[OrangeCraft] with IThreadLis
     val ocThread: Thread = Thread.currentThread
     val scheduledTasks: mutable.Queue[() => Unit] = new mutable.Queue[() => Unit]
     var playerController: PlayerControllerMP = _
-    val orangeCraft: OrangeCraft = this
     var world: WorldClient = _
     var renderer: EntityRenderer = _
     var itemRender: RenderItem = _
@@ -58,7 +57,7 @@ class OrangeCraft(ocDataDir: String) extends Logger[OrangeCraft] with IThreadLis
     var rightClickDelayTimer = 0
     var playerName: String = "Null"
     val window: Window = new Window()
-
+    OrangeCraft.orangeCraft = this
 
     def startGame(): Unit = {
 
@@ -87,8 +86,7 @@ class OrangeCraft(ocDataDir: String) extends Logger[OrangeCraft] with IThreadLis
 
         log.info("Renderer creating...")
         renderer = new EntityRenderer(this)
-        log.info("FontRender creating...")
-        fontRender = new FontRender
+
         log.info("Camera creating...")
         camera = new Camera
         cameraInc = new Vec3f()
@@ -97,7 +95,8 @@ class OrangeCraft(ocDataDir: String) extends Logger[OrangeCraft] with IThreadLis
 
         log.info("TextureManager creating...")
         textureManager = new TextureManager
-
+        log.info("FontRender creating...")
+        fontRender = new FontRender(this)
 
         renderer.init(textureManager)
         log.info("TextureManager loadTexture...")
@@ -166,7 +165,7 @@ class OrangeCraft(ocDataDir: String) extends Logger[OrangeCraft] with IThreadLis
                 runGameLoop()
                 //  sync()
                 while (System.currentTimeMillis >= lastTime + 1000L) {
-                    // log.info(s"$frames fps, $tick tick, ${RenderChunk.chunkRender / (if (frames == 0) 1 else frames)} chunkRender, ${RenderChunk.chunkUpdate} chunkUpdate")
+                    log.info(s"$frames fps, $tick tick, ${RenderChunk.chunkRender / (if (frames == 0) 1 else frames)} chunkRender, ${RenderChunk.chunkUpdate} chunkUpdate")
 
                     RenderChunk.chunkRender = 0
                     RenderChunk.chunkUpdate = 0
@@ -238,8 +237,7 @@ class OrangeCraft(ocDataDir: String) extends Logger[OrangeCraft] with IThreadLis
             Thread.sleep(1)
 
         catch {
-            case ie: InterruptedException => {
-            }
+            case ie: InterruptedException =>
         }
     }
 
@@ -289,7 +287,7 @@ class OrangeCraft(ocDataDir: String) extends Logger[OrangeCraft] with IThreadLis
                 worldRenderer.updateBlockMouseOver(objectMouseOver.blockPos, objectMouseOver.block)
 
                 val stack: ItemStack = player.inventory.getStackSelect
-                if (stack != null && stack.item.isInstanceOf[ItemBlock]) setBlock(Block.getBlockFromItem(stack.item))
+                if (stack != null && stack.item.isInstanceOf[ItemBlock]) setBlock(Blocks.getBlockFromItem(stack.item))
                 else blockSelectPosition = null
 
             }
@@ -315,59 +313,67 @@ class OrangeCraft(ocDataDir: String) extends Logger[OrangeCraft] with IThreadLis
     }
 
     private def setBlock(block: Block) {
-        var posTarget: BlockPos = objectMouseOver.getBlockWorldPos
-        var posSet: BlockPos = null
-        if (block.isFullBlock) posSet = posTarget.sum(objectMouseOver.sideHit)
-        else posSet = new BlockPos(posTarget.sum(objectMouseOver.sideHit), BlockSize.get(objectMouseOver.hitVec.x), BlockSize.get(objectMouseOver.hitVec.y), BlockSize.get(objectMouseOver.hitVec.z))
-        if (block.isFullBlock) if (world.isAirBlock(posSet)) blockSelectPosition = posSet
-        else blockSelectPosition = null
-        else {
-            var x: Float = posSet.blockX.value
-            var y: Float = posSet.blockY.value
-            var z: Float = posSet.blockZ.value
-            val bd: BlockDirection = objectMouseOver.sideHit
-            if (bd eq BlockDirection.UP) y = 0
-            else if (bd eq BlockDirection.EAST) x = 0
-            else if (bd eq BlockDirection.SOUTH) z = 0
-            else if (bd eq BlockDirection.DOWN) y = 1
-            else if (bd eq BlockDirection.WEST) x = 1
-            else if (bd eq BlockDirection.NORTH) z = 1
-            if (x + block.getPhysicsBody.getMaxX > 1) x = 1 - block.getPhysicsBody.getMaxX
-            if (y + block.getPhysicsBody.getMaxY > 1) y = 1 - block.getPhysicsBody.getMaxY
-            if (z + block.getPhysicsBody.getMaxZ > 1) z = 1 - block.getPhysicsBody.getMaxZ
-            posSet = new BlockPos(posSet, BlockSize.get(x), BlockSize.get(y), BlockSize.get(z))
-            if (world.getMultiBlock(posTarget).isFullBlock) if (world.isAirBlock(posSet)) blockSelectPosition = posSet
-            else if (world.getMultiBlock(posSet).isCanPut(posSet, block)) blockSelectPosition = posSet
-            else blockSelectPosition = null
-            else {
-                posTarget = new BlockPos(posTarget, BlockSize.get(objectMouseOver.hitVec.x), BlockSize.get(objectMouseOver.hitVec.y), BlockSize.get(objectMouseOver.hitVec.z))
-                var x1: Float = posTarget.blockX.value
-                var y1: Float = posTarget.blockY.value
-                var z1: Float = posTarget.blockZ.value
-                if (bd eq BlockDirection.UP) {
-                    if (y1 + block.getPhysicsBody.getMaxY > 1) y1 = 1 - block.getPhysicsBody.getMaxY
-                } else if (bd eq BlockDirection.DOWN) {
-                    if (y1 - block.getPhysicsBody.getMaxY <= 0) y1 = 0
-                    else y1 = y1 - block.getPhysicsBody.getMaxY
-                } else if (bd eq BlockDirection.NORTH) {
-                    if (z1 - block.getPhysicsBody.getMaxZ <= 0) z1 = 0
-                    else z1 = z1 - block.getPhysicsBody.getMaxZ
-                } else if (bd eq BlockDirection.SOUTH) {
-                    if (z1 + block.getPhysicsBody.getMaxZ > 1) z1 = 1 - block.getPhysicsBody.getMaxZ
-                } else if (bd eq BlockDirection.WEST) {
-                    if (x1 - block.getPhysicsBody.getMaxX <= 0) x1 = 0
-                    else x1 = x1 - block.getPhysicsBody.getMaxX
-                } else if (bd eq BlockDirection.EAST) if (x1 + block.getPhysicsBody.getMaxX > 1) x1 = 1 - block.getPhysicsBody.getMaxX
-                if (x1 + block.getPhysicsBody.getMaxX > 1) x1 = 1 - block.getPhysicsBody.getMaxX
-                if (y1 + block.getPhysicsBody.getMaxY > 1) y1 = 1 - block.getPhysicsBody.getMaxY
-                if (z1 + block.getPhysicsBody.getMaxZ > 1) z1 = 1 - block.getPhysicsBody.getMaxZ
-                posTarget = new BlockPos(posTarget, BlockSize.get(x1), BlockSize.get(y1), BlockSize.get(z1))
-                if (world.getMultiBlock(posTarget).isCanPut(posTarget, block)) blockSelectPosition = posTarget
-                else if (world.isAirBlock(posSet)) blockSelectPosition = posSet
-                else if (world.getMultiBlock(posSet).isCanPut(posSet, block)) blockSelectPosition = posSet
-                else blockSelectPosition = null
-            }
-        }
+
+        blockSelectPosition = block.getSelectPosition(world, objectMouseOver)
+        //
+        //
+        //
+        //        var posTarget: BlockPos = objectMouseOver.getBlockWorldPos
+        //        var posSet: BlockPos = null
+        //       // if (block.isFullBlock) posSet = posTarget.sum(objectMouseOver.sideHit)
+        //       // else
+        //        posSet = new BlockPos(posTarget.sum(objectMouseOver.sideHit), BlockSize.get(objectMouseOver.hitVec.x), BlockSize.get(objectMouseOver.hitVec.y), BlockSize.get(objectMouseOver.hitVec.z))
+        //
+        //
+        //        //if (block.isFullBlock) if (world.isAirBlock(posSet)) blockSelectPosition = posSet
+        //       // else blockSelectPosition = null
+        //      //  else {
+        //            var x: Float = posSet.blockX.value
+        //            var y: Float = posSet.blockY.value
+        //            var z: Float = posSet.blockZ.value
+        //            val bd: BlockDirection = objectMouseOver.sideHit
+        //            if (bd eq BlockDirection.UP) y = 0
+        //            else if (bd eq BlockDirection.EAST) x = 0
+        //            else if (bd eq BlockDirection.SOUTH) z = 0
+        //            else if (bd eq BlockDirection.DOWN) y = 1
+        //            else if (bd eq BlockDirection.WEST) x = 1
+        //            else if (bd eq BlockDirection.NORTH) z = 1
+        //            if (x + block.getPhysicsBody.getMaxX > 1) x = 1 - block.getPhysicsBody.getMaxX
+        //            if (y + block.getPhysicsBody.getMaxY > 1) y = 1 - block.getPhysicsBody.getMaxY
+        //            if (z + block.getPhysicsBody.getMaxZ > 1) z = 1 - block.getPhysicsBody.getMaxZ
+        //            posSet = new BlockPos(posSet, BlockSize.get(x), BlockSize.get(y), BlockSize.get(z))
+        //            if (world.getMultiBlock(posTarget).isFullBlock) if (world.isAirBlock(posSet)) blockSelectPosition = posSet
+        //            else if (world.getMultiBlock(posSet).isCanPut(posSet, block)) blockSelectPosition = posSet
+        //            else blockSelectPosition = null
+        //            else {
+        //                posTarget = new BlockPos(posTarget, BlockSize.get(objectMouseOver.hitVec.x), BlockSize.get(objectMouseOver.hitVec.y), BlockSize.get(objectMouseOver.hitVec.z))
+        //                var x1: Float = posTarget.blockX.value
+        //                var y1: Float = posTarget.blockY.value
+        //                var z1: Float = posTarget.blockZ.value
+        //                if (bd eq BlockDirection.UP) {
+        //                    if (y1 + block.getPhysicsBody.getMaxY > 1) y1 = 1 - block.getPhysicsBody.getMaxY
+        //                } else if (bd eq BlockDirection.DOWN) {
+        //                    if (y1 - block.getPhysicsBody.getMaxY <= 0) y1 = 0
+        //                    else y1 = y1 - block.getPhysicsBody.getMaxY
+        //                } else if (bd eq BlockDirection.NORTH) {
+        //                    if (z1 - block.getPhysicsBody.getMaxZ <= 0) z1 = 0
+        //                    else z1 = z1 - block.getPhysicsBody.getMaxZ
+        //                } else if (bd eq BlockDirection.SOUTH) {
+        //                    if (z1 + block.getPhysicsBody.getMaxZ > 1) z1 = 1 - block.getPhysicsBody.getMaxZ
+        //                } else if (bd eq BlockDirection.WEST) {
+        //                    if (x1 - block.getPhysicsBody.getMaxX <= 0) x1 = 0
+        //                    else x1 = x1 - block.getPhysicsBody.getMaxX
+        //                } else if (bd eq BlockDirection.EAST) if (x1 + block.getPhysicsBody.getMaxX > 1) x1 = 1 - block.getPhysicsBody.getMaxX
+        //                if (x1 + block.getPhysicsBody.getMaxX > 1) x1 = 1 - block.getPhysicsBody.getMaxX
+        //                if (y1 + block.getPhysicsBody.getMaxY > 1) y1 = 1 - block.getPhysicsBody.getMaxY
+        //                if (z1 + block.getPhysicsBody.getMaxZ > 1) z1 = 1 - block.getPhysicsBody.getMaxZ
+        //                posTarget = new BlockPos(posTarget, BlockSize.get(x1), BlockSize.get(y1), BlockSize.get(z1))
+        //                if (world.getMultiBlock(posTarget).isCanPut(posTarget, block)) blockSelectPosition = posTarget
+        //                else if (world.isAirBlock(posSet)) blockSelectPosition = posSet
+        //                else if (world.getMultiBlock(posSet).isCanPut(posSet, block)) blockSelectPosition = posSet
+        //                else blockSelectPosition = null
+        //            }
+        // }
     }
 
 
@@ -408,8 +414,6 @@ class OrangeCraft(ocDataDir: String) extends Logger[OrangeCraft] with IThreadLis
     }
 
     def runTickKeyboard(): Unit = {
-        //TODO ++++
-
         //        while (Keyboard.next) {
         //            if (Keyboard.getEventKeyState) {
         //                Keyboard.getEventKey match {
@@ -514,13 +518,13 @@ class OrangeCraft(ocDataDir: String) extends Logger[OrangeCraft] with IThreadLis
         //        }
         //        if (player.isHandActive) {
         //            if (!gameSettings.keyBindUseItem.isKeyDown) playerController.onStoppedUsingItem(player)
-        //            label472 //todo: labels is not supported
+        //            label472
         //            while (true) if (!gameSettings.keyBindAttack.isPressed) {
         //                while (gameSettings.keyBindUseItem.isPressed) {
         //                }
         //                while (true) {
-        //                    if (gameSettings.keyBindPickBlock.isPressed) continue //todo: continue is not supported
-        //                    break label472 // todo: label break is not supported
+        //                    if (gameSettings.keyBindPickBlock.isPressed) continue
+        //                    break label472
         //                }
         //            }
         //        }
@@ -592,10 +596,9 @@ class OrangeCraft(ocDataDir: String) extends Logger[OrangeCraft] with IThreadLis
             callableToSchedule()
 
         catch {
-            case exception: Exception => {
+            case exception: Exception =>
                 println("addScheduledTask")
                 exception.printStackTrace()
-            }
         }
         else {
 
@@ -613,5 +616,7 @@ class OrangeCraft(ocDataDir: String) extends Logger[OrangeCraft] with IThreadLis
 
 object OrangeCraft {
 
-    def getSystemTime(): Long = System.currentTimeMillis()
+    var orangeCraft: OrangeCraft = _
+
+    def getSystemTime: Long = System.currentTimeMillis()
 }

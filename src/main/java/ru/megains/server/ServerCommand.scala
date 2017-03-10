@@ -15,7 +15,11 @@ class ServerCommand(server: OrangeCraftServer) extends Thread {
 
         while (server.serverRunning) {
             val data = StdIn.readLine().trim.split("\\s+")
-            parseCommand(data)
+            try {
+                parseCommand(data)
+            } catch {
+                case e: Exception => e.printStackTrace()
+            }
         }
     }
 

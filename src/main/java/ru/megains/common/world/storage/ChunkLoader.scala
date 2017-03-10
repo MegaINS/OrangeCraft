@@ -4,6 +4,7 @@ import ru.megains.common.block.Block
 import ru.megains.common.block.blockdata.MultiBlockPos
 import ru.megains.common.multiblock.MultiBlock
 import ru.megains.common.position.ChunkPosition
+import ru.megains.common.register.Blocks
 import ru.megains.common.world.World
 import ru.megains.common.world.chunk.{Chunk, ChunkVoid}
 import ru.megains.nbt.NBTData
@@ -67,7 +68,7 @@ class ChunkLoader(worldDirectory: Directory) {
             val blockIdList = blockList.getList(1)
 
             for (j <- 0 until indexList.getLength) {
-                multiBlock.putBlock(MultiBlockPos.getForIndex(indexList.getInt(j)), Block.getBlockById(blockIdList.getInt(j)))
+                multiBlock.putBlock(MultiBlockPos.getForIndex(indexList.getInt(j)), Blocks.getBlockById(blockIdList.getInt(j)))
             }
             multiBlockStorage.put(posMultiBlock, multiBlock)
         }
@@ -94,7 +95,7 @@ class ChunkLoader(worldDirectory: Directory) {
                 data._2.blockData.foreach(
                     (data2: (MultiBlockPos, (Block, Int))) => {
                         indexList.setValue(data2._1.getIndex)
-                        blockIdList.setValue(Block.getIdByBlock(data2._2._1))
+                        blockIdList.setValue(Blocks.getIdByBlock(data2._2._1))
                         blockIdList.setValue(data2._2._2)
                     }
                 )

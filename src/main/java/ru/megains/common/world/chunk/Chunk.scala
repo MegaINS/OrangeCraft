@@ -79,7 +79,7 @@ class Chunk(val world: World, val position: ChunkPosition) {
             }
             true
         } else {
-            if (block.isFullBlock) {
+            if (block.format.isStandart) {
                 blockStorage.setBlock(x, y, z, block)
                 true
             } else {
@@ -108,14 +108,14 @@ class Chunk(val world: World, val position: ChunkPosition) {
 
     def isVoid: Boolean = {
         val blockData = blockStorage.blocksId
-        val airId = Block.getIdByBlock(Blocks.air)
+        val airId = Blocks.getIdByBlock(Blocks.air)
         for (i <- 0 until 4096) {
             if (blockData(i) != airId) return false
         }
         true
     }
 
-    def getBlockHp(pos: BlockPos) = {
+    def getBlockHp(pos: BlockPos): Int = {
         val posL = position.blockPosWorldToLocal(pos)
         if (blockStorage.isMultiBlock(posL.worldX, posL.worldY, posL.worldZ)) {
             blockStorage.getMultiBlock(posL.worldX, posL.worldY, posL.worldZ).getBlockHp(posL.multiPos)

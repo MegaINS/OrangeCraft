@@ -3,6 +3,7 @@ package ru.megains.client.renderer.gui
 import java.awt.Color
 
 import ru.megains.client.OrangeCraft
+import ru.megains.client.renderer.font.Fonts
 import ru.megains.client.renderer.mesh.Mesh
 import ru.megains.client.renderer.{EntityRenderer, FontRender, RenderItem}
 import ru.megains.common.item.ItemStack
@@ -35,7 +36,7 @@ abstract class GuiElement extends Gui {
 
     def drawObject(xPos: Int, yPos: Int, scale: Float, mesh: Mesh): Unit = super.drawObject(xPos, yPos, scale, mesh, renderer)
 
-    def createString(text: String, color: Color): Mesh = fontRender.createStringGui(text, color)
+    def createString(text: String, color: Color): Mesh = fontRender.createStringGui(text, color, Fonts.timesNewRomanR)
 
     def drawItemStack(itemStack: ItemStack, xPos: Int, yPos: Int): Unit = itemRender.renderItemStackToGui(xPos, yPos, itemStack)
 }

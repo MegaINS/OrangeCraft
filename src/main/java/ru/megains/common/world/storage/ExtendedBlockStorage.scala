@@ -1,8 +1,9 @@
 package ru.megains.common.world.storage
 
+
 import ru.megains.common.block.Block
 import ru.megains.common.multiblock.{AMultiBlock, MultiBlock}
-import ru.megains.common.register.MultiBlocks
+import ru.megains.common.register.{Blocks, MultiBlocks}
 
 import scala.collection.mutable
 
@@ -14,15 +15,15 @@ class ExtendedBlockStorage {
     var blocksHp: Array[Int] = new Array[Int](4096)
     val multiBlockStorage: mutable.HashMap[Int, MultiBlock] = new mutable.HashMap[Int, MultiBlock]
 
-    def getBlockId(x: Int, y: Int, z: Int) = blocksId(getIndex(x, y, z))
+    def getBlockId(x: Int, y: Int, z: Int): Short = blocksId(getIndex(x, y, z))
 
-    def getBlock(x: Int, y: Int, z: Int) = Block.getBlockById(blocksId(getIndex(x, y, z)))
+    def getBlock(x: Int, y: Int, z: Int): Block = Blocks.getBlockById(blocksId(getIndex(x, y, z)))
 
     def getIndex(x: Int, y: Int, z: Int): Int = x << 8 | y << 4 | z
 
     def setBlock(x: Int, y: Int, z: Int, value: Block): Unit = {
         val index = getIndex(x, y, z)
-        blocksId(index) = Block.getIdByBlock(value).toShort
+        blocksId(index) = Blocks.getIdByBlock(value).toShort
         blocksHp(index) = value.maxHp
     }
 
@@ -54,7 +55,7 @@ class ExtendedBlockStorage {
         }
     )
 
-    def getBlockHp(x: Int, y: Int, z: Int) = {
+    def getBlockHp(x: Int, y: Int, z: Int): Int = {
         blocksHp(getIndex(x, y, z))
     }
 

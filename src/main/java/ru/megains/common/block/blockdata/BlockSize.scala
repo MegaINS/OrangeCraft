@@ -2,97 +2,57 @@ package ru.megains.common.block.blockdata
 
 import ru.megains.common.physics.BlockAxisAlignedBB
 
+import scala.collection.mutable.ArrayBuffer
 
-sealed abstract class BlockSize(val id: Int, val value: Float) {
 
+class BlockSize private(val id: Int, val value: Float) {
 
 }
 
 object BlockSize {
 
+    private var id = 0
+    private val array: ArrayBuffer[BlockSize] = ArrayBuffer[BlockSize]()
+    private val min: Float = 0.0625f
 
-    val FULL_AABB = new BlockAxisAlignedBB(BlockSize.Zero, BlockSize.Zero, BlockSize.Zero, BlockSize.One, BlockSize.One, BlockSize.One)
-    val NULL_AABB = new BlockAxisAlignedBB(BlockSize.Zero, BlockSize.Zero, BlockSize.Zero, BlockSize.Zero, BlockSize.Zero, BlockSize.Zero)
-    private val array: Array[BlockSize] = Array(Zero, OneSixteenth, TwoSixteenth, ThreeSixteenth, FourSixteenth, FiveSixteenth, SixSixteenth, SevenSixteenth, EightSixteenth,
-        NineSixteenth, TenSixteenth, ElevenSixteenth, TwelveSixteenth, ThirteenSixteenth, FourteenSixteenth, FifteenSixteenth, One)
+    def apply(value: Float): BlockSize = {
+        if (value % min != 0) {
+            println(s"BlockSize($value % $min == 0)")
+            System.exit(-1)
+            null
+        } else {
+            val bs = new BlockSize(id, value)
+            id += 1
+            array += bs
+            bs
+        }
+    }
+
+    val S0 = BlockSize(0)
+    val S1_16 = BlockSize(1.0f * min)
+    val S2_16 = BlockSize(2.0f * min)
+    val S3_16 = BlockSize(3.0f * min)
+    val S4_16 = BlockSize(4.0f * min)
+    val S5_16 = BlockSize(5.0f * min)
+    val S6_16 = BlockSize(6.0f * min)
+    val S7_16 = BlockSize(7.0f * min)
+    val S8_16 = BlockSize(8.0f * min)
+    val S9_16 = BlockSize(9.0f * min)
+    val S10_16 = BlockSize(10.0f * min)
+    val S11_16 = BlockSize(11.0f * min)
+    val S12_16 = BlockSize(12.0f * min)
+    val S13_16 = BlockSize(13.0f * min)
+    val S14_16 = BlockSize(14.0f * min)
+    val S15_16 = BlockSize(15.0f * min)
+    val S1 = BlockSize(1.0f)
+
+    val FULL_AABB = new BlockAxisAlignedBB(S0, S0, S0, S1, S1, S1)
+    val NULL_AABB = new BlockAxisAlignedBB(S0, S0, S0, S0, S0, S0)
 
     def getForId(id: Int): BlockSize = array(id)
 
     def get(value: Float): BlockSize = {
-
-
-        if (value < 0.5f / 16) {
-            Zero
-        } else if (value < 1.5f / 16) {
-            OneSixteenth
-        } else if (value < 2.5f / 16) {
-            TwoSixteenth
-        } else if (value < 3.5f / 16) {
-            ThreeSixteenth
-        } else if (value < 4.5f / 16) {
-            FourSixteenth
-        } else if (value < 5.5f / 16) {
-            FiveSixteenth
-        } else if (value < 6.5f / 16) {
-            SixSixteenth
-        } else if (value < 7.5f / 16) {
-            SevenSixteenth
-        } else if (value < 8.5f / 16) {
-            EightSixteenth
-        } else if (value < 9.5f / 16) {
-            NineSixteenth
-        } else if (value < 10.5f / 16) {
-            TenSixteenth
-        } else if (value < 11.5f / 16) {
-            ElevenSixteenth
-        } else if (value < 12.5f / 16) {
-            TwelveSixteenth
-        } else if (value < 13.5f / 16) {
-            ThirteenSixteenth
-        } else if (value < 14.5f / 16) {
-            FourteenSixteenth
-        } else if (value < 15.5f / 16) {
-            FifteenSixteenth
-        } else {
-            One
-        }
+        array.find(_.value == ((value / min).round * min)).get
     }
-
-    case object Zero extends BlockSize(0, 0)
-
-    case object OneSixteenth extends BlockSize(1, 1.0f / 16)
-
-    case object TwoSixteenth extends BlockSize(2, 2.0f / 16)
-
-    case object ThreeSixteenth extends BlockSize(3, 3.0f / 16)
-
-    case object FourSixteenth extends BlockSize(4, 4.0f / 16)
-
-    case object FiveSixteenth extends BlockSize(5, 5.0f / 16)
-
-    case object SixSixteenth extends BlockSize(6, 6.0f / 16)
-
-    case object SevenSixteenth extends BlockSize(7, 7.0f / 16)
-
-    case object EightSixteenth extends BlockSize(8, 8.0f / 16)
-
-    case object NineSixteenth extends BlockSize(9, 9.0f / 16)
-
-    case object TenSixteenth extends BlockSize(10, 10.0f / 16)
-
-    case object ElevenSixteenth extends BlockSize(11, 11.0f / 16)
-
-    case object TwelveSixteenth extends BlockSize(12, 12.0f / 16)
-
-    case object ThirteenSixteenth extends BlockSize(13, 13.0f / 16)
-
-    case object FourteenSixteenth extends BlockSize(14, 14.0f / 16)
-
-
-    case object FifteenSixteenth extends BlockSize(15, 15.0f / 16)
-
-
-    case object One extends BlockSize(16, 1.0f)
-
 
 }

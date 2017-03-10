@@ -11,7 +11,6 @@ import ru.megains.client.renderer.world.{RenderChunk, WorldRenderer}
 import ru.megains.common.managers.TextureManager
 import ru.megains.common.util.Utils
 
-
 class EntityRenderer(oc: OrangeCraft) {
     val transformation = new Transformation
     var textureManager: TextureManager = _
@@ -30,6 +29,8 @@ class EntityRenderer(oc: OrangeCraft) {
         setupSceneShader()
         setupHudShader()
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+        glEnable(GL_STENCIL_TEST)
+
     }
 
     @throws[Exception]
@@ -65,6 +66,7 @@ class EntityRenderer(oc: OrangeCraft) {
         EntityRenderer.unbindShaderProgram()
     }
 
+
     def render(camera: Camera) {
         transformation.updateProjectionMatrix(FOV, 1600, 1200, Z_NEAR, Z_FAR, camera)
         transformation.updateViewMatrix(camera)
@@ -76,9 +78,11 @@ class EntityRenderer(oc: OrangeCraft) {
         frustum = Frustum.getFrustum(_proj, _modl)
 
 
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT)
         if (oc.world != null) renderScene()
         renderGui()
+
+
     }
 
     private def renderScene() {
@@ -136,6 +140,25 @@ class EntityRenderer(oc: OrangeCraft) {
         val ortho: Matrix4f = transformation.getOrtho2DProjectionMatrix(0, 800, 0, 600)
         hudShaderProgram.setUniform("projectionMatrix", ortho)
         oc.guiManager.draw(Mouse.getX, Mouse.getY)
+
+        //        glEnableClientState(GL_VERTEX_ARRAY)
+        //
+        //
+        //
+        //        glVertexPointer(2, GL_FLOAT, 16, charBuffer)
+        //
+        //
+        //        glColor3f(169f / 255f, 183f / 255f, 198f / 255f) // Text color
+        //
+        //        EntityRenderer.currentShaderProgram.setUniform("modelMatrix", transformation.buildOrtoProjModelMatrix(40, 40, 1))
+        //        glDrawArrays(GL_QUADS, 0, quads * 4)
+        //
+        //        glDisableClientState(GL_VERTEX_ARRAY)
+
+
+
+
+
 
         unbindShaderProgram()
 

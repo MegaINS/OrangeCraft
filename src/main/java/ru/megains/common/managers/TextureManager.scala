@@ -14,11 +14,11 @@ class TextureManager {
 
     def bindTexture(name: String) {
 
-        //  if(!name.equals(currentTexture)){
-        currentTexture = name
-        val aTexture: ATexture = getTexture(currentTexture)
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, aTexture.getGlTextureId)
-        // }
+        if (!name.equals(currentTexture)) {
+            currentTexture = name
+            val aTexture: ATexture = getTexture(currentTexture)
+            GL11.glBindTexture(GL11.GL_TEXTURE_2D, aTexture.getGlTextureId)
+        }
     }
 
     def getTexture(name: String): ATexture = {
@@ -29,16 +29,19 @@ class TextureManager {
         })
     }
 
-    def loadTexture(name: String, aTexture: ATexture) = {
+    def loadTexture(name: String, aTexture: ATexture): Boolean = {
 
         if (aTexture.loadTexture()) {
             mapATexture += name -> aTexture
+            true
         } else {
             println("Error load texture " + name)
             mapATexture += name -> TextureManager.missingTexture
+            false
         }
 
     }
+
 
 }
 

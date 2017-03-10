@@ -1,9 +1,8 @@
 package ru.megains.common.world.storage
 
-import ru.megains.common.block.Block
 import ru.megains.common.entity.player.EntityPlayer
 import ru.megains.common.item.ItemStack
-import ru.megains.common.register.Items
+import ru.megains.common.register.{Blocks, Items}
 import ru.megains.common.utils.Logger
 import ru.megains.nbt.NBTData
 import ru.megains.nbt.tag.NBTCompound
@@ -44,7 +43,7 @@ class AnvilSaveHandler(savesDirectory: Directory, worldName: String) extends ISa
 
             val rand: Int = Random.nextInt(15) + 1
             for (id <- 1 to rand) {
-                inventory.addItemStackToInventory(new ItemStack(Block.getBlockById(2 + Random.nextInt(10)), id))
+                inventory.addItemStackToInventory(new ItemStack(Blocks.getBlockById(2 + Random.nextInt(10)), id))
             }
         }
 

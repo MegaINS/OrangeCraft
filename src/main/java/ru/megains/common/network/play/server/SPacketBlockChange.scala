@@ -3,6 +3,7 @@ package ru.megains.common.network.play.server
 import ru.megains.common.block.Block
 import ru.megains.common.block.blockdata.BlockPos
 import ru.megains.common.network.{Packet, PacketBuffer}
+import ru.megains.common.register.Blocks
 import ru.megains.common.world.World
 
 class SPacketBlockChange() extends Packet[INetHandlerPlayClient] {
@@ -22,7 +23,7 @@ class SPacketBlockChange() extends Packet[INetHandlerPlayClient] {
 
     def readPacketData(buf: PacketBuffer) {
         blockPosition = buf.readBlockPos
-        block = Block.getBlockById(buf.readVarIntFromBuffer)
+        block = Blocks.getBlockById(buf.readVarIntFromBuffer)
     }
 
     /**
@@ -31,7 +32,7 @@ class SPacketBlockChange() extends Packet[INetHandlerPlayClient] {
 
     def writePacketData(buf: PacketBuffer) {
         buf.writeBlockPos(blockPosition)
-        buf.writeVarIntToBuffer(Block.getIdByBlock(block))
+        buf.writeVarIntToBuffer(Blocks.getIdByBlock(block))
     }
 
     /**

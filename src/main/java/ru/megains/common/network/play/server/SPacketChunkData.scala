@@ -4,6 +4,7 @@ import ru.megains.common.block.Block
 import ru.megains.common.block.blockdata.MultiBlockPos
 import ru.megains.common.multiblock.MultiBlock
 import ru.megains.common.network.{Packet, PacketBuffer}
+import ru.megains.common.register.Blocks
 import ru.megains.common.world.chunk.Chunk
 import ru.megains.common.world.storage.ExtendedBlockStorage
 
@@ -68,7 +69,7 @@ class SPacketChunkData extends Packet[INetHandlerPlayClient] {
                 val posBlock = buf.readInt()
                 val blockId = buf.readInt()
                 val blockHp = buf.readInt()
-                blockData += MultiBlockPos.getForIndex(posBlock) -> (Block.getBlockById(blockId), blockHp)
+                blockData += MultiBlockPos.getForIndex(posBlock) -> (Blocks.getBlockById(blockId), blockHp)
             }
             multiBlockStorage.put(posMultiBlock, multiBlock)
         }
@@ -105,7 +106,7 @@ class SPacketChunkData extends Packet[INetHandlerPlayClient] {
                         //Координаты блока
                         buf.writeInt(data2._1.getIndex)
                         //Id блока
-                        buf.writeInt(Block.getIdByBlock(data2._2._1))
+                        buf.writeInt(Blocks.getIdByBlock(data2._2._1))
                         //Hp блока
                         buf.writeInt(data2._2._2)
                     }

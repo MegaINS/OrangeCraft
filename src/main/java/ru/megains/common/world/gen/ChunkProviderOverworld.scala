@@ -1,6 +1,5 @@
 package ru.megains.common.world.gen
 
-import ru.megains.common.block.Block
 import ru.megains.common.position.ChunkPosition
 import ru.megains.common.register.Blocks
 import ru.megains.common.world.World
@@ -20,7 +19,7 @@ class ChunkProviderOverworld(world: World, seed: Long, mapFeaturesEnabledIn: Boo
 
         if (chunkY < 0) {
             for (i <- 0 until 4096) {
-                blockData(i) = Block.getIdByBlock(Blocks.stone).toShort
+                blockData(i) = Blocks.getIdByBlock(Blocks.stone).toShort
             }
         } else {
             val array = world.heightMap.generateHeightMap(chunkX, chunkZ)

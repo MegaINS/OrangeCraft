@@ -9,9 +9,9 @@ class GuiButton(val id: Int, oc: OrangeCraft, val buttonText: String, positionX:
 
 
     val textMesh: Mesh = createString(buttonText, Color.WHITE)
-    val buttonUp = createRect(weight, height, Color.blue)
-    val buttonDown = createRect(weight, height, Color.darkGray)
-    val buttonDisable = createRect(weight, height, Color.BLACK)
+    val buttonUp: Mesh = createRect(weight, height, Color.WHITE)
+    val buttonDown: Mesh = createRect(weight, height, Color.darkGray)
+    val buttonDisable: Mesh = createRect(weight, height, Color.BLACK)
     var enable = true
 
 
@@ -21,7 +21,7 @@ class GuiButton(val id: Int, oc: OrangeCraft, val buttonText: String, positionX:
 
         drawObject(positionX, positionY, 1, background)
 
-        drawObject(positionX + weight / 2, positionY + height / 2, 2, textMesh)
+        drawObject(positionX + weight / 2, positionY + height / 2, 1, textMesh)
 
     }
 

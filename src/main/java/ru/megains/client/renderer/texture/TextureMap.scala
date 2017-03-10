@@ -8,7 +8,7 @@ import org.lwjgl.opengl.GL30._
 import ru.megains.common.register.GameRegister
 import ru.megains.common.utils.Logger
 
-import scala.collection.immutable.HashMap
+import scala.collection.mutable
 
 
 class TextureMap() extends ATexture with TTextureRegister with Logger[TextureMap] {
@@ -18,7 +18,7 @@ class TextureMap() extends ATexture with TTextureRegister with Logger[TextureMap
     var map: Array[Array[Boolean]] = _
     var width: Int = 1
     var height: Int = 1
-    var textureBlockMap: HashMap[String, TextureAtlas] = new HashMap[String, TextureAtlas]
+    val textureBlockMap: mutable.HashMap[String, TextureAtlas] = new mutable.HashMap[String, TextureAtlas]
 
     override def loadTexture(): Boolean = {
         registerAllTexture()
@@ -118,7 +118,7 @@ class TextureMap() extends ATexture with TTextureRegister with Logger[TextureMap
         searchBox(size, tex)
     }
 
-    def resizeMap() = {
+    def resizeMap(): Unit = {
         width *= 2
         height *= 2
         val temp = Array.ofDim[Boolean](width, height)

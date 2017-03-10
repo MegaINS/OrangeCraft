@@ -1,9 +1,10 @@
 package ru.megains.common.register
 
 import ru.megains.client.renderer.api.{ARenderBlock, ARenderItem}
-import ru.megains.client.renderer.block.RenderBlockStandart
+import ru.megains.client.renderer.block.{RenderBlockStandart, RenderMicroBlock}
 import ru.megains.client.renderer.item.{RenderItemBlock, RenderItemStandart}
 import ru.megains.common.block.Block
+import ru.megains.common.block.blockdata.BlockFormat
 import ru.megains.common.item.{Item, ItemBlock}
 import ru.megains.common.multiblock.{AMultiBlock, MultiBlock, MultiBlockSingle}
 
@@ -13,7 +14,6 @@ object GameRegister {
 
     private val blockData = new RegisterNamespace[Block] with RegisterRender[ARenderBlock] {
         override val default = RenderBlockStandart
-
     }
     private val itemData = new RegisterNamespace[Item] with RegisterRender[ARenderItem] {
         override val default = null
@@ -42,8 +42,12 @@ object GameRegister {
                     println("Name \"" + block.name + "\" not single")
                 } else {
                     blockData.registerObject(id, block.name, block)
-                    if (block.isFullBlock) {
-                        registerMultiBlockSingle(new MultiBlockSingle(block))
+                    block.format match {
+                        case BlockFormat.MICRO =>
+                            registerBlockRender(block, RenderMicroBlock)
+                        case BlockFormat.STANDART =>
+                            registerMultiBlockSingle(new MultiBlockSingle(block))
+                        case _ =>
                     }
                     return true
                 }

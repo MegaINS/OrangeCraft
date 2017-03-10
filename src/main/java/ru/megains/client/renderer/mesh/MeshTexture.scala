@@ -1,6 +1,5 @@
 package ru.megains.client.renderer.mesh
 
-import org.lwjgl.opengl.GL11._
 import org.lwjgl.opengl.GL13._
 import org.lwjgl.opengl.GL30._
 import ru.megains.client.renderer.EntityRenderer
@@ -22,6 +21,5 @@ class MeshTexture(makeMode: Int, val textureName: String, indices: Array[Int], p
 
     override def endRender(): Unit = {
         super.endRender()
-        glBindTexture(GL_TEXTURE_2D, 0)
     }
 }

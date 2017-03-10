@@ -2,14 +2,12 @@ package ru.megains.common.block
 
 
 import org.joml.Vector3d
-import ru.megains.client.renderer.block.RenderBlockGlass
 import ru.megains.client.renderer.texture.{TTextureRegister, TextureAtlas}
-import ru.megains.common.block.blockdata.{BlockDirection, BlockPos, BlockSize, MultiBlockPos}
+import ru.megains.common.block.blockdata._
 import ru.megains.common.entity.EntityLivingBase
 import ru.megains.common.entity.player.EntityPlayer
-import ru.megains.common.item.{Item, ItemStack}
+import ru.megains.common.item.ItemStack
 import ru.megains.common.physics.{AxisAlignedBB, BlockAxisAlignedBB}
-import ru.megains.common.register.{Blocks, GameRegister}
 import ru.megains.common.util.{RayTraceResult, Vec3f}
 import ru.megains.common.world.World
 
@@ -18,11 +16,14 @@ import scala.util.Random
 
 class Block(val name: String) {
 
+
     val maxHp: Int = 100
 
     var aTexture: TextureAtlas = _
 
     var textureName: String = ""
+
+    val format: BlockFormat = BlockFormat.STANDART
 
     def randomUpdate(world: World, blockPos: BlockPos, rand: Random): Unit = {
 
@@ -42,7 +43,7 @@ class Block(val name: String) {
         aTexture = textureRegister.registerTexture(name)
     }
 
-    def isFullBlock: Boolean = true
+    // def isFullBlock: Boolean = true
 
 
     def isOpaqueCube: Boolean = true
@@ -83,45 +84,15 @@ class Block(val name: String) {
 
     def onBlockDestroyedByPlayer(worldIn: World, pos: BlockPos) {
     }
-}
 
-object Block {
-    def getIdByBlock(block: Block) = {
-        GameRegister.getIdByBlock(block)
-    }
-
-    def getBlockFromItem(item: Item) = {
-        GameRegister.getBlockFromItem(item)
-    }
-
-    def getBlockById(id: Int): Block = {
-        val block: Block = GameRegister.getBlockById(id)
-        if (block == null) {
-            Blocks.air
-        } else {
-            block
-        }
-    }
-
-    def initBlocks(): Unit = {
-
-        GameRegister.registerBlock(1, new BlockAir("air"))
-        GameRegister.registerBlock(2, new Block("stone"))
-        GameRegister.registerBlock(3, new Block("dirt"))
-        GameRegister.registerBlock(4, new BlockGrass("grass"))
-        GameRegister.registerBlock(5, new BlockGlass("glass"))
-        GameRegister.registerBlock(6, new BlockMicroTest("micro0", 0))
-        GameRegister.registerBlock(7, new BlockMicroTest("micro1", 1))
-        GameRegister.registerBlock(8, new BlockMicroTest("micro2", 2))
-
-        GameRegister.registerBlock(9, new Block("brick"))
-        GameRegister.registerBlock(10, new Block("sand"))
-        GameRegister.registerBlock(11, new Block("cobblestone"))
-        GameRegister.registerBlock(12, new Block("planks_oak"))
-        GameRegister.registerBlock(13, new Block("leaves_oak"))
-        GameRegister.registerBlockRender(Blocks.glass, RenderBlockGlass)
+    def getSelectPosition(worldIn: World, objectMouseOver: RayTraceResult): BlockPos = {
+        val posTarget: BlockPos = objectMouseOver.getBlockWorldPos.getS0
+        val posSet: BlockPos = posTarget.sum(objectMouseOver.sideHit)
+        if (worldIn.isAirBlock(posSet)) posSet
+        else null
     }
 
 
 }
+
 

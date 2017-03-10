@@ -123,7 +123,7 @@ class PlayerList(server: OrangeCraftServer) {
         //                    for (entity <- entity2.getRecursivePassengers) {
         //                        if (entity.getUniqueID == uuid) {
         //                            playerIn.startRiding(entity, true)
-        //                            break //todo: break is not supported
+        //                            break
         //                        }
         //                    }
         //                }

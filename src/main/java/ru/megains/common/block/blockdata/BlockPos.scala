@@ -10,7 +10,7 @@ class BlockPos(val worldX: Int, val worldY: Int, val worldZ: Int, val blockX: Bl
     }
 
     def this(worldX: Int, worldY: Int, worldZ: Int) {
-        this(worldX, worldY, worldZ, BlockSize.Zero, BlockSize.Zero, BlockSize.Zero)
+        this(worldX, worldY, worldZ, BlockSize.S0, BlockSize.S0, BlockSize.S0)
     }
 
     def this(pos: BlockPos, blockX: BlockSize, blockY: BlockSize, blockZ: BlockSize) {
@@ -18,8 +18,11 @@ class BlockPos(val worldX: Int, val worldY: Int, val worldZ: Int, val blockX: Bl
     }
 
     def this(pos: BlockPos) {
-        this(pos.worldX, pos.worldY, pos.worldZ, BlockSize.Zero, BlockSize.Zero, BlockSize.Zero)
+        this(pos.worldX, pos.worldY, pos.worldZ, BlockSize.S0, BlockSize.S0, BlockSize.S0)
     }
+
+
+    def getS0 = new BlockPos(this)
 
     def sum(direction: BlockDirection) = new BlockPos(worldX + direction.x, worldY + direction.y, worldZ + direction.z, blockX, blockY, blockZ)
 

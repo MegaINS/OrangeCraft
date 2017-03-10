@@ -5,6 +5,10 @@ import org.lwjgl.opengl.GL
 import org.lwjgl.system.MemoryUtil.NULL
 
 class Window {
+    def getHeight(): Int = height
+
+    def getWidth(): Int = width
+
 
     var width: Int = 800
     var height: Int = 600
@@ -15,7 +19,6 @@ class Window {
         if (!glfwInit) {
             throw new RuntimeException("Failed to init GLFW.")
         }
-
         glfwWindowHint(GLFW_DEPTH_BITS, 24)
         id = glfwCreateWindow(width, height, "OrangeCraft", NULL, NULL)
         if (id == NULL) {
