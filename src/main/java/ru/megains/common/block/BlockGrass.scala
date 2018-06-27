@@ -9,7 +9,7 @@ import scala.util.Random
 
 class BlockGrass(name: String) extends Block(name) {
 
-    override val maxHp: Int = 45
+    override val maxHp: Short = 45
     var aTextureUp: TextureAtlas = _
     var aTextureDown: TextureAtlas = _
 
@@ -33,7 +33,7 @@ class BlockGrass(name: String) extends Block(name) {
         aTextureDown = textureRegister.registerTexture(name + "_down")
     }
 
-    override def getATexture(blockDirection: BlockDirection): TextureAtlas = {
+    override def getATexture(pos: BlockPos, blockDirection: BlockDirection, world: World): TextureAtlas = {
         blockDirection match {
             case BlockDirection.UP => aTextureUp
             case BlockDirection.DOWN => aTextureDown

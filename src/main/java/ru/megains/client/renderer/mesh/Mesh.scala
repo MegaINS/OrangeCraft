@@ -13,7 +13,7 @@ import scala.collection.mutable.ArrayBuffer
 class Mesh private[mesh](val makeMode: Int, val vertexCount: Int) {
 
     val vaoId: Int = glGenVertexArrays
-    val vboIdList = ArrayBuffer[Int]()
+    val vboIdList: ArrayBuffer[Int] = ArrayBuffer[Int]()
     var clear: Boolean = false
 
     def this(makeMode: Int, indices: Array[Int], positions: Array[Float], colours: Array[Float]) {

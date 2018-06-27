@@ -11,7 +11,6 @@ import ru.megains.client.renderer.world.WorldRenderer;
 import ru.megains.common.block.blockdata.BlockPos;
 import ru.megains.common.managers.TextureManager;
 import ru.megains.common.util.Utils;
-import scala.collection.Iterator;
 
 import java.nio.FloatBuffer;
 
@@ -198,17 +197,17 @@ public class Renderer {
 
 
         // Iterator<RenderChunk> iterable = renderChunks.iterator();
-        Iterator<RenderChunk> iterable = worldRenderer.getRenderChunks(oc.player(), frustum).iterator();
-        RenderChunk renderChunk;
-        while (iterable.hasNext()) {
-            renderChunk = iterable.next();
-            //  if (frustum.cubeInFrustum(renderChunk.cube())) {
-            modelViewMatrix = transformation.buildChunkModelViewMatrix(renderChunk.chunk().position());
-            sceneShaderProgram.setUniform("modelViewMatrix", modelViewMatrix);
-            renderChunk.render(0);
-            //  }
-
-        }
+//        Iterator<RenderChunk> iterable = worldRenderer.getRenderChunks(oc.player(), frustum).iterator();
+//        RenderChunk renderChunk;
+//        while (iterable.hasNext()) {
+//            renderChunk = iterable.next();
+//            //  if (frustum.cubeInFrustum(renderChunk.cube())) {
+//            modelViewMatrix = transformation.buildChunkModelViewMatrix(renderChunk.chunk().position());
+//            sceneShaderProgram.setUniform("modelViewMatrix", modelViewMatrix);
+//            renderChunk.render(0);
+//            //  }
+//
+//        }
 
 
         // GL11.glDepthMask(true);

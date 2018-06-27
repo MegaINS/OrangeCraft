@@ -69,7 +69,7 @@ class ServerPinger extends Logger[ServerPinger] {
                     //                    }
                     //  else server.setBase64EncodedIconData(null.asInstanceOf[String])
                     // net.minecraftforge.fml.client.FMLClientHandler.instance.bindServerListData(server, serverstatusresponse)
-                    this.pingSentAt = OrangeCraft.getSystemTime()
+                    this.pingSentAt = OrangeCraft.getSystemTime
                     networkmanager.sendPacket(new CPacketPing(pingSentAt))
                     this.successful = true
                 }
@@ -77,7 +77,7 @@ class ServerPinger extends Logger[ServerPinger] {
 
             override def handlePong(packetIn: SPacketPong) {
                 val i: Long = pingSentAt
-                val j: Long = OrangeCraft.getSystemTime()
+                val j: Long = OrangeCraft.getSystemTime
                 server.pingToServer = j - i
                 networkmanager.closeChannel("ServerPinger" + "handlePong")
             }

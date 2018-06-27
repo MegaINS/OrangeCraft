@@ -203,27 +203,28 @@ class PlayerControllerMP(oc: OrangeCraft, val connection: NetHandlerPlayClient) 
             }
         }
         connection.sendPacket(new CPacketPlayerTryUseItemOnBlock(pos, oc.blockSelectPosition, facing, f, f1, f2))
-        if (!flag && (currentGameType ne GameType.SPECTATOR)) if (stack == null) EnumActionResult.PASS
-        //  else if (player.getCooldownTracker.hasCooldown(stack.item)) EnumActionResult.PASS
-        else {
-            //                if (stack.item.isInstanceOf[ItemBlock] && !player.func_189808_dh) {
-            //                 //  val block: Block = stack.item.asInstanceOf[ItemBlock].block
-            //                   // if (block.isInstanceOf[BlockCommandBlock] || block.isInstanceOf[BlockStructure]) return EnumActionResult.FAIL
-            //                }
-            if (currentGameType.isCreative) {
-                //val i: Int = stack.getMetadata
-                val j: Int = stack.stackSize
-                val enumactionresult: EnumActionResult = stack.onItemUse(player, worldIn, oc.blockSelectPosition, facing, f, f1, f2)
-                //    stack.setItemDamage(i)
-                stack.stackSize = j
-                enumactionresult
-
-            }
+        if (!flag && (currentGameType ne GameType.SPECTATOR)) {
+            if (stack == null) EnumActionResult.PASS
+            //  else if (player.getCooldownTracker.hasCooldown(stack.item)) EnumActionResult.PASS
             else {
-                stack.onItemUse(player, worldIn, oc.blockSelectPosition, facing, f, f1, f2)
+                //                if (stack.item.isInstanceOf[ItemBlock] && !player.func_189808_dh) {
+                //                 //  val block: Block = stack.item.asInstanceOf[ItemBlock].block
+                //                   // if (block.isInstanceOf[BlockCommandBlock] || block.isInstanceOf[BlockStructure]) return EnumActionResult.FAIL
+                //                }
+                if (currentGameType.isCreative) {
+                    //val i: Int = stack.getMetadata
+                    val j: Int = stack.stackSize
+                    val enumactionresult: EnumActionResult = stack.onItemUse(player, worldIn, oc.blockSelectPosition, facing, f, f1, f2)
+                    //    stack.setItemDamage(i)
+                    stack.stackSize = j
+                    enumactionresult
+
+                }
+                else {
+                    stack.onItemUse(player, worldIn, oc.blockSelectPosition, facing, f, f1, f2)
+                }
             }
-        }
-        else EnumActionResult.SUCCESS
+        } else EnumActionResult.SUCCESS
         //  }
     }
 

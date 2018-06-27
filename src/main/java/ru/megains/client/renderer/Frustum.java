@@ -2,6 +2,7 @@ package ru.megains.client.renderer;
 
 import org.lwjgl.BufferUtils;
 import ru.megains.common.physics.AxisAlignedBB;
+import ru.megains.common.position.ChunkPosition;
 
 import java.nio.FloatBuffer;
 
@@ -171,6 +172,10 @@ public class Frustum {
 
     public boolean cubeInFrustum(AxisAlignedBB aabb) {
         return this.cubeInFrustum(aabb.minX, aabb.minY, aabb.minZ, aabb.maxX, aabb.maxY, aabb.maxZ);
+    }
+
+    public boolean chunkInFrustum(ChunkPosition aabb) {
+        return this.cubeInFrustum(aabb.minX(), aabb.minY(), aabb.minZ(), aabb.maxX(), aabb.maxY(), aabb.maxZ());
     }
 
 }

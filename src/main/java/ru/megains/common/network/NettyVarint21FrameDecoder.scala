@@ -35,7 +35,7 @@ class NettyVarint21FrameDecoder extends ByteToMessageDecoder {
                 }
             }
             {
-                i += 1;
+                i += 1
                 i
             }
         }

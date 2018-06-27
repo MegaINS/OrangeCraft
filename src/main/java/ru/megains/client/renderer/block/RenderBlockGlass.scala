@@ -21,37 +21,42 @@ object RenderBlockGlass extends ARenderBlock {
         val maxZ = AABB.getMaxZ
         var block1: AMultiBlock = null
         var isRender = false
+        var pos: BlockPos = null
 
-
-
-        block1 = world.getMultiBlock(posWorld.sum(BlockDirection.SOUTH))
+        pos = posWorld.sum(BlockDirection.SOUTH)
+        block1 = world.getMultiBlock(pos)
         if (!block1.isOpaqueCube && block1 != MultiBlocks.glass) {
-            RenderBlock.renderSideSouth(minX, maxX, minY, maxY, maxZ, block.getATexture(BlockDirection.SOUTH))
+            RenderBlock.renderSideSouth(minX, maxX, minY, maxY, maxZ, block.getATexture(posWorld, BlockDirection.SOUTH, world))
             isRender = true
         }
-        block1 = world.getMultiBlock(posWorld.sum(BlockDirection.NORTH))
+        pos = posWorld.sum(BlockDirection.NORTH)
+        block1 = world.getMultiBlock(pos)
         if (!block1.isOpaqueCube && block1 != MultiBlocks.glass) {
-            RenderBlock.renderSideNorth(minX, maxX, minY, maxY, minZ, block.getATexture(BlockDirection.NORTH))
+            RenderBlock.renderSideNorth(minX, maxX, minY, maxY, minZ, block.getATexture(posWorld, BlockDirection.NORTH, world))
             isRender = true
         }
-        block1 = world.getMultiBlock(posWorld.sum(BlockDirection.DOWN))
+        pos = posWorld.sum(BlockDirection.DOWN)
+        block1 = world.getMultiBlock(pos)
         if (!block1.isOpaqueCube && block1 != MultiBlocks.glass) {
-            RenderBlock.renderSideDown(minX, maxX, minY, minZ, maxZ, block.getATexture(BlockDirection.DOWN))
+            RenderBlock.renderSideDown(minX, maxX, minY, minZ, maxZ, block.getATexture(posWorld, BlockDirection.DOWN, world))
             isRender = true
         }
-        block1 = world.getMultiBlock(posWorld.sum(BlockDirection.UP))
+        pos = posWorld.sum(BlockDirection.UP)
+        block1 = world.getMultiBlock(pos)
         if (!block1.isOpaqueCube && block1 != MultiBlocks.glass) {
-            RenderBlock.renderSideUp(minX, maxX, maxY, minZ, maxZ, block.getATexture(BlockDirection.UP))
+            RenderBlock.renderSideUp(minX, maxX, maxY, minZ, maxZ, block.getATexture(posWorld, BlockDirection.UP, world))
             isRender = true
         }
-        block1 = world.getMultiBlock(posWorld.sum(BlockDirection.WEST))
+        pos = posWorld.sum(BlockDirection.WEST)
+        block1 = world.getMultiBlock(pos)
         if (!block1.isOpaqueCube && block1 != MultiBlocks.glass) {
-            RenderBlock.renderSideWest(minX, minY, maxY, minZ, maxZ, block.getATexture(BlockDirection.WEST))
+            RenderBlock.renderSideWest(minX, minY, maxY, minZ, maxZ, block.getATexture(posWorld, BlockDirection.WEST, world))
             isRender = true
         }
-        block1 = world.getMultiBlock(posWorld.sum(BlockDirection.EAST))
+        pos = posWorld.sum(BlockDirection.EAST)
+        block1 = world.getMultiBlock(pos)
         if (!block1.isOpaqueCube && block1 != MultiBlocks.glass) {
-            RenderBlock.renderSideEast(maxX, minY, maxY, minZ, maxZ, block.getATexture(BlockDirection.EAST))
+            RenderBlock.renderSideEast(maxX, minY, maxY, minZ, maxZ, block.getATexture(posWorld, BlockDirection.EAST, world))
             isRender = true
         }
 

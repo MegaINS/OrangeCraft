@@ -1,6 +1,7 @@
 package ru.megains.client.renderer.gui
 
 import ru.megains.client.OrangeCraft
+import ru.megains.client.renderer.gui.Element.GuiButton
 
 class GuiMainMenu extends GuiScreen {
 

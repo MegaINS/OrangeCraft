@@ -32,7 +32,7 @@ object MeshMaker {
     private var isNormals: Boolean = false
     private var textureName: String = ""
 
-    def getMeshMaker = this
+    def getMeshMaker: MeshMaker.type = this
 
     def startMakeTriangles(): Unit = {
         startMake(GL_TRIANGLES)
@@ -126,7 +126,7 @@ object MeshMaker {
         addColor(r / 255f, g / 255f, b / 255f, a / 255f)
     }
 
-    def addColor(color: Color) = {
+    def addColor(color: Color): Unit = {
         addColorRGBA(color.getRed, color.getGreen, color.getBlue, color.getAlpha)
     }
 
@@ -137,11 +137,11 @@ object MeshMaker {
             var mesh: Mesh = null
             if (isNormals) {
                 mesh = new MeshTextureNormals(makeMode, textureName, indicesArray.toArray, posArray.toArray, colourArray.toArray, textCordsArray.toArray, normalsArray.toArray)
-            } else if (textureName != "") {
-                mesh = new MeshTexture(makeMode, textureName, indicesArray.toArray, posArray.toArray, colourArray.toArray, textCordsArray.toArray)
-            } else {
-                mesh = new Mesh(makeMode, indicesArray.toArray, posArray.toArray, colourArray.toArray)
-            }
+            } else /* if (textureName != "")*/ {
+                mesh = new MeshTexture(makeMode, textureName, indicesArray.toArray, posArray.toArray, colourArray.toArray, textCordsArray.toArray, textureName != "")
+            } //else {
+            //                mesh = new Mesh(makeMode, indicesArray.toArray, posArray.toArray, colourArray.toArray)
+            //            }
             isStartMake = false
             reset()
             mesh

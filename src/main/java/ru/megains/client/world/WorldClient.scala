@@ -21,12 +21,16 @@ class WorldClient(connection: NetHandlerPlayClient) extends World(new SaveHandle
         }
     }
 
-    def invalidateRegionAndSetBlock(pos: BlockPos, block: Block): Boolean = {
+    def invalidateRegionAndSetBlock(pos: BlockPos, block: Block, meta: Int): Boolean = {
         //  val i: Int = pos.getX
         //  val j: Int = pos.getY
         //   val k: Int = pos.getZ
         // invalidateBlockReceiveRegion(i, j, k, i, j, k)
-        setBlock(pos, block, 3)
+        val isOk = setBlock(pos, block, 3)
+        if (isOk) {
+            setBlockMeta(pos, meta)
+        }
+        isOk
     }
 
 

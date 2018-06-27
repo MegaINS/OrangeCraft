@@ -30,4 +30,6 @@ class ChunkProviderClient(world: World) extends IChunkProvider {
     override def unload(chunk: Chunk): Unit = {
 
     }
+
+    override val chunkMap: mutable.HashMap[Long, Chunk] = null
 }

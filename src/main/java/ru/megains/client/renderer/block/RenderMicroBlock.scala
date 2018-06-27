@@ -18,12 +18,12 @@ object RenderMicroBlock extends ARenderBlock {
         val maxY = AABB.getMaxY
         val maxZ = AABB.getMaxZ
 
-        RenderBlock.renderSideSouth(minX, maxX, minY, maxY, maxZ, block.getATexture(BlockDirection.SOUTH))
-        RenderBlock.renderSideNorth(minX, maxX, minY, maxY, minZ, block.getATexture(BlockDirection.NORTH))
-        RenderBlock.renderSideDown(minX, maxX, minY, minZ, maxZ, block.getATexture(BlockDirection.DOWN))
-        RenderBlock.renderSideUp(minX, maxX, maxY, minZ, maxZ, block.getATexture(BlockDirection.UP))
-        RenderBlock.renderSideWest(minX, minY, maxY, minZ, maxZ, block.getATexture(BlockDirection.WEST))
-        RenderBlock.renderSideEast(maxX, minY, maxY, minZ, maxZ, block.getATexture(BlockDirection.EAST))
+        RenderBlock.renderSideSouth(minX, maxX, minY, maxY, maxZ, block.getATexture(posWorld, BlockDirection.SOUTH, world))
+        RenderBlock.renderSideNorth(minX, maxX, minY, maxY, minZ, block.getATexture(posWorld, BlockDirection.NORTH, world))
+        RenderBlock.renderSideDown(minX, maxX, minY, minZ, maxZ, block.getATexture(posWorld, BlockDirection.DOWN, world))
+        RenderBlock.renderSideUp(minX, maxX, maxY, minZ, maxZ, block.getATexture(posWorld, BlockDirection.UP, world))
+        RenderBlock.renderSideWest(minX, minY, maxY, minZ, maxZ, block.getATexture(posWorld, BlockDirection.WEST, world))
+        RenderBlock.renderSideEast(maxX, minY, maxY, minZ, maxZ, block.getATexture(posWorld, BlockDirection.EAST, world))
 
         true
     }

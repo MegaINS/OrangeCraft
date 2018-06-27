@@ -1,8 +1,8 @@
 package ru.megains.common.register
 
 import ru.megains.client.renderer.block.RenderBlockGlass
-import ru.megains.common.block.TEST.{BlockMicroTest, MacroBlockTest}
-import ru.megains.common.block.{Block, BlockAir, BlockGlass, BlockGrass}
+import ru.megains.common.block.TEST.BlockMicroTest
+import ru.megains.common.block._
 import ru.megains.common.item.Item
 
 
@@ -17,10 +17,14 @@ object Blocks {
     lazy val micro1: Block = GameRegister.getBlockByName("micro0")
     lazy val micro2: Block = GameRegister.getBlockByName("micro1")
     lazy val micro3: Block = GameRegister.getBlockByName("micro2")
+    lazy val micro4: Block = GameRegister.getBlockByName("micro3")
 
-    lazy val macro1: Block = GameRegister.getBlockByName("macro0")
-    lazy val macro2: Block = GameRegister.getBlockByName("macro1")
-    lazy val macro3: Block = GameRegister.getBlockByName("macro2")
+    //  lazy val macro1: Block = GameRegister.getBlockByName("macro0")
+    // lazy val macro2: Block = GameRegister.getBlockByName("macro1")
+    // lazy val macro3: Block = GameRegister.getBlockByName("macro2")
+
+
+    lazy val blockMeta: Block = GameRegister.getBlockByName("blockMeta")
 
     def getIdByBlock(block: Block): Int = {
         GameRegister.getIdByBlock(block)
@@ -56,10 +60,12 @@ object Blocks {
         GameRegister.registerBlock(12, new Block("planks_oak"))
         GameRegister.registerBlock(13, new Block("leaves_oak"))
 
-        GameRegister.registerBlock(14, new MacroBlockTest("macro0", 0))
-        GameRegister.registerBlock(15, new MacroBlockTest("macro1", 1))
-        GameRegister.registerBlock(16, new MacroBlockTest("macro2", 2))
-
+        // GameRegister.registerBlock(14, new MacroBlockTest("macro0", 0))
+        // GameRegister.registerBlock(15, new MacroBlockTest("macro1", 1))
+        // GameRegister.registerBlock(16, new MacroBlockTest("macro2", 2))
+        // GameRegister.registerBlock(18, new MacroBlockTest("macro3", 3))
+        GameRegister.registerBlock(19, new BlockMicroTest("micro3", 3))
+        GameRegister.registerBlock(17, new BlockMeta("blockMeta"))
         GameRegister.registerBlockRender(Blocks.glass, RenderBlockGlass)
     }
 }

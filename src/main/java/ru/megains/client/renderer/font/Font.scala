@@ -13,8 +13,8 @@ class Font(val name: String) extends ATexture {
 
 
     val height = 24
-    val BITMAP_W = 512
-    val BITMAP_H = 512
+    val BITMAP_W = 1024
+    val BITMAP_H = 1024
     val cdata: Buffer = STBTTBakedChar.malloc(2000)
 
     override def loadTexture(): Boolean = {
@@ -22,7 +22,7 @@ class Font(val name: String) extends ATexture {
         try {
             val ttf = IOUtil.ioResourceToByteBuffer(s"fonts/$name.ttf", 160 * 1024)
             val bitmap = BufferUtils.createByteBuffer(BITMAP_W * BITMAP_H)
-            STBTruetype.stbtt_BakeFontBitmap(ttf, 24, bitmap, BITMAP_W, BITMAP_H, 32, cdata)
+            STBTruetype.stbtt_BakeFontBitmap(ttf, 24, bitmap, BITMAP_W, BITMAP_H, 0, cdata)
             glBindTexture(GL_TEXTURE_2D, texID)
             glPixelStorei(GL_UNPACK_ALIGNMENT, 1)
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)

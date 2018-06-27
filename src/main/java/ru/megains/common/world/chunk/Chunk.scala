@@ -124,7 +124,23 @@ class Chunk(val world: World, val position: ChunkPosition) {
         }
     }
 
+    def getBlockMeta(pos: BlockPos): Int = {
+        val posL = position.blockPosWorldToLocal(pos)
+        if (blockStorage.isMultiBlock(posL.worldX, posL.worldY, posL.worldZ)) {
+            blockStorage.getMultiBlock(posL.worldX, posL.worldY, posL.worldZ).getBlockMeta(posL.multiPos)
+        } else {
+            blockStorage.getBlockMeta(posL.worldX, posL.worldY, posL.worldZ)
+        }
+    }
 
+    def setBlockMeta(pos: BlockPos, meta: Int): Unit = {
+        val posL = position.blockPosWorldToLocal(pos)
+        if (blockStorage.isMultiBlock(posL.worldX, posL.worldY, posL.worldZ)) {
+            blockStorage.getMultiBlock(posL.worldX, posL.worldY, posL.worldZ).setBlockMeta(posL.multiPos, meta)
+        } else {
+            blockStorage.setBlockMeta(posL.worldX, posL.worldY, posL.worldZ, meta)
+        }
+    }
 }
 
 object Chunk {

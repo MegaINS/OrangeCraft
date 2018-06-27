@@ -4,6 +4,7 @@ package ru.megains.common.world.storage
 import ru.megains.common.block.Block
 import ru.megains.common.multiblock.{AMultiBlock, MultiBlock}
 import ru.megains.common.register.{Blocks, MultiBlocks}
+import ru.megains.common.world.chunk.Chunk
 
 import scala.collection.mutable
 
@@ -11,8 +12,9 @@ import scala.collection.mutable
 class ExtendedBlockStorage {
 
 
-    var blocksId: Array[Short] = new Array[Short](4096)
-    var blocksHp: Array[Int] = new Array[Int](4096)
+    var blocksId: Array[Short] = new Array[Short](Math.pow(Chunk.CHUNK_SIZE, 3) toInt)
+    var blocksHp: Array[Short] = new Array[Short](Math.pow(Chunk.CHUNK_SIZE, 3) toInt)
+    var blocksMeta: Array[Short] = new Array[Short](Math.pow(Chunk.CHUNK_SIZE, 3) toInt)
     val multiBlockStorage: mutable.HashMap[Int, MultiBlock] = new mutable.HashMap[Int, MultiBlock]
 
     def getBlockId(x: Int, y: Int, z: Int): Short = blocksId(getIndex(x, y, z))
@@ -25,13 +27,14 @@ class ExtendedBlockStorage {
         val index = getIndex(x, y, z)
         blocksId(index) = Blocks.getIdByBlock(value).toShort
         blocksHp(index) = value.maxHp
+        blocksMeta(index) = 0
     }
 
     def setMultiBlock(x: Int, y: Int, z: Int): Unit = {
         val index = getIndex(x, y, z)
         blocksId(index) = MultiBlock.id.toShort
         blocksHp(index) = -1
-
+        blocksMeta(index) = -1
     }
 
     def setMultiBlock(x: Int, y: Int, z: Int, value: MultiBlock): Unit = {
@@ -47,6 +50,10 @@ class ExtendedBlockStorage {
         multiBlockStorage.remove(getIndex(x, y, z))
     }
 
+    def setBlockMeta(x: Int, y: Int, z: Int, meta: Int): Unit = {
+        blocksMeta(getIndex(x, y, z)) = meta.toShort
+    }
+
     def getMultiBlock(x: Int, y: Int, z: Int): AMultiBlock = multiBlockStorage.getOrElse(
         getIndex(x, y, z),
         default = {
@@ -59,4 +66,7 @@ class ExtendedBlockStorage {
         blocksHp(getIndex(x, y, z))
     }
 
+    def getBlockMeta(x: Int, y: Int, z: Int): Int = {
+        blocksMeta(getIndex(x, y, z))
+    }
 }

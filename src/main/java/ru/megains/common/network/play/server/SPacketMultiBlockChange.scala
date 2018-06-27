@@ -28,7 +28,7 @@ class SPacketMultiBlockChange() extends Packet[INetHandlerPlayClient] {
 
         changedBlocks = new Array[BlockUpdateData](buf.readVarIntFromBuffer)
         for (i <- changedBlocks.indices) {
-            changedBlocks(i) = new BlockUpdateData(buf.readBlockPos(), Blocks.getBlockById(buf.readVarIntFromBuffer))
+            changedBlocks(i) = new BlockUpdateData(buf.readBlockPos(), Blocks.getBlockById(buf.readVarIntFromBuffer), buf.readInt())
         }
     }
 
@@ -39,6 +39,7 @@ class SPacketMultiBlockChange() extends Packet[INetHandlerPlayClient] {
         for (blockData <- changedBlocks) {
             buf.writeBlockPos(blockData.blockPosition)
             buf.writeVarIntToBuffer(Blocks.getIdByBlock(blockData.block))
+            buf.writeInt(blockData.meta)
         }
     }
 
@@ -52,17 +53,20 @@ class SPacketMultiBlockChange() extends Packet[INetHandlerPlayClient] {
 
         var blockPosition: BlockPos = _
         var block: Block = _
+        var meta: Int = _
 
-        def this(blockPositionIn: BlockPos, blockIn: Block) {
+        def this(blockPositionIn: BlockPos, blockIn: Block, metaIn: Int) {
             this()
             blockPosition = blockPositionIn
             block = blockIn
+            meta = metaIn
         }
 
         def this(blockPositionIn: BlockPos, chunk: Chunk) {
             this()
             blockPosition = blockPositionIn
             block = chunk.getBlockWorldCord(blockPosition)
+            meta = chunk.getBlockMeta(blockPositionIn)
         }
 
     }

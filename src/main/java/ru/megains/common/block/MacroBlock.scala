@@ -12,7 +12,6 @@ class MacroBlock(name: String) extends Block(name) {
 
     override def isOpaqueCube: Boolean = false
 
-
     override def getSelectPosition(worldIn: World, objectMouseOver: RayTraceResult): BlockPos = {
         val posTarget: BlockPos = objectMouseOver.getBlockWorldPos
         val posSet: BlockPos = posTarget.sum(objectMouseOver.sideHit)

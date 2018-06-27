@@ -4,6 +4,7 @@ import java.awt.Color
 
 import org.lwjgl.glfw.GLFW._
 import ru.megains.client.OrangeCraft
+import ru.megains.client.renderer.gui.Element.{GuiButton, GuiElement}
 import ru.megains.client.renderer.mesh.Mesh
 import ru.megains.common.entity.player.EntityPlayer
 

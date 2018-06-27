@@ -3,6 +3,7 @@ package ru.megains.client.renderer.gui
 import java.awt.Color
 
 import ru.megains.client.OrangeCraft
+import ru.megains.client.renderer.gui.Element.GuiButton
 
 class GuiDisconnected(screen: GuiScreen, reasonLocalizationKey: String, chatComp: String) extends GuiScreen with GuiText {
 

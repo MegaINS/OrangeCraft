@@ -32,9 +32,9 @@ public class PacketBuffer extends ByteBuf {
         writeInt(pos.worldX());
         writeInt(pos.worldY());
         writeInt(pos.worldZ());
-        writeByte(pos.blockX().id());
-        writeByte(pos.blockY().id());
-        writeByte(pos.blockZ().id());
+        writeByte(pos.multiPos().x().id());
+        writeByte(pos.multiPos().y().id());
+        writeByte(pos.multiPos().z().id());
     }
 
 

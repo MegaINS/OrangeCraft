@@ -68,7 +68,7 @@ class EntityRenderer(oc: OrangeCraft) {
 
 
     def render(camera: Camera) {
-        transformation.updateProjectionMatrix(FOV, 1600, 1200, Z_NEAR, Z_FAR, camera)
+        transformation.updateProjectionMatrix(FOV, 800, 600, Z_NEAR, Z_FAR, camera)
         transformation.updateViewMatrix(camera)
         val projectionMatrix: Matrix4f = transformation.getProjectionMatrix
         val viewMatrix: Matrix4f = transformation.getViewMatrix
@@ -99,13 +99,12 @@ class EntityRenderer(oc: OrangeCraft) {
         RenderChunk.clearRend()
 
 
-        worldRenderer.getRenderChunks(oc.player, frustum).foreach((renderChunk: RenderChunk) => {
-            sceneShaderProgram.setUniform("modelViewMatrix", transformation.buildChunkModelViewMatrix(renderChunk.chunk.position))
-            renderChunk.render(0)
-        }
-
-
-        )
+        worldRenderer.getRenderChunks(oc.player).foreach((renderChunk: RenderChunk) => {
+            if (frustum.chunkInFrustum(renderChunk.chunkPosition)) {
+                sceneShaderProgram.setUniform("modelViewMatrix", transformation.buildChunkModelViewMatrix(renderChunk.chunk.position))
+                renderChunk.render(0)
+            }
+        })
 
         worldRenderer.renderEntitiesItem(frustum, transformation)
         glDisable(GL_CULL_FACE)
@@ -140,24 +139,6 @@ class EntityRenderer(oc: OrangeCraft) {
         val ortho: Matrix4f = transformation.getOrtho2DProjectionMatrix(0, 800, 0, 600)
         hudShaderProgram.setUniform("projectionMatrix", ortho)
         oc.guiManager.draw(Mouse.getX, Mouse.getY)
-
-        //        glEnableClientState(GL_VERTEX_ARRAY)
-        //
-        //
-        //
-        //        glVertexPointer(2, GL_FLOAT, 16, charBuffer)
-        //
-        //
-        //        glColor3f(169f / 255f, 183f / 255f, 198f / 255f) // Text color
-        //
-        //        EntityRenderer.currentShaderProgram.setUniform("modelMatrix", transformation.buildOrtoProjModelMatrix(40, 40, 1))
-        //        glDrawArrays(GL_QUADS, 0, quads * 4)
-        //
-        //        glDisableClientState(GL_VERTEX_ARRAY)
-
-
-
-
 
 
         unbindShaderProgram()

@@ -15,29 +15,30 @@ class MicroBlock(name: String) extends Block(name) {
         var posTarget: BlockPos = objectMouseOver.getBlockWorldPos
         var posSet: BlockPos = null
         posSet = new BlockPos(posTarget.sum(objectMouseOver.sideHit), BlockSize.get(objectMouseOver.hitVec.x), BlockSize.get(objectMouseOver.hitVec.y), BlockSize.get(objectMouseOver.hitVec.z))
-        var x: Float = posSet.blockX.value
-        var y: Float = posSet.blockY.value
-        var z: Float = posSet.blockZ.value
         val bd: BlockDirection = objectMouseOver.sideHit
-        if (bd eq BlockDirection.UP) y = 0
-        else if (bd eq BlockDirection.EAST) x = 0
-        else if (bd eq BlockDirection.SOUTH) z = 0
-        else if (bd eq BlockDirection.DOWN) y = 1
-        else if (bd eq BlockDirection.WEST) x = 1
-        else if (bd eq BlockDirection.NORTH) z = 1
-        if (x + getPhysicsBody.getMaxX > 1) x = 1 - getPhysicsBody.getMaxX
-        if (y + getPhysicsBody.getMaxY > 1) y = 1 - getPhysicsBody.getMaxY
-        if (z + getPhysicsBody.getMaxZ > 1) z = 1 - getPhysicsBody.getMaxZ
-        posSet = new BlockPos(posSet, BlockSize.get(x), BlockSize.get(y), BlockSize.get(z))
+
         if (worldIn.getMultiBlock(posTarget).isFullBlock) {
+            var x: Float = posSet.multiPos.floatX
+            var y: Float = posSet.multiPos.floatY
+            var z: Float = posSet.multiPos.floatZ
+            if (bd eq BlockDirection.UP) y = 0
+            else if (bd eq BlockDirection.EAST) x = 0
+            else if (bd eq BlockDirection.SOUTH) z = 0
+            else if (bd eq BlockDirection.DOWN) y = 1
+            else if (bd eq BlockDirection.WEST) x = 1
+            else if (bd eq BlockDirection.NORTH) z = 1
+            if (x + getPhysicsBody.getMaxX > 1) x = 1 - getPhysicsBody.getMaxX
+            if (y + getPhysicsBody.getMaxY > 1) y = 1 - getPhysicsBody.getMaxY
+            if (z + getPhysicsBody.getMaxZ > 1) z = 1 - getPhysicsBody.getMaxZ
+            posSet = new BlockPos(posSet, BlockSize.get(x), BlockSize.get(y), BlockSize.get(z))
             if (worldIn.isAirBlock(posSet)) posSet
             else if (worldIn.getMultiBlock(posSet).isCanPut(posSet, this)) posSet
             else null
         } else {
             posTarget = new BlockPos(posTarget, BlockSize.get(objectMouseOver.hitVec.x), BlockSize.get(objectMouseOver.hitVec.y), BlockSize.get(objectMouseOver.hitVec.z))
-            var x1: Float = posTarget.blockX.value
-            var y1: Float = posTarget.blockY.value
-            var z1: Float = posTarget.blockZ.value
+            var x1: Float = posTarget.multiPos.floatX
+            var y1: Float = posTarget.multiPos.floatY
+            var z1: Float = posTarget.multiPos.floatZ
             if (bd eq BlockDirection.UP) {
                 if (y1 + getPhysicsBody.getMaxY > 1) y1 = 1 - getPhysicsBody.getMaxY
             } else if (bd eq BlockDirection.DOWN) {
@@ -60,6 +61,7 @@ class MicroBlock(name: String) extends Block(name) {
             else if (worldIn.isAirBlock(posSet)) posSet
             else if (worldIn.getMultiBlock(posSet).isCanPut(posSet, this)) posSet
             else null
+
         }
     }
 }

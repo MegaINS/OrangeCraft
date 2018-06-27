@@ -10,11 +10,13 @@ class SPacketBlockChange() extends Packet[INetHandlerPlayClient] {
 
     var blockPosition: BlockPos = _
     var block: Block = _
+    var meta: Int = _
 
     def this(worldIn: World, posIn: BlockPos) {
         this()
         blockPosition = posIn
         block = worldIn.getBlock(posIn)
+        meta = worldIn.getBlockMeta(posIn)
     }
 
     /**
@@ -24,6 +26,7 @@ class SPacketBlockChange() extends Packet[INetHandlerPlayClient] {
     def readPacketData(buf: PacketBuffer) {
         blockPosition = buf.readBlockPos
         block = Blocks.getBlockById(buf.readVarIntFromBuffer)
+        meta = buf.readInt()
     }
 
     /**
@@ -33,6 +36,7 @@ class SPacketBlockChange() extends Packet[INetHandlerPlayClient] {
     def writePacketData(buf: PacketBuffer) {
         buf.writeBlockPos(blockPosition)
         buf.writeVarIntToBuffer(Blocks.getIdByBlock(block))
+        buf.writeInt(meta)
     }
 
     /**

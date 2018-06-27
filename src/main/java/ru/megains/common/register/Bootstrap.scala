@@ -2,7 +2,6 @@ package ru.megains.common.register
 
 import ru.megains.client.OrangeCraft
 import ru.megains.common.item.Item
-import ru.megains.common.multiblock.MultiBlockSingle
 import ru.megains.common.utils.Logger
 
 object Bootstrap extends Logger[OrangeCraft] {
@@ -16,8 +15,6 @@ object Bootstrap extends Logger[OrangeCraft] {
             Blocks.initBlocks()
             log.info("Items init...")
             Item.initItems()
-            log.info("MultiBlockSingle init...")
-            MultiBlockSingle.initMultiBlockSingle()
         }
 
     }

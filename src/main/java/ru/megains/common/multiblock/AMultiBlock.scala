@@ -11,6 +11,11 @@ import scala.collection.mutable.ArrayBuffer
 
 
 abstract class AMultiBlock {
+
+    def setBlockMeta(multiPos: MultiBlockPos, meta: Int): Unit
+
+    def getBlockMeta(pos: MultiBlockPos): Int
+
     def getBlockHp(pos: MultiBlockPos): Int
 
     def getBlock(multiPos: MultiBlockPos): Block

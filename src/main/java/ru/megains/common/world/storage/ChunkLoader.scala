@@ -1,6 +1,5 @@
 package ru.megains.common.world.storage
 
-import ru.megains.common.block.Block
 import ru.megains.common.block.blockdata.MultiBlockPos
 import ru.megains.common.multiblock.MultiBlock
 import ru.megains.common.position.ChunkPosition
@@ -55,20 +54,24 @@ class ChunkLoader(worldDirectory: Directory) {
         val multiBlockStorage = blockStorage.multiBlockStorage
 
         blockStorage.blocksId = compound.getArrayShort("blocksId")
-        blockStorage.blocksHp = compound.getArrayInt("blocksHp")
-
+        blockStorage.blocksHp = compound.getArrayShort("blocksHp")
+        blockStorage.blocksMeta = compound.getArrayShort("blocksMeta")
+        blockStorage.blocksMeta.foreach((meta) => if (meta > 0) println(meta))
         val posList = compound.getList("multiBlockPosition")
         val multiBlockList = compound.getList("multiBlockData")
 
         for (i <- 0 until posList.getLength) {
             val posMultiBlock = posList.getInt(i)
             val multiBlock = new MultiBlock()
+            val blockData = multiBlock.blockData
             val blockList = multiBlockList.getList(i)
             val indexList = blockList.getList(0)
-            val blockIdList = blockList.getList(1)
+            val blocksId = blockList.getList(1)
+            val blocksHp = blockList.getList(2)
+            val blocksMeta = blockList.getList(3)
 
             for (j <- 0 until indexList.getLength) {
-                multiBlock.putBlock(MultiBlockPos.getForIndex(indexList.getInt(j)), Blocks.getBlockById(blockIdList.getInt(j)))
+                blockData += MultiBlockPos.getForIndex(indexList.getInt(j)) -> (Blocks.getBlockById(blocksId.getInt(j)), blocksHp.getInt(j), blocksMeta.getInt(j))
             }
             multiBlockStorage.put(posMultiBlock, multiBlock)
         }
@@ -82,25 +85,28 @@ class ChunkLoader(worldDirectory: Directory) {
 
         compound.setValue("blocksId", blockStorage.blocksId)
         compound.setValue("blocksHp", blockStorage.blocksHp)
+        compound.setValue("blocksMeta", blockStorage.blocksMeta)
         val posList = compound.createList("multiBlockPosition", EnumNBTInt)
         val multiBlockList = compound.createList("multiBlockData", EnumNBTList)
 
-        multiBlockStorage.foreach(
-            (data: (Int, MultiBlock)) => {
-                posList.setValue(data._1)
+
+        multiBlockStorage.foreach {
+            case (index, multiBlock) =>
+                posList.setValue(index)
                 val blockList = multiBlockList.createList(EnumNBTList)
                 val indexList = blockList.createList(EnumNBTInt)
-                val blockIdList = blockList.createList(EnumNBTInt)
+                val blocksId = blockList.createList(EnumNBTInt)
+                val blocksHp = blockList.createList(EnumNBTInt)
+                val blocksMeta = blockList.createList(EnumNBTInt)
+                multiBlock.blockData.foreach {
+                    case (blockPos, (block, hp, meta)) =>
+                        indexList.setValue(blockPos.getIndex)
+                        blocksId.setValue(Blocks.getIdByBlock(block))
+                        blocksHp.setValue(hp)
+                        blocksMeta.setValue(meta)
 
-                data._2.blockData.foreach(
-                    (data2: (MultiBlockPos, (Block, Int))) => {
-                        indexList.setValue(data2._1.getIndex)
-                        blockIdList.setValue(Blocks.getIdByBlock(data2._2._1))
-                        blockIdList.setValue(data2._2._2)
-                    }
-                )
-            }
-        )
+                }
+        }
     }
 
     def saveExtraChunkData(worldIn: World, chunkIn: Chunk) {

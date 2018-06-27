@@ -1,6 +1,5 @@
 package ru.megains.common.network.play.server
 
-import ru.megains.common.block.Block
 import ru.megains.common.block.blockdata.MultiBlockPos
 import ru.megains.common.multiblock.MultiBlock
 import ru.megains.common.network.{Packet, PacketBuffer}
@@ -50,10 +49,12 @@ class SPacketChunkData extends Packet[INetHandlerPlayClient] {
         val blockStorage: ExtendedBlockStorage = new ExtendedBlockStorage
         val blocksId = blockStorage.blocksId
         val blocksHp = blockStorage.blocksHp
+        val blocksMeta = blockStorage.blocksMeta
         val multiBlockStorage = blockStorage.multiBlockStorage
         for (i <- 0 until 4096) {
             blocksId(i) = buf.readShort()
-            blocksHp(i) = buf.readInt()
+            blocksHp(i) = buf.readShort()
+            blocksMeta(i) = buf.readShort()
         }
 
         val sizeMultiBlock = buf.readInt()
@@ -69,7 +70,8 @@ class SPacketChunkData extends Packet[INetHandlerPlayClient] {
                 val posBlock = buf.readInt()
                 val blockId = buf.readInt()
                 val blockHp = buf.readInt()
-                blockData += MultiBlockPos.getForIndex(posBlock) -> (Blocks.getBlockById(blockId), blockHp)
+                val blockMeta = buf.readInt()
+                blockData += MultiBlockPos.getForIndex(posBlock) -> (Blocks.getBlockById(blockId), blockHp, blockMeta)
             }
             multiBlockStorage.put(posMultiBlock, multiBlock)
         }
@@ -79,40 +81,31 @@ class SPacketChunkData extends Packet[INetHandlerPlayClient] {
     def writeChunk(buf: PacketBuffer): Unit = {
 
         val blocksId = blockStorage.blocksId
-        val blockHp = blockStorage.blocksHp
+        val blocksHp = blockStorage.blocksHp
+        val blocksMeta = blockStorage.blocksMeta
         for (i <- 0 until 4096) {
             buf.writeShort(blocksId(i))
-            buf.writeInt(blockHp(i))
+            buf.writeShort(blocksHp(i))
+            buf.writeShort(blocksMeta(i))
         }
 
-
         val multiBlockStorage = blockStorage.multiBlockStorage
-
-        //Колличество мультиБлоков
         buf.writeInt(multiBlockStorage.size)
 
-
-        multiBlockStorage.foreach(
-            (data: (Int, MultiBlock)) => {
-                //Координаты мультиБлока
-                buf.writeInt(data._1)
-
-                val blockData = data._2.blockData
-                //Колличество блоков в мультиБлоке
+        multiBlockStorage.foreach {
+            case (index, multiBlock) =>
+                buf.writeInt(index)
+                val blockData = multiBlock.blockData
                 buf.writeInt(blockData.size)
 
-                blockData.foreach(
-                    (data2: (MultiBlockPos, (Block, Int))) => {
-                        //Координаты блока
-                        buf.writeInt(data2._1.getIndex)
-                        //Id блока
-                        buf.writeInt(Blocks.getIdByBlock(data2._2._1))
-                        //Hp блока
-                        buf.writeInt(data2._2._2)
-                    }
-                )
-            }
-        )
+                blockData.foreach {
+                    case (blockPos, (block, hp, meta)) =>
+                        buf.writeInt(blockPos.getIndex)
+                        buf.writeInt(Blocks.getIdByBlock(block))
+                        buf.writeInt(hp)
+                        buf.writeInt(meta)
+                }
+        }
 
     }
 

@@ -3,7 +3,13 @@ package ru.megains.common.world
 import ru.megains.common.position.ChunkPosition
 import ru.megains.common.world.chunk.Chunk
 
+import scala.collection.mutable
+
 abstract class IChunkProvider {
+
+
+    val chunkMap: mutable.HashMap[Long, Chunk]
+
     def unload(chunk: Chunk): Unit
 
 

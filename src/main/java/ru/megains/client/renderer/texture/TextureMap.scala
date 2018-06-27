@@ -27,33 +27,25 @@ class TextureMap() extends ATexture with TTextureRegister with Logger[TextureMap
     }
 
     def registerAllTexture(): Unit = {
-
         textureBlockMap += "missing" -> missingTexture
         GameRegister.getBlocks.foreach(_.registerTexture(this))
         GameRegister.getItems.foreach(_.registerTexture(this))
     }
 
-
     def loadTextureAtlas(): Unit = {
 
         textureBlockMap.values.foreach(_.loadTexture())
-
         list = textureBlockMap.values.toList.sortBy(_.width).reverse
         createTexture()
         updateTexture()
         glBindTexture(GL_TEXTURE_2D, getGlTextureId)
-
-
         glGenerateMipmap(GL_TEXTURE_2D)
-
     }
 
     override def registerTexture(textureName: String): TextureAtlas = {
 
         if (textureBlockMap.contains(textureName)) return textureBlockMap(textureName)
-
         val tTexture = new TextureAtlas("blocks/" + textureName)
-
         if (!tTexture.isMissingTexture) {
             textureBlockMap += textureName -> tTexture
             tTexture
@@ -72,12 +64,9 @@ class TextureMap() extends ATexture with TTextureRegister with Logger[TextureMap
 
         map = Array.ofDim[Boolean](width, height)
         list.foreach((tex: TextureAtlas) => {
-            val size: Int = tex.height
-            searchBox(size, tex)
-
+            searchBox(tex.height, tex)
         })
         glBindTexture(GL_TEXTURE_2D, getGlTextureId)
-
 
         val byteBuffer: ByteBuffer = null
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1)
@@ -92,7 +81,6 @@ class TextureMap() extends ATexture with TTextureRegister with Logger[TextureMap
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, byteBuffer)
         log.info("Create texture block map " + width + "-" + height + " pixels")
-
     }
 
     def searchBox(size: Int, tex: TextureAtlas): Boolean = {
@@ -111,7 +99,6 @@ class TextureMap() extends ATexture with TTextureRegister with Logger[TextureMap
                 tex.startX = x
                 tex.startY = y
                 return true
-
             }
         }
         resizeMap()

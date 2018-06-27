@@ -1,9 +1,8 @@
 package ru.megains.server
 
 
-import ru.megains.common.item.ItemStack
 import ru.megains.common.network.ServerStatusResponse
-import ru.megains.common.register.{Bootstrap, Items}
+import ru.megains.common.register.Bootstrap
 import ru.megains.common.utils.{IThreadListener, Logger}
 import ru.megains.common.world.storage.AnvilSaveFormat
 import ru.megains.server.network.NetworkSystem
@@ -39,7 +38,6 @@ class OrangeCraftServer(serverDir: Directory) extends Runnable with Logger[Orang
 
         saveLoader = new AnvilSaveFormat(serverDir)
         loadAllWorlds()
-        new ItemStack(Items.stick, 10)
 
         true
     }
@@ -154,7 +152,7 @@ class OrangeCraftServer(serverDir: Directory) extends Runnable with Logger[Orang
 
     }
 
-    def loadAllWorlds() = {
+    def loadAllWorlds(): Unit = {
         val saveHandler = saveLoader.getSaveLoader("world")
         world = new WorldServer(this, saveHandler)
         world.addEventListener(new ServerWorldEventHandler(this, world))
@@ -163,7 +161,7 @@ class OrangeCraftServer(serverDir: Directory) extends Runnable with Logger[Orang
         initialWorldChunkLoad()
     }
 
-    def initialWorldChunkLoad() = {
+    def initialWorldChunkLoad(): Unit = {
 
     }
 
@@ -184,10 +182,9 @@ class OrangeCraftServer(serverDir: Directory) extends Runnable with Logger[Orang
             callable()
 
         catch {
-            case exception: Exception => {
+            case exception: Exception =>
                 println("addScheduledTask")
                 exception.printStackTrace()
-            }
         }
     }
 

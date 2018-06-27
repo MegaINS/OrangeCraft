@@ -17,13 +17,19 @@ import scala.util.Random
 class Block(val name: String) {
 
 
-    val maxHp: Int = 100
+    val maxHp: Short = 100
 
     var aTexture: TextureAtlas = _
 
     var textureName: String = ""
 
     val format: BlockFormat = BlockFormat.STANDART
+
+    def isOpaqueCube: Boolean = true
+
+    def isAir: Boolean = false
+
+    def getLayerRender: Int = 0
 
     def randomUpdate(world: World, blockPos: BlockPos, rand: Random): Unit = {
 
@@ -32,7 +38,7 @@ class Block(val name: String) {
     def onBlockPlacedBy(worldIn: World, pos: BlockPos, placer: EntityLivingBase, stack: ItemStack) {
     }
 
-    def getATexture(blockDirection: BlockDirection): TextureAtlas = aTexture
+    def getATexture(pos: BlockPos, blockDirection: BlockDirection, world: World): TextureAtlas = aTexture
 
     def setTextureName(textureName: String): Block = {
         this.textureName = textureName
@@ -43,10 +49,9 @@ class Block(val name: String) {
         aTexture = textureRegister.registerTexture(name)
     }
 
-    // def isFullBlock: Boolean = true
+    def getATexture(blockDirection: BlockDirection): TextureAtlas = aTexture
 
 
-    def isOpaqueCube: Boolean = true
 
     def onBlockActivated(worldIn: World, pos: BlockPos, playerIn: EntityPlayer, heldItem: ItemStack, side: BlockDirection, hitX: Float, hitY: Float, hitZ: Float): Boolean = false
 
@@ -69,10 +74,6 @@ class Block(val name: String) {
             new RayTraceResult(rayTraceResult.hitVec.add(pos.worldX, pos.worldY, pos.worldZ), rayTraceResult.sideHit, new BlockPos(pos, offset.x, offset.y, offset.z), this)
         }
     }
-
-    def isAir: Boolean = false
-
-    def getLayerRender: Int = 0
 
     def removedByPlayer(world: World, pos: BlockPos, player: EntityPlayer, willHarvest: Boolean): Boolean = {
         onBlockHarvested(world, pos, player)

@@ -2,6 +2,7 @@ package ru.megains.common.entity
 
 
 import org.joml.Vector3d
+import ru.megains.common.block.blockdata.BlockDirection
 import ru.megains.common.physics.AxisAlignedBB
 import ru.megains.common.util.{MathHelper, RayTraceResult}
 import ru.megains.common.world.World
@@ -34,6 +35,8 @@ abstract class Entity(var world: World, val height: Float, val wight: Float, val
 
     var speed: Float = 50
     var onGround: Boolean = false
+
+    var side: BlockDirection = BlockDirection.DOWN
 
     def setPosition(x: Double, y: Double, z: Double) {
 

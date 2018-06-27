@@ -6,12 +6,13 @@ import ru.megains.common.physics.{AxisAlignedBB, BlockAxisAlignedBB}
 
 class MacroBlockTest(name: String, val size: Int) extends MacroBlock(name) {
 
-    override val maxHp: Int = size * 500
+    override val maxHp: Short = size * 500 toShort
     val S2 = BlockSize(2)
     val S3 = BlockSize(3)
     val S4 = BlockSize(4)
     val boundingBox = Array(new BlockAxisAlignedBB(BlockSize.S0, BlockSize.S0, BlockSize.S0, S2, S2, S2),
         new BlockAxisAlignedBB(BlockSize.S0, BlockSize.S0, BlockSize.S0, BlockSize.S1, S2, BlockSize.S1),
+        new BlockAxisAlignedBB(BlockSize.S0, BlockSize.S0, BlockSize.S0, BlockSize.S1, BlockSize.S1, S2),
         new BlockAxisAlignedBB(BlockSize.S0, BlockSize.S0, BlockSize.S0, BlockSize.S1, BlockSize.S1, S2)
     )
 

@@ -2,7 +2,7 @@ package ru.megains.common.block.blockdata
 
 import ru.megains.common.block.blockdata.BlockFormat.STANDART
 
-sealed abstract class BlockFormat extends Enumeration {
+sealed abstract class BlockFormat {
 
     def isStandart: Boolean = this == STANDART
 

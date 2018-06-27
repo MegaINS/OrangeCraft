@@ -130,9 +130,9 @@ public class Transformation {
 
     public Matrix4f buildBlockModelViewMatrix(BlockPos blockPos) {
         //    Vector3f rotation = gameItem.getRotation();
-        modelMatrix.identity().translate(blockPos.worldX() + blockPos.blockX().value(),
-                blockPos.worldY() + blockPos.blockY().value(),
-                blockPos.worldZ() + blockPos.blockZ().value());
+        modelMatrix.identity().translate(blockPos.worldX() + blockPos.multiPos().floatX(),
+                blockPos.worldY() + blockPos.multiPos().floatY(),
+                blockPos.worldZ() + blockPos.multiPos().floatZ());
 //                rotateX((float)Math.toRadians(-rotation.x)).
 //                rotateY((float)Math.toRadians(-rotation.y)).
 //                rotateZ((float)Math.toRadians(-rotation.z)).

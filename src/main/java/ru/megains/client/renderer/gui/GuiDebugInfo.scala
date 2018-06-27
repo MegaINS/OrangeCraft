@@ -3,12 +3,14 @@ package ru.megains.client.renderer.gui
 import java.awt.Color
 
 import ru.megains.client.OrangeCraft
+import ru.megains.common.block.blockdata.BlockDirection
 import ru.megains.common.world.GameType
 import ru.megains.common.world.GameType.NOT_SET
 
 class GuiDebugInfo extends GuiInGame with GuiText {
 
     var lastGameType: GameType = NOT_SET
+    var lastSide: BlockDirection = BlockDirection.UP
 
     override def initGui(orangeCraft: OrangeCraft): Unit = {
 
@@ -17,6 +19,7 @@ class GuiDebugInfo extends GuiInGame with GuiText {
         addText("position.x", createString("x:", Color.WHITE))
         addText("position.y", createString("y:", Color.WHITE))
         addText("position.z", createString("z:", Color.WHITE))
+        addText("position.side", createString("side:", Color.WHITE))
         addText("fps", createString("FPS:", Color.WHITE))
         addText("memory", createString("Memory use:", Color.WHITE))
         addText("gameType", createString("Game type: " + lastGameType.name, Color.WHITE))
@@ -29,7 +32,8 @@ class GuiDebugInfo extends GuiInGame with GuiText {
         drawObject(0, height - 40, 1, text("position.x"))
         drawObject(0, height - 60, 1, text("position.y"))
         drawObject(0, height - 80, 1, text("position.z"))
-        drawObject(0, height - 100, 1, text("gameType"))
+        drawObject(0, height - 100, 1, text("position.side"))
+        drawObject(0, height - 120, 1, text("gameType"))
         drawObject(weight - 250, height - 40, 1, text("fps"))
         drawObject(weight - 250, height - 20, 1, text("memory"))
 
@@ -44,6 +48,11 @@ class GuiDebugInfo extends GuiInGame with GuiText {
         if (lastGameType ne gameType) {
             lastGameType = gameType
             addText("gameType", createString("Game type: " + gameType.name, Color.WHITE))
+        }
+        val side = oc.player.side
+        if (side != lastSide) {
+            lastSide = side
+            addText("position.side", createString("side: " + side.name, Color.WHITE))
         }
         tickI += 1
         if (tickI > 19) {

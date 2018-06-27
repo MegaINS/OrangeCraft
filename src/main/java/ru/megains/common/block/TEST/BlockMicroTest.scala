@@ -8,14 +8,16 @@ import ru.megains.common.physics.{AxisAlignedBB, BlockAxisAlignedBB}
 class BlockMicroTest(name: String, val size: Int) extends MicroBlock(name) {
 
 
-    override val maxHp: Int = size * 50
+    override val maxHp: Short = size * 50 toShort
 
     val boundingBox = Array(new BlockAxisAlignedBB(BlockSize.S0, BlockSize.S0, BlockSize.S0,
-        BlockSize.S4_16, BlockSize.S4_16, BlockSize.S4_16),
+        BlockSize.S5_16, BlockSize.S5_16, BlockSize.S5_16),
         new BlockAxisAlignedBB(BlockSize.S0, BlockSize.S0, BlockSize.S0,
-            BlockSize.S8_16, BlockSize.S8_16, BlockSize.S8_16),
+            BlockSize.S4_16, BlockSize.S4_16, BlockSize.S4_16),
         new BlockAxisAlignedBB(BlockSize.S0, BlockSize.S0, BlockSize.S0,
-            BlockSize.S12_16, BlockSize.S12_16, BlockSize.S12_16)
+            BlockSize.S6_16, BlockSize.S6_16, BlockSize.S6_16),
+        new BlockAxisAlignedBB(BlockSize.S0, BlockSize.S0, BlockSize.S0,
+            BlockSize.S7_16, BlockSize.S7_16, BlockSize.S7_16)
     )
 
 

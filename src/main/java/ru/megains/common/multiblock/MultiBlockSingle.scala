@@ -13,7 +13,10 @@ import scala.collection.mutable.ArrayBuffer
 
 class MultiBlockSingle(val block: Block) extends AMultiBlock {
 
+
+    override def getBlockMeta(pos: MultiBlockPos): Int = -100
     override def getBlockHp(pos: MultiBlockPos): Int = -100
+
     override def isFullBlock: Boolean = true
 
     override def isOpaqueCube: Boolean = block.isOpaqueCube
@@ -44,15 +47,11 @@ class MultiBlockSingle(val block: Block) extends AMultiBlock {
     override def isEmpty: Boolean = false
 
     override def getBlock(multiPos: MultiBlockPos): Block = block
+
+    override def setBlockMeta(multiPos: MultiBlockPos, meta: Int): Unit = {}
 }
 
 object MultiBlockSingle {
 
-    def initMultiBlockSingle(): Unit = {
-        //  GameRegister.registerMultiBlockSingle(new MultiBlockSingle(Blocks.air))
-        //  GameRegister.registerMultiBlockSingle(new MultiBlockSingle(Blocks.stone))
-        //  GameRegister.registerMultiBlockSingle(new MultiBlockSingle(Blocks.dirt))
-        //  GameRegister.registerMultiBlockSingle(new MultiBlockSingle(Blocks.grass))
-        //  GameRegister.registerMultiBlockSingle(new MultiBlockSingle(Blocks.glass))
-    }
+
 }

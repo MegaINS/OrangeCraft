@@ -23,7 +23,7 @@ class PlayerChunkMap(val worldServer: WorldServer) {
 
     val playerInstancesToUpdate: mutable.HashSet[PlayerChunkMapEntry] = new mutable.HashSet[PlayerChunkMapEntry]()
 
-    val playerViewRadius: Int = 5
+    val playerViewRadius: Int = 6
     var previousTotalWorldTime: Long = 0
 
     val CAN_GENERATE_CHUNKS = (player: EntityPlayerMP) => player != null
@@ -45,33 +45,16 @@ class PlayerChunkMap(val worldServer: WorldServer) {
         playerInstancesToUpdate.foreach(_.update())
         playerInstancesToUpdate.clear()
 
-        //        if (this.sortMissingChunks && i % 4L == 0L) {
-        //            this.sortMissingChunks = false
-        //            Collections.sort(this.playersNeedingChunks, new Comparator[PlayerChunkMapEntry]() {
-        //                def compare(p_compare_1_:
-        //
-        //                PlayerChunkMapEntry, p_compare_2_: PlayerChunkMapEntry): Int = {
-        //                    return ComparisonChain.start.compare(p_compare_1_.getClosestPlayerDistance, p_compare_2_.getClosestPlayerDistance).result
-        //                }
-        //            })
-        //        }
-        //        if (this.sortSendToPlayers && i % 4L == 2L) {
-        //            this.sortSendToPlayers = false
-        //            Collections.sort(this.pendingSendToPlayers, new Comparator[PlayerChunkMapEntry]() {
-        //                def compare(p_compare_1_:
-        //
-        //                PlayerChunkMapEntry, p_compare_2_: PlayerChunkMapEntry): Int = {
-        //                    return ComparisonChain.start.compare(p_compare_1_.getClosestPlayerDistance, p_compare_2_.getClosestPlayerDistance).result
-        //                }
-        //            })
-        //        }
+
 
 
         if (playersNeedingChunks.nonEmpty) {
             val l: Long = System.nanoTime + 50000000L
-            var k: Int = 49
+            var k: Int = 40
 
-
+            playersNeedingChunks = playersNeedingChunks.sortBy((chunk) => {
+                chunk.getClosestPlayerDistance
+            })
 
 
 
@@ -96,8 +79,11 @@ class PlayerChunkMap(val worldServer: WorldServer) {
         }
 
         if (pendingSendToPlayers.nonEmpty) {
-            var i1: Int = 81
+            var i1: Int = 60
 
+            pendingSendToPlayers = pendingSendToPlayers.sortBy((chunk) => {
+                chunk.getClosestPlayerDistance
+            })
             pendingSendToPlayers = pendingSendToPlayers.flatMap(
                 (player) => {
                     if (!(i1 < 0)) {

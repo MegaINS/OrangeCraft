@@ -209,7 +209,7 @@ class OrangeCraft(ocDataDir: String) extends Logger[OrangeCraft] with IThreadLis
             player = null
         }
 
-
+        objectMouseOver = null
 
         world = newWorld
     }

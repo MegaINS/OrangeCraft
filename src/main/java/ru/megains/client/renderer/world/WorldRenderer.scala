@@ -13,6 +13,7 @@ import ru.megains.common.position.ChunkPosition
 import ru.megains.common.register.GameRegister
 
 import scala.collection.mutable
+import scala.collection.mutable.ArrayBuffer
 
 
 class WorldRenderer(val world: WorldClient, val textureManager: TextureManager) {
@@ -23,21 +24,30 @@ class WorldRenderer(val world: WorldClient, val textureManager: TextureManager) 
     val renderChunks: mutable.HashMap[Long, RenderChunk] = new mutable.HashMap[Long, RenderChunk]
     var blockMouseOver: Mesh = _
     var blockSelect: Mesh = _
-    val range = 6
+    val range = 5
+    var lastX = 0
+    var lastY = 0
+    var lastZ = 0
+    val playerRenderChunks: ArrayBuffer[RenderChunk] = mutable.ArrayBuffer[RenderChunk]()
 
-
-    def getRenderChunks(entityPlayer: EntityPlayer, frustum: Frustum): IndexedSeq[RenderChunk] = {
+    def getRenderChunks(entityPlayer: EntityPlayer): ArrayBuffer[RenderChunk] = {
+        // TODO:  OPTIMIZE
         val posX: Int = entityPlayer.posX / 16 - (if (entityPlayer.posX < 0) 1 else 0) toInt
         val posY: Int = entityPlayer.posY / 16 - (if (entityPlayer.posY < 0) 1 else 0) toInt
         val posZ: Int = entityPlayer.posZ / 16 - (if (entityPlayer.posZ < 0) 1 else 0) toInt
 
-        for {x <- posX - range to posX + range
-             y <- posY - range to posY + range
-             z <- posZ - range to posZ + range
-             renderChunk = getRenderChunk(x, y, z)
-             if frustum.cubeInFrustum(renderChunk.cube)
-        } yield renderChunk
-
+        if (posX != lastX || posY != lastY || posZ != lastZ) {
+            lastX = posX
+            lastY = posY
+            lastZ = posZ
+            playerRenderChunks.clear()
+            for (x <- posX - range to posX + range;
+                 y <- posY - range to posY + range;
+                 z <- posZ - range to posZ + range) {
+                playerRenderChunks += getRenderChunk(x, y, z)
+            }
+        }
+        playerRenderChunks
     }
 
 

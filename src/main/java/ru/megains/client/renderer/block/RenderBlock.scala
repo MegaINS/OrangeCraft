@@ -21,7 +21,6 @@ object RenderBlock {
         val averageV = (minV + maxV) / 2
 
         mm.setCurrentIndex()
-        mm.addNormals(0, 1, 0)
         mm.addVertexWithUV(minX, maxY, minZ, maxU, maxV)
         mm.addVertexWithUV(minX, maxY, maxZ, maxU, minV)
         mm.addVertexWithUV(maxX, maxY, minZ, minU, maxV)
@@ -45,7 +44,6 @@ object RenderBlock {
         val averageV = (minV + maxV) / 2
 
         mm.setCurrentIndex()
-        mm.addNormals(0, -1, 0)
         mm.addVertexWithUV(minX, minY, minZ, minU, maxV)
         mm.addVertexWithUV(minX, minY, maxZ, minU, minV)
         mm.addVertexWithUV(maxX, minY, minZ, maxU, maxV)
@@ -69,7 +67,6 @@ object RenderBlock {
 
 
         mm.setCurrentIndex()
-        mm.addNormals(-1, 0, 0)
         mm.addVertexWithUV(minX, minY, minZ, minU, maxV)
         mm.addVertexWithUV(minX, minY, maxZ, maxU, maxV)
         mm.addVertexWithUV(minX, maxY, minZ, minU, minV)
@@ -95,7 +92,6 @@ object RenderBlock {
 
 
         mm.setCurrentIndex()
-        mm.addNormals(1, 0, 0)
         mm.addVertexWithUV(maxX, minY, minZ, maxU, maxV)
         mm.addVertexWithUV(maxX, minY, maxZ, minU, maxV)
         mm.addVertexWithUV(maxX, maxY, minZ, maxU, minV)
@@ -119,7 +115,6 @@ object RenderBlock {
         val averageV = (minV + maxV) / 2
 
         mm.setCurrentIndex()
-        mm.addNormals(0, 0, 1)
         mm.addVertexWithUV(minX, minY, maxZ, minU, maxV)
         mm.addVertexWithUV(minX, maxY, maxZ, minU, minV)
         mm.addVertexWithUV(maxX, minY, maxZ, maxU, maxV)
@@ -143,7 +138,6 @@ object RenderBlock {
         val averageV = (minV + maxV) / 2
 
         mm.setCurrentIndex()
-        mm.addNormals(0, 0, -1)
         mm.addVertexWithUV(minX, minY, minZ, maxU, maxV)
         mm.addVertexWithUV(minX, maxY, minZ, maxU, minV)
         mm.addVertexWithUV(maxX, minY, minZ, minU, maxV)

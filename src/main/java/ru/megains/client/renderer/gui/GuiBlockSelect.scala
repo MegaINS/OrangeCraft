@@ -22,6 +22,7 @@ class GuiBlockSelect extends GuiInGame with GuiText {
         addText("Block.y", createString("", Color.WHITE))
         addText("Block.z", createString("", Color.WHITE))
         addText("Block.hp", createString("", Color.WHITE))
+        addText("Block.meta", createString("", Color.WHITE))
     }
 
     override def tick(): Unit = {
@@ -30,7 +31,8 @@ class GuiBlockSelect extends GuiInGame with GuiText {
             if (ray ne null) {
                 val posB: BlockPos = ray.getBlockWorldPos
                 val vec: Vec3f = ray.hitVec
-                val hp = oc.world.getBlockHp(posB).toString
+                val meta = oc.world.getBlockMeta(posB)
+                val hp = oc.world.getBlockHp(posB)
                 blockSelect = ray.block
                 addText("Block.name", createString(ray.block.name, Color.WHITE))
                 addText("Block.x", createString("x: " + posB.worldX + "  " + vec.x, Color.WHITE))
@@ -38,6 +40,7 @@ class GuiBlockSelect extends GuiInGame with GuiText {
                 addText("Block.z", createString("z: " + posB.worldZ + "  " + vec.z, Color.WHITE))
                 addText("Block.side", createString("side: " + ray.sideHit.name, Color.WHITE))
                 addText("Block.hp", createString("HP: " + hp, Color.WHITE))
+                addText("Block.meta", createString("Meta: " + meta, Color.WHITE))
             }
         }
     }
@@ -46,13 +49,14 @@ class GuiBlockSelect extends GuiInGame with GuiText {
         if (ray ne null) {
             val weight = 800 / 2 - 100
             val height = 600
-            drawObject(weight, height - 20, 2, text("Block.name"))
-            drawObject(weight, height - 40, 2, text("Block.x"))
-            drawObject(weight, height - 60, 2, text("Block.y"))
-            drawObject(weight, height - 80, 2, text("Block.z"))
-            drawObject(weight, height - 100, 2, text("Block.side"))
-            drawObject(weight, height - 100, 2, text("Block.side"))
-            drawObject(weight, height - 120, 2, text("Block.hp"))
+            drawObject(weight, height - 20, 1, text("Block.name"))
+            drawObject(weight, height - 40, 1, text("Block.x"))
+            drawObject(weight, height - 60, 1, text("Block.y"))
+            drawObject(weight, height - 80, 1, text("Block.z"))
+            drawObject(weight, height - 100, 1, text("Block.side"))
+            drawObject(weight, height - 100, 1, text("Block.side"))
+            drawObject(weight, height - 120, 1, text("Block.hp"))
+            drawObject(weight, height - 140, 1, text("Block.meta"))
             drawItemStack(new ItemStack(blockSelect), 800 / 2 - 150, height - 50)
         }
 

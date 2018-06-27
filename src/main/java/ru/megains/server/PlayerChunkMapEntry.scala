@@ -32,6 +32,15 @@ class PlayerChunkMapEntry(playerChunkMap: PlayerChunkMap, chunkX: Int, chunkY: I
 
     }
 
+    def getClosestPlayerDistance: Double = {
+        var d0 = Double.MaxValue
+
+        for (entityplayermp <- players) {
+            val d1 = pos.getDistanceSq(entityplayermp)
+            if (d1 < d0) d0 = d1
+        }
+        d0
+    }
 
     var lastUpdateInhabitedTime: Long = 0
 

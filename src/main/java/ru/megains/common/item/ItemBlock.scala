@@ -1,5 +1,6 @@
 package ru.megains.common.item
 
+import ru.megains.client.renderer.texture.TTextureRegister
 import ru.megains.common.EnumActionResult
 import ru.megains.common.EnumActionResult.EnumActionResult
 import ru.megains.common.block.Block
@@ -27,6 +28,8 @@ class ItemBlock(val block: Block) extends Item(block.name) {
         }
         else EnumActionResult.FAIL
     }
+
+    override def registerTexture(textureRegister: TTextureRegister): Unit = {}
 
     def placeBlockAt(stack: ItemStack, player: EntityPlayer, world: World, pos: BlockPos, side: BlockDirection, hitX: Float, hitY: Float, hitZ: Float): Boolean = {
         if (!world.setBlock(pos, block, 3)) return false

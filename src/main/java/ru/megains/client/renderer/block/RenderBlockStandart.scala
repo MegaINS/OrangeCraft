@@ -23,32 +23,32 @@ object RenderBlockStandart extends ARenderBlock {
 
 
         if (!world.isOpaqueCube(posWorld.sum(BlockDirection.SOUTH))) {
-            RenderBlock.renderSideSouth(minX, maxX, minY, maxY, maxZ, block.getATexture(BlockDirection.SOUTH))
+            RenderBlock.renderSideSouth(minX, maxX, minY, maxY, maxZ, block.getATexture(posWorld, BlockDirection.SOUTH, world))
             isRender = true
         }
 
         if (!world.isOpaqueCube(posWorld.sum(BlockDirection.NORTH))) {
-            RenderBlock.renderSideNorth(minX, maxX, minY, maxY, minZ, block.getATexture(BlockDirection.NORTH))
+            RenderBlock.renderSideNorth(minX, maxX, minY, maxY, minZ, block.getATexture(posWorld, BlockDirection.NORTH, world))
             isRender = true
         }
 
         if (!world.isOpaqueCube(posWorld.sum(BlockDirection.DOWN))) {
-            RenderBlock.renderSideDown(minX, maxX, minY, minZ, maxZ, block.getATexture(BlockDirection.DOWN))
+            RenderBlock.renderSideDown(minX, maxX, minY, minZ, maxZ, block.getATexture(posWorld, BlockDirection.DOWN, world))
             isRender = true
         }
 
         if (!world.isOpaqueCube(posWorld.sum(BlockDirection.UP))) {
-            RenderBlock.renderSideUp(minX, maxX, maxY, minZ, maxZ, block.getATexture(BlockDirection.UP))
+            RenderBlock.renderSideUp(minX, maxX, maxY, minZ, maxZ, block.getATexture(posWorld, BlockDirection.UP, world))
             isRender = true
         }
 
         if (!world.isOpaqueCube(posWorld.sum(BlockDirection.WEST))) {
-            RenderBlock.renderSideWest(minX, minY, maxY, minZ, maxZ, block.getATexture(BlockDirection.WEST))
+            RenderBlock.renderSideWest(minX, minY, maxY, minZ, maxZ, block.getATexture(posWorld, BlockDirection.WEST, world))
             isRender = true
         }
 
         if (!world.isOpaqueCube(posWorld.sum(BlockDirection.EAST))) {
-            RenderBlock.renderSideEast(maxX, minY, maxY, minZ, maxZ, block.getATexture(BlockDirection.EAST))
+            RenderBlock.renderSideEast(maxX, minY, maxY, minZ, maxZ, block.getATexture(posWorld, BlockDirection.EAST, world))
             isRender = true
         }
         isRender

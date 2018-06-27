@@ -5,12 +5,11 @@ import org.joml.Vector3d
 import ru.megains.common.block.Block
 import ru.megains.common.block.blockdata.{BlockDirection, BlockPos}
 import ru.megains.common.entity.Entity
-import ru.megains.common.entity.item.EntityItem
 import ru.megains.common.item.ItemStack
 import ru.megains.common.multiblock.AMultiBlock
 import ru.megains.common.physics.AxisAlignedBB
 import ru.megains.common.position.ChunkPosition
-import ru.megains.common.register.{Blocks, GameRegister, MultiBlocks}
+import ru.megains.common.register.{Blocks, MultiBlocks}
 import ru.megains.common.util.{MathHelper, RayTraceResult}
 import ru.megains.common.utils.Logger
 import ru.megains.common.world.chunk.Chunk
@@ -38,29 +37,22 @@ abstract class World(saveHandler: ISaveHandler) extends Logger[World] {
     val height: Int = 30000
     val eventListeners: ArrayBuffer[IWorldEventListener] = ArrayBuffer[IWorldEventListener]()
 
-    val chunks: mutable.HashMap[Long, Chunk] = new mutable.HashMap[Long, Chunk]
+
     val rand: Random = new Random()
     val entities: ArrayBuffer[Entity] = new ArrayBuffer[Entity]()
+    var i = 0
 
-
-    def init() {
-
-
-        for (i <- 1 to 10) {
-            val entity = new EntityItem(this, GameRegister.getItemById(rand.nextInt(4) + 2))
-            entity.setWorld(this)
-            entity.setPosition(rand.nextInt(i) - i / 2, 5, rand.nextInt(i) - i / 2)
-            entities += entity
-        }
-
-
-    }
 
     def update() {
         entities.foreach(_.update())
 
-        chunks.values.foreach(_.updateRandomBlocks(rand))
 
+        //        i+=1
+        //
+        //        if(i%100==0){
+        //
+        //            println(  chunkProvider.chunkMap.size)
+        //        }
 
     }
 
@@ -129,6 +121,14 @@ abstract class World(saveHandler: ISaveHandler) extends Logger[World] {
         getChunk(pos.chunkX, pos.chunkY, pos.chunkZ)
     }
 
+    def getBlockMeta(pos: BlockPos): Int = {
+        if (!validBlockPos(pos)) -1 else getChunk(pos).getBlockMeta(pos)
+    }
+
+    def setBlockMeta(pos: BlockPos, meta: Int): Unit = {
+        if (validBlockPos(pos)) getChunk(pos).setBlockMeta(pos, meta)
+    }
+
     def getChunk(x: Int, y: Int, z: Int): Chunk = {
 
         chunkProvider.provideChunk(x, y, z)
@@ -178,7 +178,8 @@ abstract class World(saveHandler: ISaveHandler) extends Logger[World] {
 
     def save(): Unit = {
         log.info("World saved...")
-        chunks.values.foreach(chunkLoader.saveChunk)
+
+
         log.info("World saved completed")
     }
 
@@ -282,10 +283,6 @@ abstract class World(saveHandler: ISaveHandler) extends Logger[World] {
 
     def getBlockHp(pos: BlockPos): Int = {
         if (!validBlockPos(pos)) -1 else getChunk(pos).getBlockHp(pos)
-    }
-
-    def addChunk(index: Long, chunk: Chunk): Unit = {
-        chunks += index -> chunk
     }
 
 

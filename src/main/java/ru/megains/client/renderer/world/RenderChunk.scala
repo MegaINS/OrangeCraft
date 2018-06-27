@@ -4,7 +4,7 @@ import ru.megains.client.renderer.mesh.{Mesh, MeshMaker}
 import ru.megains.common.block.blockdata.BlockPos
 import ru.megains.common.managers.TextureManager
 import ru.megains.common.multiblock.AMultiBlock
-import ru.megains.common.physics.AxisAlignedBB
+import ru.megains.common.position.ChunkPosition
 import ru.megains.common.utils.Logger
 import ru.megains.common.world.World
 import ru.megains.common.world.chunk.{Chunk, ChunkVoid}
@@ -14,12 +14,7 @@ class RenderChunk(var chunk: Chunk, textureManager: TextureManager) extends Logg
 
     val isVoid: Boolean = chunk.isInstanceOf[ChunkVoid]
     val world: World = chunk.world
-    val minX: Int = chunk.position.minX
-    val minY: Int = chunk.position.minY
-    val minZ: Int = chunk.position.minZ
-    val cube: AxisAlignedBB = new AxisAlignedBB(minX, minY, minZ, chunk.position.maxX, chunk.position.maxY, chunk.position.maxZ)
-
-
+    val chunkPosition: ChunkPosition = chunk.position
     var isReRender: Boolean = true
     var blockRender: Int = 0
     val meshes: Array[Mesh] = new Array[Mesh](2)
@@ -44,7 +39,7 @@ class RenderChunk(var chunk: Chunk, textureManager: TextureManager) extends Logg
 
     private def makeChunk(layer: Int) {
 
-        log.debug(s"Start make chunk $minX $minY $minZ")
+        log.debug(s"Start make chunk ${chunkPosition.maxX} ${chunkPosition.maxY} ${chunkPosition.maxZ} ")
         MeshMaker.startMakeTriangles()
         MeshMaker.setTexture(TextureManager.locationBlockTexture)
         var blockPos: BlockPos = null
@@ -52,7 +47,7 @@ class RenderChunk(var chunk: Chunk, textureManager: TextureManager) extends Logg
         var block: AMultiBlock = null
 
         for (x <- 0 until Chunk.CHUNK_SIZE; y <- 0 until Chunk.CHUNK_SIZE; z <- 0 until Chunk.CHUNK_SIZE) {
-            blockPos = new BlockPos(x + minX, y + minY, z + minZ)
+            blockPos = new BlockPos(x + chunkPosition.minX, y + chunkPosition.minY, z + chunkPosition.minZ)
             renderPos = new BlockPos(x, y, z)
             if (!world.isAirBlock(blockPos)) {
                 block = chunk.getMultiBlockWorldCord(blockPos)

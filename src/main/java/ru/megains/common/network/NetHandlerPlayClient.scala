@@ -92,14 +92,14 @@ class NetHandlerPlayClient(gameController: OrangeCraft, previousScreen: GuiScree
 
     def handleBlockChange(packetIn: SPacketBlockChange) {
         PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, gameController)
-        clientWorldController.invalidateRegionAndSetBlock(packetIn.blockPosition, packetIn.block)
+        clientWorldController.invalidateRegionAndSetBlock(packetIn.blockPosition, packetIn.block, packetIn.meta)
 
     }
 
     def handleMultiBlockChange(packetIn: SPacketMultiBlockChange) {
         PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, gameController)
         for (blockData <- packetIn.changedBlocks) {
-            clientWorldController.invalidateRegionAndSetBlock(blockData.blockPosition, blockData.block)
+            clientWorldController.invalidateRegionAndSetBlock(blockData.blockPosition, blockData.block, blockData.meta)
         }
     }
 

@@ -89,7 +89,6 @@ class RenderItemBlock(item: ItemBlock) extends ARenderItem {
 
 
         mm.setCurrentIndex()
-        mm.addNormals(0, -1, 0)
         mm.addVertexWithUV(minX, minY, minZ, minU, maxV)
         mm.addVertexWithUV(minX, minY, maxZ, minU, minV)
         mm.addVertexWithUV(maxX, minY, minZ, maxU, maxV)

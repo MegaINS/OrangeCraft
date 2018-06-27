@@ -12,7 +12,6 @@ trait INetHandlerPlayClient extends INetHandler {
 
     def handleSetSlot(slot: SPacketSetSlot): Unit
 
-
     def handleJoinGame(packetIn: SPacketJoinGame): Unit
 
     def handleHeldItemChange(packetIn: SPacketHeldItemChange): Unit

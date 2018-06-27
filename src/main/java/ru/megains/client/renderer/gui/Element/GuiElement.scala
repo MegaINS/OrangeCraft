@@ -1,9 +1,10 @@
-package ru.megains.client.renderer.gui
+package ru.megains.client.renderer.gui.Element
 
 import java.awt.Color
 
 import ru.megains.client.OrangeCraft
 import ru.megains.client.renderer.font.Fonts
+import ru.megains.client.renderer.gui.Gui
 import ru.megains.client.renderer.mesh.Mesh
 import ru.megains.client.renderer.{EntityRenderer, FontRender, RenderItem}
 import ru.megains.common.item.ItemStack
